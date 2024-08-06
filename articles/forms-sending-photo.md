@@ -3,7 +3,7 @@ title: "Microsoft365でスマートフォンで撮影した写真を管理する
 emoji: "🐥"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Microsoft 365","Power Automate","Microsoft Forms"]
-published: false
+published: true
 ---
 ## はじめに
 Microsoft365でスマートフォンで撮影した写真を管理する仕組みを作っていきます。
