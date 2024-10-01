@@ -3,7 +3,7 @@ title: "ソラカメで撮影した画像をwordpressで作成したwebサイト
 emoji: "📷"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ソラカメ","wordpress","s3","lambda","IoT"]
-published: false
+published: true
 ---
 
 :::message
