@@ -354,8 +354,8 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
     以下のような表示が出てれば成功です。
     ![alt text](/images/soracamimagetos3towp/image-40.png)
 
-## 画像をS3に保存するLambda関数を定期実行するCloudWatchイベントを作成する
-定期的にSORACOM APIを呼び出して画像を取得し、S3に保存するためのCloudWatchイベントを作成します。
+## 画像をS3に保存するLambda関数を定期実行するEventBridgeルールを作成する
+定期的にSORACOM APIを呼び出して画像を取得し、S3に保存するためのEventBridgeルールを作成します。
 
 ついにすべての準備が整います。
 ![alt text](/images/soracamimagetos3towp/image-41.png)
@@ -396,6 +396,7 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
     ![alt text](/images/soracamimagetos3towp/image-51.png)
 
 5. 末尾に以下のコードを追加します。
+
     ```php
     function live_camera_slider_shortcode() {
         ob_start();
