@@ -493,6 +493,10 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
     }
     add_shortcode('live_camera_slider', 'live_camera_slider_shortcode');
     ```
+    :::message
+    ファイルの末尾にある想定なので、phpの閉じタグは省略しています。
+    :::
+
 6. 「ファイルを更新/Update File」をクリックします。
 
     ![alt text](/images/soracamimagetos3towp/image-52.png)
