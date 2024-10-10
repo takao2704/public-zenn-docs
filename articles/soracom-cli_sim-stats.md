@@ -79,8 +79,7 @@ soracom sims list
 
 結論から書きます。スクリプトは以下のとおりです。
 
-[こちら](https://github.com/takao2704/public-zenn-docs/blob/main/files/check_sim_data_usage.sh)
-からダウンロードもできます。
+[こちら](https://github.com/takao2704/public-zenn-docs/blob/main/files/check_sim_data_usage.sh)からダウンロードできます。
 
 ```zsh
 #!/bin/zsh
