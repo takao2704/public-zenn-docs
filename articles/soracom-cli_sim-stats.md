@@ -1,5 +1,5 @@
 ---
-title: "大量の回線の過去何ヶ月かの利用状況を把握する"
+title: "大量の回線のうち過去何ヶ月か使っていないSIMを割り出す"
 emoji: "📊"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [soracom,zsh]
