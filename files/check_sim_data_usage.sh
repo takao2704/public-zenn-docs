@@ -1,12 +1,16 @@
 #!/bin/zsh
 
-# デフォルトの日付設定
-DEFAULT_FROM_DATE="2024-07-01"  # デフォルト開始日
-DEFAULT_TO_DATE="2024-10-31"    # デフォルト終了日
+# デフォルト値を設定
+DEFAULT_FROM_DATE="2024-07-01"  # デフォルトの開始日
+DEFAULT_TO_DATE="2024-10-31"    # デフォルトの終了日
 
-# 引数が渡されていれば、それを使用。なければデフォルト値を使用
-FROM_DATE=${1:-$DEFAULT_FROM_DATE}  # 第1引数が指定されていなければデフォルト値
-TO_DATE=${2:-$DEFAULT_TO_DATE}      # 第2引数が指定されていなければデフォルト値
+# 引数から日付を取得（指定がない場合はデフォルト値を使用）
+FROM_DATE="${1:-$DEFAULT_FROM_DATE}"
+TO_DATE="${2:-$DEFAULT_TO_DATE}"
+
+# 取得する期間の表示
+echo "開始日: $FROM_DATE"
+echo "終了日: $TO_DATE"
 
 # UNIX秒に変換
 FROM_UNIX=$(date -j -f "%Y-%m-%d" "$FROM_DATE" +%s)
@@ -26,7 +30,7 @@ apiKey=$(echo "$auth_info" | jq -r '.apiKey')
 apiToken=$(echo "$auth_info" | jq -r '.token')
 
 # 全てのSIMのIMSIを取得
-all_sims=($(soracom sims list --fetch-all | jq -r '.[].profiles[].subscribers[].imsi'))
+all_sims=($(soracom sims list --fetch-all --api-key "$apiKey" --api-token "$apiToken" | jq -r '.[].profiles[].subscribers[].imsi'))
 total_sims=${#all_sims[@]}  # 総SIM数
 
 # プログレスバーの表示関数
