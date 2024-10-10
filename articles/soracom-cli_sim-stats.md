@@ -80,6 +80,9 @@ soracom sims list
 
 結論から書きます。スクリプトは以下のとおりです。
 
+[こちら](https://github.com/takao2704/public-zenn-docs/blob/main/files/check_sim_data_usage.sh)
+からダウンロードもできます。
+
 ```zsh
 #!/bin/zsh
 
@@ -161,4 +164,26 @@ else
         echo "$sim"
     done
 fi
+```
+
+使い方は以下のとおりです。
+ダウンロードまたは上記内容を書いたファイルを保存したしたディレクトリに移動します。
+```zsh
+cd ファイルを保存したディレクトリ
+```
+
+スクリプトファイルに実行権限を付与します。
+```zsh
+chmod +x check_sim_data_usage.sh
+```
+
+
+```zsh
+./check_sim_data_usage.sh 開始日 終了日
+```
+開始日と終了日は、YYYY-MM-DDの形式で指定してください。
+例えば、2024年7月1日から2024年9月30日までのデータ通信がないSIMを調べる場合は、以下のように実行します。
+
+```zsh
+./script_name.sh 2024-07-01 2024-09-30
 ```
