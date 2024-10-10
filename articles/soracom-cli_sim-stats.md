@@ -177,6 +177,8 @@ cd ファイルを保存したディレクトリ
 chmod +x check_sim_data_usage.sh
 ```
 
+実行するときは、以下のように実行します。
+
 ```shell
 ./check_sim_data_usage.sh 開始日 終了日
 ```
