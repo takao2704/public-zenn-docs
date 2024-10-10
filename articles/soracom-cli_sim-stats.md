@@ -81,7 +81,7 @@ soracom sims list
 
 [こちら](https://github.com/takao2704/public-zenn-docs/blob/main/files/check_sim_data_usage.sh)からダウンロードできます。
 
-```zsh
+```shell
 #!/bin/zsh
 
 # デフォルトの日付設定
@@ -168,22 +168,22 @@ fi
 
 ダウンロードまたは上記内容を書いたファイルを保存したしたディレクトリに移動します。
 
-```zsh
+```shell
 cd ファイルを保存したディレクトリ
 ```
 
 スクリプトファイルに実行権限を付与します。
-```zsh
+```shell
 chmod +x check_sim_data_usage.sh
 ```
 
-```zsh
+```shell
 ./check_sim_data_usage.sh 開始日 終了日
 ```
 開始日と終了日は、YYYY-MM-DDの形式で指定してください。
 例えば、2024年7月1日から2024年9月30日までのデータ通信がないSIMを調べる場合は、以下のように実行します。
 
-```zsh
+```shell
 ./check_sim_data_usage.sh 2024-07-01 2024-09-30
 ```
 
@@ -209,7 +209,7 @@ SORACOM APIを使う際は、日付はUNIX秒で指定する必要がありま�
 
 一応、デフォルトの開始日と終了日を設定していますが、引数が渡されていればそれを使用するようにしていますので、数ヶ月経ってから実行する場合など同じスクリプトを使いまわすことができます。
 
-```zsh
+```shell
 # デフォルトの日付設定
 DEFAULT_FROM_DATE="2024-07-01"  # デフォルト開始日
 DEFAULT_TO_DATE="2024-10-31"    # デフォルト終了日
@@ -221,8 +221,6 @@ TO_DATE=${2:-$DEFAULT_TO_DATE}      # 第2引数が指定されていなけれ�
 # UNIX秒に変換
 FROM_UNIX=$(date -j -f "%Y-%m-%d" "$FROM_DATE" +%s)
 TO_UNIX=$(date -j -f "%Y-%m-%d" "$TO_DATE" +%s)
-
-
 ```
 
 ### SORACOM CLIの認証情報取得
@@ -231,7 +229,7 @@ SORACOM CLIを使うとき、一つずつコマンドを実行していく場合
 
 ここでは、`soracom configure get`で取得した認証情報を使ってapi-keyとapi-tokenを取得して再利用できるように変数に格納しています。
 
-```zsh
+```shell
 # authkey,IDを取得
 configure=$(soracom configure get)
 authKeyId=$(echo $configure | jq -r '.authKeyId')
@@ -250,7 +248,7 @@ apiToken=$(echo "$auth_info" | jq -r '.token')
 (これをつけない場合は、100件のみ取得されます。)
 `--fetch-all --api-key "$apiKey" --api-token "$apiToken"`の部分は先ほど取得したapi-keyとapi-tokenを使っていこのコマンドを実行しています。
 
-```zsh
+```shell
 # 全てのSIMのIMSIを取得
 all_sims=($(soracom sims list --fetch-all --api-key "$apiKey" --api-token "$apiToken" | jq -r '.[].profiles[].subscribers[].imsi'))
 total_sims=${#all_sims[@]}  # 総SIM数
@@ -261,7 +259,7 @@ total_sims=${#all_sims[@]}  # 総SIM数
 キャリッジリターン(`\r`)を使って、同じ行に表示されるようにしています。
 終わった割合だけ、`#`が積み上がっていきます。
 
-```zsh
+```shell
 # プログレスバーの表示関数
 display_progress() {
     local progress=$1
@@ -288,7 +286,7 @@ display_progress() {
 データを取得した後は、ダウンロード量とアップロード量を取得して、どちらも0の場合はinactive_simsという配列に追加しています。
 ここまでの一連の処理が終わったところで、進捗率を表示して次のSIMに移ります。
 
-```zsh
+```shell
 # 各SIMのデータ通信量を確認
 for ((i=0; i<total_sims; i++)); do
     imsi=${all_sims[$i]}
@@ -321,7 +319,7 @@ done
 最後に、データ通信量が0のSIMのIMSIを表示しています。
 forループの中で`inactive_sims`という配列に追加していたので、それを表示しています。
 
-```zsh
+```shell
 # 結果を表示
 echo ""  # プログレスバーの改行
 if [[ ${#inactive_sims[@]} -eq 0 ]]; then
