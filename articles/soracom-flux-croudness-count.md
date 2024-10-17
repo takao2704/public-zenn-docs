@@ -166,6 +166,7 @@ https://changelog.soracom.io/ja/soracom-flux-ni-soracom-api-akusiyongazhui-jia-s
 
 これをこのまま放置するとこのあとの工程をやっている間に意図せず駆動されてしまうので、一旦無効化しておきます。
 ![](https://storage.googleapis.com/zenn-user-upload/ad46038f4648-20241016.png)
+
 ※急に現れてblinkしている、「変更を保存」ボタンは忘れずに押しましょう
 
 STUDIOの画面上はこんな感じになっています。
