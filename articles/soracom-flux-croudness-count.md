@@ -56,13 +56,13 @@ https://weathernews.jp/s/topics/202403/180215/
 ![alt text](/images/soracamimagetos3towp/image.png)
 
 デバイスの一覧表示で、先ほど登録したカメラがオンラインになっていることを確認します。
-![](https://storage.googleapis.com/zenn-user-upload/696a6fec29e6-20241016.png)
-
+![alt text](/images/soracom-flux-croudness-count/image.png)
+images/soracom-flux-croudness-count/image-1.png
 ここで重要な情報はデバイスIDになります。
 後で使うので、メモをしておくかいつでもここに戻ってこられるようにしておきましょう。
 
 さらに、カメラの名前をクリックすると、カメラの映像が表示されます。
-![](https://storage.googleapis.com/zenn-user-upload/e1385d99bcbf-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-1.png)
 
 こちら現在20時過ぎのソラコムの赤坂オフィスです。ホワイト企業なので、この時間にオフィスで働いている人はほとんどいません。
 
@@ -136,7 +136,7 @@ https://changelog.soracom.io/ja/soracom-flux-ni-soracom-api-akusiyongazhui-jia-s
 あとはこのデバイスが所属するグループにHarvest Dataの設定を有効化します。
 
 「Inventory デバイス管理」から先ほど登録したデバイスを探し出して、グループのところをクリックします。
-![](https://storage.googleapis.com/zenn-user-upload/a0e583ea6308-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-2.png)
 
 ちょっと下の方にスクロールして、「SORACOM Harvest Data 設定」のトグルスイッチをONして有効化します。
 ![](https://storage.googleapis.com/zenn-user-upload/99e22c511266-20241016.png)
@@ -185,10 +185,11 @@ STUDIOの画面上はこんな感じになっています。
 こんな感じの画面になります。
 ![](https://storage.googleapis.com/zenn-user-upload/059462c0a325-20241016.png)
 
-URLのところの'{device_id}'をソラカメのデバイスIDに置き換えます。
+URLのところの`{device_id}`をソラカメのデバイスIDに置き換えます。
 
 この画面
-![](https://storage.googleapis.com/zenn-user-upload/696a6fec29e6-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image.png)
+
 の右側のやつです。
 
 HTTPボディには、
@@ -203,13 +204,14 @@ SAM Userは新しく作成します。
 名前もデフォルトのままでいきます。
 
 こんな感じになります。
-![](https://storage.googleapis.com/zenn-user-upload/5031ab450604-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-3.png)
 
 最後にアクションのアウトプットを有効にして別のチャンネルに送信するを有効にします。
 ![](https://storage.googleapis.com/zenn-user-upload/8b6e847ad746-20241016.png)
 
 こんな画面に遷移すればOKです。
-![](https://storage.googleapis.com/zenn-user-upload/2c5f6782bb2a-20241016.png)
+
+![alt text](/images/soracom-flux-croudness-count/image-4.png)
 
 ##### ちゃんと設定できたか試してみる
 自分の設定に自身のある方は次に進みましょう。
@@ -220,17 +222,18 @@ SAM Userは新しく作成します。
 
 実行結果が下の方に現れてきます。
 緑色で`COMPLETED`となったらOKです。
-![](https://storage.googleapis.com/zenn-user-upload/289ce7d96131-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-5.png)
 
 JSONのレスポンスのフォーマットはこのような感じになっています。
-![](https://storage.googleapis.com/zenn-user-upload/f841f394438b-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-6.png)
 
 このレスポンスの内容は`payload`というJSONとなって後段のアクションで再利用できます。
-![](https://storage.googleapis.com/zenn-user-upload/d5f4a39f888e-20241016.png)
 
-今回のExportのAPIは非同期のAPIとなっており、`now()`画像の切り出しで指定した時刻の画像を録画した動画から切り取るためのキューに入れるイメージとなります。
+:::message
+今回のExportのAPIは非同期のAPIとなっており、`now()`という画像の切り出しで指定した時刻の画像を録画した動画から切り取るためのキューに入れるイメージとなります。
 
-`exportID`はキューを特定するためのIDで、`status`はいまどういう状態かを示していて、`initializing`は始まったところで、`processing` -> `completed`という変化をしていきます。
+`exportID`はキューを特定するためのIDで、`status`はそのキューがいまどういう状態かを示していて、`initializing`は始まったところで、`processing` -> `completed`という変化をしていきます。
+:::
 
 ### 切り出した画像のデータを取得する
 こんな感じの状態になっているともいます。
@@ -266,10 +269,11 @@ JSONのレスポンスのフォーマットはこのような感じになって�
 ![](https://storage.googleapis.com/zenn-user-upload/dc1006c82201-20241016.png)
 
 さっきより出力が伸びたと思います。一番下が緑でCOMPLETEDになっていればOKです。
-![](https://storage.googleapis.com/zenn-user-upload/670508552baf-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-7.png)
+
 
 最後の出力を見てみると、statusがprocessingとなっています。
-![](https://storage.googleapis.com/zenn-user-upload/efa04a21f859-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-8.png)
 
 これは、まだ画像が作り終わっていないという意味になります。
 おわかりの通り、画像が作り終わるまで作り終わったかどうかを確認する必要がありますね。
@@ -288,7 +292,7 @@ payload.status == "initializing" || payload.status == "processing"
 
 を入れます。
 
-![](https://storage.googleapis.com/zenn-user-upload/f9650cf041e9-20241016.png)
+![alt text](/images/soracom-flux-croudness-count/image-9.png)
 
 これは、一つ前のアクションの実行結果のレスポンスに含まれる、`status`が`initializing`または`processing`のときだけ、このAPIを実行しますよーというWhile文やIf文の条件のようなものになります。
 
