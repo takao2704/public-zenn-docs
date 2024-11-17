@@ -281,10 +281,10 @@ JSONのレスポンスのフォーマットはこのような感じになって�
 
 #### 画像のexportが完了するまでデータ取得のAPIを実行し続ける
 
-STUDIOに戻って
-![](https://storage.googleapis.com/zenn-user-upload/87a595c330dc-20241016.png)
+STUDIOに戻って右端のSORACOM API アクションをクリックします。
+![alt text](/images/soracom-flux-croudness-count/image-10.png)
 
-右端のアクションをクリックします。
+
 アクションの実行条件のところに
 ```
 payload.status == "initializing" || payload.status == "processing"
@@ -386,7 +386,7 @@ BODYはAIアクションのレスポンスのボディからoutputを抜き出�
 webhookアクションの実行履歴が緑色でcompletedとなっていればOKですが、念の為Harvest Dataの方でも確認してみます。
 
 
-「データ収集・蓄積・可視化」から、「SORACOM Harvest Files」を選択します。
+「データ収集・蓄積・可視化」から、「SORACOM Harvest Data」を選択します。
 ![](https://storage.googleapis.com/zenn-user-upload/d5c438dede27-20241017.png)
 
 Inventoryを使っているので、「デバイス」の中からリソースを指定して、
