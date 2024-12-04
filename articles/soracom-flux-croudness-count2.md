@@ -279,7 +279,7 @@ SORACOM FluxにはSORACOM Harvest Filesから画像を取得する方法とし�
 いったんこの状態で、先程の5分タイマーのイベントをテスト実行してみましょう。
 テスト実行の結果が緑色で`COMPLETED`となったら、こんどは新たに作成したHarvest Filesイベントの「メッセージ履歴」を確認してみましょう。
 
-なにか新しいメーッセージが出力されているはずです。
+なにか新しいメッセージが出力されているはずです。
 
 ![alt text](/images/soracom-flux-croudness-count2/image-10.png)
 
