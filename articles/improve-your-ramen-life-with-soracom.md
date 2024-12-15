@@ -15,9 +15,9 @@ published: false
 三度の飯よりラーメンが好きなソリューションアーキテクトの井出です。
 みなさん、ラーメンは好きですか？私はラーメンが大好きです。
 今年1年のスマートフォンの中のラーメン画像を振り返ってみるとこんな感じになっていました。
-![alt text](image.png)
-![alt text](image-1.png)
-![alt text](image-3.png)
+![alt text](/images/ramenlife/image.png)
+![alt text](/images/ramenlife/image-1.png)
+![alt text](/images/ramenlife/image-3.png)
 
 ラーメン屋さんに行くとなると外出をしなければなりません。しかしながら、ソラコムは基本的にリモートワークのためあまり外出する機会が多くありません。
 私は常々この貴重な外出の機会に後悔のないラーメンを食べたいと思っています。
@@ -31,23 +31,23 @@ SORACOM UGは読んで字のごとくSORACOMのユーザーグループのこと
 |日付|イベント名|場所|ラーメン|
 |---|---|---|---|
 |5/18|[SORACOM UG 四国 in 高松](https://soracomug-tokyo.connpass.com/event/316529/)|高松||
-|7/26|[SORACOM UG 九州 ＃14](https://soracomug-tokyo.connpass.com/event/323443/)|福岡|![alt text](image-4.png)![alt text](image-5.png)![alt text](image-6.png)![alt text](image-7.png)|
-|9/7|[四国クラウドお遍路 2024 in 高知 & SORACOM UG四国 共催](https://soracomug-tokyo.connpass.com/event/324645/)|高知|![alt text](image-8.png)|
-|9/13|[SORACOM UG 東北 #1 in 秋田](https://soracomug-tokyo.connpass.com/event/326028/)|秋田|![alt text](image-9.png)|
+|7/26|[SORACOM UG 九州 ＃14](https://soracomug-tokyo.connpass.com/event/323443/)|福岡|![alt text](/images/ramenlife/image-4.png)![alt text](/images/ramenlife/image-5.png)![alt text](/images/ramenlife/image-6.png)![alt text](/images/ramenlife/image-7.png)|
+|9/7|[四国クラウドお遍路 2024 in 高知 & SORACOM UG四国 共催](https://soracomug-tokyo.connpass.com/event/324645/)|高知|![alt text](/images/ramenlife/image-8.png)|
+|9/13|[SORACOM UG 東北 #1 in 秋田](https://soracomug-tokyo.connpass.com/event/326028/)|秋田|![alt text](/images/ramenlife/image-9.png)|
 |9/14|[SORACOM UG 東北 #2 in 岩手 + JAWS-UG いわて共同開催](https://soracomug-tokyo.connpass.com/event/326049/)|岩手||
-|11/2|[（仙台会場）SORACOM UG Explorer 2024 〜HUB-ing FUN!](https://soracomug-tokyo.connpass.com/event/331550/)|仙台|![alt text](image-10.png)|
+|11/2|[（仙台会場）SORACOM UG Explorer 2024 〜HUB-ing FUN!](https://soracomug-tokyo.connpass.com/event/331550/)|仙台|![alt text](/images/ramenlife/image-10.png)|
 
 あれ、高松と岩手はラーメンの画像がないですね。どうなってるんや！！とお怒りの皆さん。
 実は私、その場所でラーメンよりも推奨されている麺類があればまずはそちらを食べることにしています。
 したがって、うどん県高松ではラーメンではなくうどんを4杯頂いています。この通り！
-![alt text](image-11.png)
-![alt text](image-19.png)![alt text](image-13.png)
-![alt text](image-14.png)
+![alt text](/images/ramenlife/image-11.png)
+![alt text](/images/ramenlife/image-19.png)![alt text](/images/ramenlife/image-13.png)
+![alt text](/images/ramenlife/image-14.png)
 
 また、盛岡では皆さん御存知の三大麺（じゃじゃ麺、冷麺、わんこそば）をコンプリートしました。
-![alt text](image-15.png)
-![alt text](image-16.png)
-![alt text](image-17.png)![alt text](image-18.png)
+![alt text](/images/ramenlife/image-15.png)
+![alt text](/images/ramenlife/image-16.png)
+![alt text](/images/ramenlife/image-17.png)![alt text](/images/ramenlife/image-18.png)
 ちなみに、わんこそばの記録は140杯で、これはちゃんとトレーニングすればもっと記録が伸ばせそうな手応えを得たので、また機会があれば挑戦した生本はありますが、次に盛岡に行ったときはラーメンを食べることにしたいと思っています。
 
 来年もSORACOM UGに参加して美味しいラーメンを食べることと皆さんにお会いできることを楽しみにしています！
@@ -64,16 +64,16 @@ UGは土日祝日に開催されることが多いため、ご家庭の事情な
 
 |No.|店名|ジャンル|ラーメン|
 |---|---|---|---|
-|1|[希須林](https://tabelog.com/tokyo/A1308/A130801/13020232/)|担々麺|![alt text](image-20.png)|
-|2|[一点張](https://tabelog.com/tokyo/A1308/A130801/13002781/)|札幌味噌ラーメン|![alt text](image-21.png)|
-|3|[一刀家](https://tabelog.com/tokyo/A1308/A130801/13159359/)|横浜家系|![alt text](image-22.png)|
-|4|[和](https://tabelog.com/tokyo/A1308/A130801/13165421/)|博多とんこつ|![alt text](image-23.png)|
-|5|[天下一品](https://tabelog.com/tokyo/A1308/A130801/13195122/)|天一|![alt text](image-24.png)|
+|1|[希須林](https://tabelog.com/tokyo/A1308/A130801/13020232/)|担々麺|![alt text](/images/ramenlife/image-20.png)|
+|2|[一点張](https://tabelog.com/tokyo/A1308/A130801/13002781/)|札幌味噌ラーメン|![alt text](/images/ramenlife/image-21.png)|
+|3|[一刀家](https://tabelog.com/tokyo/A1308/A130801/13159359/)|横浜家系|![alt text](/images/ramenlife/image-22.png)|
+|4|[和](https://tabelog.com/tokyo/A1308/A130801/13165421/)|博多とんこつ|![alt text](/images/ramenlife/image-23.png)|
+|5|[天下一品](https://tabelog.com/tokyo/A1308/A130801/13195122/)|天一|![alt text](/images/ramenlife/image-24.png)|
 
 このラーメン屋さんはどれも美味しいので、ランチタイムに行くと並ぶことが多くあります。
 このためこれらのラーメン屋さんのどれかに入れればいいなと思ってランチタイムに赤坂見附周辺を歩く際のルーティーンルートを作りましたので公開させていただきます。
 
-![alt text](image-25.png)
+![alt text](/images/ramenlife/image-25.png)
 スタート地点は赤坂見附の駅にしています。これは午後出社の際に赤坂見附駅に到着してから昼食を取ってからオフィスに出社することができるように設定しています。という話と、午前中からオフィスにいた場合ちょっと大回りになってしまいますが、このあとラーメンを食べるわけなのでその準備運動として適切な運動をするためにこのようなルートを設定しています。
 順序は前述のよく行くラーメン屋さんの表の順番と同じにしてあります。座席数やラーメンの種類などにより待ち時間が概ね長い順だと思っていただいても差し支えありません。
 
@@ -88,7 +88,7 @@ UGは土日祝日に開催されることが多いため、ご家庭の事情な
 
 slackをお使いの方はご存知かと思いますが、reacji channeler という機能があり、誰かの投稿に「🍜」のreacjiで反応すると自動的にその投稿が「#ramen」に転送される仕組みになっていて、このチャンネルを購読していればソラコム社内に飛び交う無数のラーメン情報を効率よく手に入れることができます。
 ある日の「#ramen」チャンネルの投稿は以下の通りです。
-![alt text](image-27.png)
+![alt text](/images/ramenlife/image-27.png)
 
 こういう感じでソラコムには充実のラーメンライフを送っているメンバーが多数います。
 
