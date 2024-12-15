@@ -31,7 +31,7 @@ SORACOM UGは読んで字のごとくSORACOMのユーザーグループのこと
 |日付|イベント名|場所|ラーメン|
 |---|---|---|---|
 |5/18|[SORACOM UG 四国 in 高松](https://soracomug-tokyo.connpass.com/event/316529/)|高松||
-|7/26|[SORACOM UG 九州 ＃14](https://soracomug-tokyo.connpass.com/event/323443/)|福岡|![alt text](/images/ramenlife/image-4.png)![alt text](/images/ramenlife/image-5.png)![alt text](/images/ramenlife/image-6.png)![alt text](/images/ramenlife/image-7.png)|
+|7/26|[SORACOM UG 九州 ＃14](https://soracomug-tokyo.connpass.com/event/323443/)|福岡|![alt text](/images/ramenlife/image-28.png)|
 |9/7|[四国クラウドお遍路 2024 in 高知 & SORACOM UG四国 共催](https://soracomug-tokyo.connpass.com/event/324645/)|高知|![alt text](/images/ramenlife/image-8.png)|
 |9/13|[SORACOM UG 東北 #1 in 秋田](https://soracomug-tokyo.connpass.com/event/326028/)|秋田|![alt text](/images/ramenlife/image-9.png)|
 |9/14|[SORACOM UG 東北 #2 in 岩手 + JAWS-UG いわて共同開催](https://soracomug-tokyo.connpass.com/event/326049/)|岩手||
@@ -40,9 +40,7 @@ SORACOM UGは読んで字のごとくSORACOMのユーザーグループのこと
 あれ、高松と岩手はラーメンの画像がないですね。どうなってるんや！！とお怒りの皆さん。
 実は私、その場所でラーメンよりも推奨されている麺類があればまずはそちらを食べることにしています。
 したがって、うどん県高松ではラーメンではなくうどんを4杯頂いています。この通り！
-![alt text](/images/ramenlife/image-11.png)
-![alt text](/images/ramenlife/image-19.png)![alt text](/images/ramenlife/image-13.png)
-![alt text](/images/ramenlife/image-14.png)
+![alt text](/images/ramenlife/image-29.png)
 
 また、盛岡では皆さん御存知の三大麺（じゃじゃ麺、冷麺、わんこそば）をコンプリートしました。
 ![alt text](/images/ramenlife/image-15.png)
