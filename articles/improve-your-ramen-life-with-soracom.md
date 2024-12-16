@@ -43,9 +43,8 @@ SORACOM UGは読んで字のごとくSORACOMのユーザーグループのこと
 ![alt text](/images/ramenlife/image-29.png)
 
 また、盛岡では皆さん御存知の三大麺（じゃじゃ麺、冷麺、わんこそば）をコンプリートしました。
-![alt text](/images/ramenlife/image-15.png)
-![alt text](/images/ramenlife/image-16.png)
-![alt text](/images/ramenlife/image-17.png)![alt text](/images/ramenlife/image-18.png)
+![](https://storage.googleapis.com/zenn-user-upload/d9865a111d9d-20241216.png)
+
 ちなみに、わんこそばの記録は140杯で、これはちゃんとトレーニングすればもっと記録が伸ばせそうな手応えを得たので、また機会があれば挑戦した生本はありますが、次に盛岡に行ったときはラーメンを食べることにしたいと思っています。
 
 来年もSORACOM UGに参加して美味しいラーメンを食べることと皆さんにお会いできることを楽しみにしています！
