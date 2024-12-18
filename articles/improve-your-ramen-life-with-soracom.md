@@ -12,9 +12,11 @@ published: false
 
 ## はじめに
 この記事は [SORACOM Advent Calendar 2024](https://qiita.com/advent-calendar/2024/soracom) の18日目の記事です。
-三度の飯よりラーメンが好きなソリューションアーキテクトの井出です。
-みなさん、ラーメンは好きですか？私はラーメンが大好きです。
-今年1年のスマートフォンの中のラーメン画像を振り返ってみるとこんな感じになっていました。
+17日目の記事は、[@n_mikuni](https://qiita.com/n_mikuni)さんの[M5StickC PLUS・SORACOM・Alexaでゴミ捨て忘れを防止する](https://qiita.com/n_mikuni/items/62d8001e962a066ac021)でした。わたしも今年になってマンション（賃貸）から戸建て（中古）に引っ越したのでゴミ捨て忘れの問題は切実です。
+
+さて、みなさんこんにちは三度の飯よりラーメンが好きなソリューションアーキテクトの井出です。
+ちゃんとラーメン、食べてますか！？私はご多分に漏れずちゃんと食べています。
+ふと、今年1年のスマートフォンに動悸しているgoogle photo のラーメン画像を振り返ってみるとこんな感じになっていました。
 ![](https://storage.googleapis.com/zenn-user-upload/48522bdda83a-20241215.png) 
 ![alt text](/images/ramenlife/image-1.png)
 ![](https://storage.googleapis.com/zenn-user-upload/dd11e1c29957-20241215.png)
@@ -67,7 +69,7 @@ UGは土日祝日に開催されることが多いため、ご家庭の事情な
 |2|[一点張](https://tabelog.com/tokyo/A1308/A130801/13002781/)|札幌味噌ラーメン|![alt text](/images/ramenlife/image-21.png)|
 |3|[一刀家](https://tabelog.com/tokyo/A1308/A130801/13159359/)|横浜家系|![alt text](/images/ramenlife/image-22.png)|
 |4|[和](https://tabelog.com/tokyo/A1308/A130801/13165421/)|博多とんこつ|![alt text](/images/ramenlife/image-23.png)|
-|5|[天下一品](https://tabelog.com/tokyo/A1308/A130801/13195122/)|天一|![alt text](/images/ramenlife/image-24.png)|
+|5|[天下一品](https://tabelog.com/tokyo/A1308/A130801/13195122/)|天一|![](https://storage.googleapis.com/zenn-user-upload/e2a5f5498635-20241218.png)|
 
 このラーメン屋さんはどれも美味しいので、ランチタイムに行くと並ぶことが多くあります。
 このためこれらのラーメン屋さんのどれかに入れればいいなと思ってランチタイムに赤坂見附周辺を歩く際のルーティーンルートを作りましたので公開させていただきます。
@@ -77,15 +79,17 @@ UGは土日祝日に開催されることが多いため、ご家庭の事情な
 順序は前述のよく行くラーメン屋さんの表の順番と同じにしてあります。座席数やラーメンの種類などにより待ち時間が概ね長い順だと思っていただいても差し支えありません。
 
 これだけだったらソラコムと協業してソラコムのオフィスにご来訪いただく機会を増やすだけでもいいのでは？と思うかもしれません。
-もちろんそういった方法も大歓迎ですし、そのときはぜひSPS（SORACOM Partner Space）にご登録いただければと思うのですが、入社がおすすめな理由はそれ以外にもあります。
+もちろんそういった方法も大歓迎ですし、そのときはぜひ[SPS（SORACOM Partner Space）](https://soracom.jp/partners/)
+https://soracom.jp/partners/
+にご登録いただければと思うのですが、入社がおすすめな理由はそれ以外にもあります。
 
-ソラコムはコミュニケーションツールにslackを使っていて、slackには「#_{ニックネーム}」というtimesのようなチャンネルと「#ramen」チャンネルがあります。
-「#_{ニックネーム}」にはかくメンバーの日々の生活が投稿されていて、その中にはその日にラーメンの画像やそれにまつわるポエムを投稿するメンバーも多くいます。
+ソラコムはコミュニケーションツールにslackを使っていて、slackには「#_ニックネーム」というtimesのようなチャンネルと「#ramen」チャンネルがあります。
+「#_ニックネーム」にはかくメンバーの日々の生活が投稿されていて、その中にはその日にラーメンの画像やそれにまつわるポエムを投稿するメンバーも多くいます。
 :::message
 ソラコムのラーメン界隈では、何故かラーメンを食べることを「研修」という隠語で表現することが多く、こういった投稿を「研修報告」、よく研修報告をすると「勉強熱心だ」などと言われています。
 :::
 
-slackをお使いの方はご存知かと思いますが、reacji channeler という機能があり、誰かの投稿に「🍜」のreacjiで反応すると自動的にその投稿が「#ramen」に転送される仕組みになっていて、このチャンネルを購読していればソラコム社内に飛び交う無数のラーメン情報を効率よく手に入れることができます。
+slackをお使いの方はご存知かと思いますが、reacji channeler という機能があり、ソラコム社内のslackでは誰かの投稿に「🍜」のreacjiで反応すると自動的にその投稿が「#ramen」に転送される仕組みになっていて、このチャンネルを購読していればソラコム社内に飛び交う無数のラーメン情報を効率よく手に入れることができます。
 ある日の「#ramen」チャンネルの投稿は以下の通りです。
 ![alt text](/images/ramenlife/image-27.png)
 このように、reacji channeler により「#ramen」チャンネルに研修報告が転送されています。また、社員同士で一緒にラーメンを食べに行く待ち合わせのやり取りなどもされていることがわかると思います。
@@ -96,26 +100,37 @@ slackをお使いの方はご存知かと思いますが、reacji channeler と�
 そんな方でも出先でラーメン屋さんを探す作業をもう少し効率てきにやりたいと思っている方は多いのではないでしょうか？
 
 そんな方におすすめなのがGPSマルチユニットとSORACOM Fluxを使ってラーメンの位置情報を取得する方法です。このセクションではその具体的な方法についてご紹介します。
+アドカレの技術ブログとしてはここからが本題です。
 
 #### 準備
 - SORACOM アカウント
 - [GPSマルチユニットSORACOM Edition（バッテリー内蔵タイプ）スターターキット](https://soracom.jp/store/5235/)
+
+https://soracom.jp/store/5235/
 
 #### 手順
 ##### 1. GPSマルチユニットをセットアップします。
    
 [STEP 1: 電源がオンになることを確認する](https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/confirm-it-works/)
 
+https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/confirm-it-works/
+
 [STEP 2: GPS マルチユニットに IoT SIM を挿入する](https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/insert-sim/) 
 
+https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/insert-sim/
+
 :::message
-赤いトレーは絶対に捨てないでください。捨てたら終わります。
+赤いトレーはマジで絶対に捨てないでください。捨てたら終わります。
 :::
 
 [STEP 3: SORACOM ユーザーコンソールに GPS マルチユニット SORACOM Edition を登録する](https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/register/)
 
 
+https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/register/
+
 [STEP 4: 動作モードを SORACOM ユーザーコンソールで設定する](https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/setting-mode-on-console/)
+
+https://users.soracom.io/ja-jp/guides/iot-devices/gps-multiunit/setting-mode-on-console/
 
 :::message
 いろいろ試した結果、今回の使い方だと「定期送信 - 自動モード」が一番いいです。
@@ -124,9 +139,9 @@ slackをお使いの方はご存知かと思いますが、reacji channeler と�
 ##### 2. グループ設定をいじる
 
 先ほど作成したグループで「SORACOM Air for セルラー設定」から
-![alt text](image-1.png)
+![](https://storage.googleapis.com/zenn-user-upload/f1642bb9fbea-20241218.png)
 「バイナリパーサー」のトグルスイッチをONしてフォーマットに`@gpsmultiunit`を入力して保存します。
-![alt text](image-2.png)
+![](https://storage.googleapis.com/zenn-user-upload/9b015b806957-20241218.png)
 
 :::message
 ここで実施した設定の意味は[ドキュメント](https://users.soracom.io/ja-jp/docs/binary-parser/predefined-format/#gpsmultiunit)を参照のこと。
@@ -145,21 +160,23 @@ https://github.com/takao2704/tabelog_scraping/blob/main/main.py
 中身は難しくないのでこのブログでの解説は割愛します。コメントを付けてあるので読んでみてください。
 
 [requirements.txt](https://github.com/takao2704/tabelog_scraping/blob/main/requirements.txt)を参考に必要なライブラリをインストールした環境をご用意し実行ください。
-    
+
+https://github.com/takao2704/tabelog_scraping/blob/main/requirements.txt
+
 このコードを実行すると食べログのラーメン百名店のデータがCSV形式で出力されます。
 なお、ラーメン百名店は東京・大阪・東日本・西日本と4部門に別れているので、全部で400名店分のデータが出力されます。
 
 次に、このCSVをkintoneにインポートします。
 アプリストアから、CSVを読み込んで作成を選択して、ガンガン読み込んでいきます。
-![alt text](image-3.png)
-![alt text](image-4.png)
+![](https://storage.googleapis.com/zenn-user-upload/896926eb86c5-20241218.png)
+![](https://storage.googleapis.com/zenn-user-upload/d8f4214be8aa-20241218.png)
 
 スクレイピングスクリプトが吐き出したcsvを選択して、インポートしていきます。
 プレビューを見ながら文字コードを適切に選択しましょう。
-![alt text](image-5.png)
+![](https://storage.googleapis.com/zenn-user-upload/1130ece42003-20241218.png)
 
 できたら作成ボタンを押してアプリを作成します。
-![alt text](image-6.png)
+![](https://storage.googleapis.com/zenn-user-upload/0282a6ea6c47-20241218.png)
  簡単ですね。これでラーメンの名店DBにクエリを投げる準備が整いました。
 
 各フィールドの名称を半角英数字にしておきます。
@@ -175,50 +192,54 @@ https://github.com/takao2704/tabelog_scraping/blob/main/main.py
 
 APIトークンを発行します。
 アプリの設定からAPIトークンを発行します。
-![alt text](image-7.png)
+![](https://storage.googleapis.com/zenn-user-upload/9d4e4eba7b7d-20241218.png)
 
 今回は閲覧の権限のみを付与します。
-![alt text](image-8.png)
+![](https://storage.googleapis.com/zenn-user-upload/f22accb07aed-20241218.png)
 
 これらの設定は、保存して「アプリの更新までやっておかないと反映されないので忘れずにやっておきましょう」
-![alt text](image-9.png)
+![](https://storage.googleapis.com/zenn-user-upload/e1de1b235f48-20241218.png)
 
 400名店のデータベースにクエリwebAPIでクエリが投げられるようになりました。
 
 ##### 4. SORACOM Fluxのロジックを作成する
 実はこのアプリ、8月頃から作り始めて9月のJAWS UG + SORACOM UG四国で軽く発表したものを今回大幅アップデートしました。
 9月時点では、こんな感じのシンプルなものだったのですが、
-![alt text](image-10.png)
+![](https://storage.googleapis.com/zenn-user-upload/582c6ec83ee4-20241218.png)
 https://speakerdeck.com/soracom/remote-control-for-robot-arm-and-llm-with-iot?slide=17
 
 何度もフィールドテストを重ねて、今回このような形になっています。じゃーん！
-![alt text](image-11.png)
+![](https://storage.googleapis.com/zenn-user-upload/4188526e4bb1-20241218.png)
 
 おそらくここまでfluxアプリを作り込んだ人は私の他にはほぼいないのではないかと思います。
 
 それでは順番に見ていきます。
 まずはじめの紫色のボックスが「GPSマルチユニットからのデータを受信する」ボックスです。これは先程セットアップしたGPSマルチユニットの所属するグループのunified endpointからデータを受信します。
-![alt text](image-12.png)
+![](https://storage.googleapis.com/zenn-user-upload/c39fc4a828df-20241218.png)
 
 その後、二手に分かれます。上段の分岐がどうなっているか見ていきましょう。
 `payload.lon == null`という条件式で、`/v1/sims/${event.context.resource.simId}`という、SORACOM APIを叩いています。これは、GPSマルチユニットからのデータに経度が含まれていない場合、基地局のIDから位置情報を割り出すための処理です。
-![alt text](image-13.png)
+![](https://storage.googleapis.com/zenn-user-upload/d7c6fac4f54e-20241218.png)
 したがって、この次のSORACOM APIアクションでは、
 `/v1/cell_locations?mcc=${payload.sessionStatus.cell.mcc}&mnc=${payload.sessionStatus.cell.mnc}&tac=${payload.sessionStatus.cell.tac}&eci=${payload.sessionStatus.cell.eci}`
 というGETリクエストが設定されています。まさにこれが、基地局のIDから位置情報を割り出すためのAPI処理です。
 その次のrepublishアクションでは、unified endpointに来たGPSマルチユニットのデータと、基地局IDから割り出した位置情報をマージしています。
-![alt text](image-14.png)
+![](https://storage.googleapis.com/zenn-user-upload/a95766ee93b8-20241218.png)
 
 もともとはこの処理を入れていなかったのですが、私が普段生活している東京都内は地下鉄の移動も多く、駅降りてすぐに位置情報が手に入れられなければ電車を降りてすぐにラーメン屋さんに向かうことができません。
-これでは困るので、なんとかして基地局IDから位置情報を割り出す方法を考えました。ただ、テストをして気付いたのですが、SORACOMプラットフォームが持っている基地局IDの情報はハンドオーバーなどでmodifiedとなる場合IDは更新されない作りになっています。
+これでは困るので、なんとかして基地局IDから位置情報を割り出す方法を考えました。ただ、テストをして気付いたのですが、SORACOMプラットフォームが持っているセッションごとの基地局IDの情報はハンドオーバーなどでmodifiedとなる場合IDは更新されない作りになっています。
 セッションのDelete/Createが発生するとIDは更新されるのですが、これのためにセッションを切りに行くというのはデバイスの電池消費の観点およびLTE網への負荷の観点からやるべきではない実装になります。
 今後、GPS位置情報だけでなく基地局位置情報をデバイス側で取得し、ペイロードに乗せることができるデバイスを作れたときに改めて考えることにします。
 
 下段の分岐については、デバイスからのデータが位置情報を含めて完全な状態できている場合の処理でそのままrepublishします。ただし、上川の分岐と排他的になるように、`payload.lon != null`という条件式を設定しています。
 この1段目のフローの最後にあるwebhookアクションでは2段目にあるAPI/マニュアル実行トリガーに割り当てたIncoming Webhook URLにPOSTリクエストを送信しています。
+つまり、こういうことです。
+![](https://storage.googleapis.com/zenn-user-upload/f302202f7c3c-20241218.png)
+このテクニックは現状のFluxで一度受け取ったデータを保持しつつ途中で取得した新しいデータと組み合わせってその後段で再利用しようと思った場合に使えるテクニックです。
 
 それでは2段目のフローを見ていきます。
-![alt text](image-15.png)
+![](https://storage.googleapis.com/zenn-user-upload/96f0ffda3c75-20241218.png)
+
 1段目の最後のwebhookのbodyの形式（=このトリガーに入ってくるbody）は以下のようなものになっています。
 ```json
     {
@@ -252,14 +273,17 @@ eventのpayloadやcontextに入ったデータは、直後のアクションよ�
 なぜこれを入れているかというと、SIMのタグ情報を書いたり読んだりすることで、ステートフルな動作を実現しようとしています。
 
 ユーザーコンソールで言うと、SIM詳細のタグ情報のところです。これをFluxのAPIアクションで読み書きしていきます。
-![alt text](image-16.png)
+![](https://storage.googleapis.com/zenn-user-upload/25357443483d-20241218.png)
 `prev_location`と、`prev_station`と、`ts`というタグを用意しています。これらをどう使うかは3段目のフローで説明します。
 中段2段目はこのタグを読んで更に後段で再利用するためにまた、webhook アクションとIncoming Webhookを挟んでいきます。
 
 3段目のフローを見ていきます。
 大まかに説明すると、上半分が最寄り駅ベースで検索するフロー、下半分が位置情報から割り出した住所ベースで検索するフローになっています。
-![alt text](image-17.png)
+![](https://storage.googleapis.com/zenn-user-upload/177c5f61e184-20241218.png)
 まず、最初のwebhookが何をしているか見てみましょう。
+このAPIトリガーの次の分にあるwebhookアクションです。
+![](https://storage.googleapis.com/zenn-user-upload/b529d4ebf8bc-20241218.png)
+
 URLには以下のようなアドレスとパラメータが設定されています。
 
 ```
@@ -272,6 +296,7 @@ openstreetmapおよびこのAPIを提供しているnominatimは商用利用を�
 今回のような、1回線程度の規模であれば特に問題と思いますが大規模で利用することを考える場合は注意しましょう。
 
 APIの仕様は[こちらのサイト](https://nominatim.org/release-docs/latest/api/Reverse/)のとおりです.
+https://nominatim.org/release-docs/latest/api/Reverse/
 末尾に `zoom=9`というパラメータがついているのがわかると思いますが、これは日本だと都道府県レベルの精度で住所を返してくれるようになります。
 つまり、最初の分岐では今どこの都道府県にいるのかを見ていることになります。400名店分のラーメンデータベースのうち、東京と大阪で100名店ずつあるので密度が異なります。
 また、東京・大阪のデータベースには最寄り駅が書いてあり、夏から続くフィールドテストの結果、住所（市区町村や町名などの情報）で探すよりも最寄り駅ベースで探すほうが効率が良いことが確認できているためにこのような設計になっています。
@@ -323,9 +348,13 @@ APIの仕様は[こちらのサイト](https://nominatim.org/release-docs/latest
 ```
 
 都道府県が東京または大阪の場合はまず、上段の最寄り駅ベースで検索するフローに入ります。
+
+分岐後の先頭のwebhookアクションになります。
+![](https://storage.googleapis.com/zenn-user-upload/77d8d99d02c6-20241218.png)
+
 それでは最寄り駅検索のwebhookアクションの中を見てみましょう。
 
-![alt text](image-19.png)
+![](https://storage.googleapis.com/zenn-user-upload/b5cb04bd1dfc-20241218.png)
 
 アクションの実行条件文を見ると東京都または大阪府だった場合にこのアクションが動く様になっています。
 
@@ -339,7 +368,9 @@ https://www.heartrails-express.com/api/json?method=getStations&x=${event.payload
 
 今回は概念実証ということで、このAPIを利用していきます。
 
-APIの仕様は、https://www.heartrails-express.com/api.html の最寄駅情報取得 API になります。
+APIの仕様は、
+https://www.heartrails-express.com/api.html
+の最寄駅情報取得 API になります。
 
 リクエストパラメータ
 |パラメータ|値|説明|
@@ -446,20 +477,22 @@ APIの仕様は、https://www.heartrails-express.com/api.html の最寄駅情報
 
 この次のrepublishアクションでは、最寄り駅とその前後の駅3駅を配列にして、次のアクションに渡すようにしています。
 
-![alt text](image-20.png)
-
+![](https://storage.googleapis.com/zenn-user-upload/a969411aa123-20241218.png)
+![](https://storage.googleapis.com/zenn-user-upload/a70389530730-20241218.png)
 
 `"stations" : ["${payload.response.station[0].name}","${payload.response.station[0].prev}","${payload.response.station[0].next}"]`というやつがそれです。
 
 
 
-その次はこんな感じになっています。
-![alt text](image-21.png)
+その次は二股に分岐しています。
 
-またまた二股に分岐しています。
 上段の分岐はkintoneの400名店DBアプリにクエリを投げるアクションです。
+![](https://storage.googleapis.com/zenn-user-upload/82b0f8f9a35c-20241218.png)
+
 実行条件は、`event.payload.tags.prev_station != payload.stations[0]`となっておりAPIで取得した最寄り駅（先ほどrepublishアクションで作った`stations`という配列の最初の要素）がタグに書かれている前回の最寄り駅（タグに最寄り駅を書く処理はこの次で説明します）が異なる場合、つまり位置情報に変化があった場合にこのアクションが実行されるようにすることで同じ結果が連続で出力されることを抑制しています。
-kintoneのAPIは、[こちらのサイト](https://kintone.dev/en/docs/kintone/rest-api/records/get-records/)を参考にしています。
+kintoneのAPIは、[こちらのサイト](https://kintone.dev/en/docs/kintone/rest-api/records/get-records/)
+https://kintone.dev/en/docs/kintone/rest-api/records/get-records/
+を参考にしています。
 
 最初にkintoneへ設定したフィールドコードでこのようなクエリをつくります。最寄り駅とその両隣の駅に近い店舗が取得できるクエリです。
 `https://soracom.cybozu.com/k/v1/records.json?app=209&query=station like "${payload.stations[0]}" or station like "${payload.stations[1]}" or station like "${payload.stations[2]}" order by number asc limit 3`
@@ -468,21 +501,27 @@ kintoneのAPIは、[こちらのサイト](https://kintone.dev/en/docs/kintone/r
 
 
 分岐の下側はSORACOM APIアクションとなっています。
-![alt text](image-22.png)
+
+![](https://storage.googleapis.com/zenn-user-upload/148d46301c7f-20241218.png)
+
 アクションの実行条件は先ほどと同じで、位置情報に変化があった場合に実行されるようにしています。
 
 実行するSORACOM APIはsimのタグ情報を書き換える[putSimTags](https://users.soracom.io/ja-jp/tools/api/reference/#/Sim/putSimTags)APIとなっています。
+
+https://users.soracom.io/ja-jp/tools/api/reference/#/Sim/putSimTags
+
 したがって位置情報に変化があった場合に新しい最寄り駅を上書きするということをやっています。と、同時に`prev_lobation`というタグも書き換えています。
 
 というのも、今回のフローは東京・大阪の場合は最寄り駅を探しに行きますが、もし最寄り駅の近くにラーメン屋さんがなかった場合は同じ区や隣の区を住所ベースで探したい(このあとでその処理が登場します)ため、東京大阪であっても住所ベースの検索が発生する可能性もあるのでこのタイミングで古い住所`prev_location`を書き換えています。
 
 ここまでで最寄り駅ベースのラーメン店が400名店データベースから抽出できているはずなので、slackに投稿していきます。
-![alt text](image-23.png)
+![](https://storage.googleapis.com/zenn-user-upload/7de092c7d405-20241218.png)
+
 
 クエリの結果は当然JSONなので、slackに投稿するためには整形が必要です。
 が、先程も言ったようにFluxは長さが未知の配列を扱うのが尋常じゃなく難しいので、この処理はLLMの力を借ります。
 
-![alt text](image-24.png)
+![](https://storage.googleapis.com/zenn-user-upload/2754bc09936e-20241218.png)
 
 アクションの実行条件は`payload.records[0] != null`となっていて、これはkintoneが返してくるレコードが0でなければ、つまりどこかしらの店舗が見つかった場合にこのアクションが実行されるようになっています。
 
@@ -532,21 +571,23 @@ kintoneのAPIは、[こちらのサイト](https://kintone.dev/en/docs/kintone/r
 slack投稿のアクションが右にあるかと思ったらないぞ？と思った方、正解です。
 
 実はLLMに整形をさせてその内容をslackに投稿するアクションの流れがこのあと更に2回、合計3回出てきます。当初は整形用LLMのAIアクション一個ずつにつき、slack投稿アクションが一個ずつつくようにしていたのですが、これをやるとチャンネルの和の上限値20を超えてしまったためこの部分だけ共通化しました。
-![alt text](image-25.png)
+![](https://storage.googleapis.com/zenn-user-upload/fb7f57c6f78a-20241218.png)
 
 あれ？webhookアクションじゃん!Fluxにはslackアクションがあるのになぜと思った方、何故だと思いますか？
 Fluxで用意されているslackアクションはwebhookを使ってslackに投稿するもので、基本的にチャネルに直に投稿されてしまいます。
 これも夏から続くフィールドワークのフィードバックの結果、いくら自分のチャネルとはいえラーメン屋が次々出てきたら荒れてしまうし、その結果チャネルの治安が悪化する可能性もあります。また、突然の大事な情報がラーメン屋さん情報で流されてしまうことも考えられます。
 ということでできれば、同じ日のうちは同じスレッドにまとめて投稿したいという強い要望が湧いたため、webhookアクションで[slack apiのchat.postMessage](https://api.slack.com/methods/chat.postMessage)の方を使っています。
 
+https://api.slack.com/methods/chat.postMessage
+
 最後のslack投稿のあとのSORACOM APIアクションは、SIMのタグにslack投稿した際のスレッドの`ts`値を書き込んでいます。これによって次回投稿するときにタグに書かれたtsを投稿するslack apiのbodyに指定すると、同じスレッドに書くことができるわけです。
-![alt text](image-26.png)
+![](https://storage.googleapis.com/zenn-user-upload/430f7aab3e18-20241218.png)
 
 最寄り駅ベースの検索のフローは以上です。
 最寄り駅にラーメン屋さんがなかったときは、現在地が東京・大阪以外のときに実施している住所ベースで探すフローに入る必要があります。
 ただし最初の分岐の判定は東京・大阪かそれ以外かなので、ここに戻ることはできないのでその途中に戻る形になります。
 ここのwebhookは、位置情報から住所を割り出すAPIの直前のチャネルにあるincoming webhookを叩きます。
-![alt text](image-28.png)
+![](https://storage.googleapis.com/zenn-user-upload/53957960ceb1-20241218.png)
 
 これをやるためには、位置情報から住所を割り出すAPIに東京大阪かそれ以外かの実行条件の判定をくっつけてはいけないので、このような形になっています。
 またwebhookを叩くときは、それまで代々受け継がれてきた`event.payload`の値を拾ってきてもう一度bodyに入れてpostします。
@@ -554,15 +595,56 @@ Fluxで用意されているslackアクションはwebhookを使ってslackに�
 
 このあとの流れさっきとあまり変わりません。駅じゃなくて住所をキーに探しているだけです。
 こんな感じです。
-![alt text](image-29.png)
+![](https://storage.googleapis.com/zenn-user-upload/30766b5c0636-20241218.png)
 
 近接する自治体はこんな感じのプロンプトで聞いています。
-![alt text](image-30.png)
-ここでの返事はJSONにしてもらって、その後のkintone APIのクエリではJSONのvalueをパラメータにして検索をかけています。
+![](https://storage.googleapis.com/zenn-user-upload/5f11ea1a9362-20241218.png)
 
+ここでの返事はあえてJSONにして、その後のkintone APIのクエリのパラメータにではJSONのvalueを直接指定して検索をかけています。
 
 はい、だいたいこんな感じです。
 
+###### 5. Demo
+ダミーデータでデモしまーす。
+新宿を東から西に横切ります。
+|No.|緯度|経度|
+|---|---|---|
+|1| 35.687557| 139.716952|
+|2| 35.687357| 139.711755|
+|3| 35.689154| 139.706418|
+|4| 35.689126| 139.700994|
+|5| 35.683906| 139.690741|
 
-###### Demo
-ダミーデータでデモします。
+![](https://storage.googleapis.com/zenn-user-upload/cf4a491ba76a-20241218.png)
+
+
+結果：
+![](https://storage.googleapis.com/zenn-user-upload/220512d4f5e9-20241218.png)
+ まあ良さそうな仕上がりですね。
+
+##### 6. Futurework
+気が向いたらやりたいことを書いておきます。
+- 地下鉄などGPSの届かないところでの位置情報取得からのラーメン屋さんの検索
+    - GPSに加えて基地局のIDも送れるデバイス作りたい。BG770とかを狙っている。
+
+- ちょうどいいラーメン情報 as a Serviceへの課題
+    - 逆ジオコーディングAPI、駅情報API、ラーメンDBを安定的に商用利用できるAPIを探したり、DBを構築したり
+
+- フローの可読性向上
+    - Fluxのアプデに期待age
+
+- LLMでやっているところをロジックでやりたい
+    - slack投稿向けの整形処理はぶっちゃけLLM使う必要ないので、ロジックでやりたいFluxのアプデに期待age
+
+- ロジックの改善
+    - 本当に行ける範囲のラーメン屋さんをもれなくピックアップできるロジック
+    - 定休日や営業時間、場合によってはスープ切れなどの情報もリアルタイムに考慮してレコメンドに反映できるロジック
+
+- DBに入っているリストの更新、メンテナンス、ユーザー間でのレコメンド機能の追加
+    - 例えば社内で運用するなら
+        - 誰かがラーメン屋さんの食べログサイト情報をslackで投稿したらそれを自動的にスクレイピングしてDBに反映させる仕組み
+        - 写真を投稿したらその画像からどこのラーメン屋さん化を特定して食べログサイトに行ってスクレイピングしてDBに反映させる仕組み
+
+
+来年もSORACOMで充実のラーメンライフを送りましょう！
+ありがとうございました。
