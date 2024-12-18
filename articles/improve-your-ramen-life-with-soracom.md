@@ -16,7 +16,7 @@ published: true
 
 さて、みなさんこんにちは三度の飯よりラーメンが好きなソリューションアーキテクトの井出です。
 ちゃんとラーメン、食べてますか！？私はご多分に漏れずちゃんと食べています。
-ふと、今年1年のスマートフォンに動悸しているgoogle photo のラーメン画像を振り返ってみるとこんな感じになっていました。
+ふと、今年1年のスマートフォンに同期しているgoogle photo のラーメン画像を振り返ってみるとこんな感じになっていました。
 ![](https://storage.googleapis.com/zenn-user-upload/48522bdda83a-20241215.png) 
 ![alt text](/images/ramenlife/image-1.png)
 ![](https://storage.googleapis.com/zenn-user-upload/dd11e1c29957-20241215.png)
