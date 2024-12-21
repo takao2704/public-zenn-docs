@@ -190,7 +190,6 @@ https://github.com/takao2704/tabelog_scraping/blob/main/requirements.txt
 |定休日|teikyubi|
 |住所|address|
 |リンク|link|
-|住所|address|
 
 APIトークンを発行します。
 アプリの設定からAPIトークンを発行します。
