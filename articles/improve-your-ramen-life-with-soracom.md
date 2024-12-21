@@ -105,6 +105,8 @@ slackをお使いの方はご存知かと思いますが、reacji channeler と�
 ### 準備
 - SORACOM アカウント
 - [GPSマルチユニットSORACOM Edition（バッテリー内蔵タイプ）スターターキット](https://soracom.jp/store/5235/)
+- kintone
+- slack
 
 https://soracom.jp/store/5235/
 
