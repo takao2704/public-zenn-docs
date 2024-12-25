@@ -103,6 +103,12 @@ https://changelog.soracom.io/ja/soracom-flux-ni-soracom-api-akusiyongazhui-jia-s
 
 ということでそんな便利な機能を早速使っていきましょう。
 
+:::message
+以前の手順では、はじめにInventoryデバイスを作成して、WebhookでSORACOM Harvestにデータを送信するという手順がありましたが、[2024/12/9のアップデート（ソラカメ対応カメラに紐づけてデータを SORACOM Harvest Data に保存できるようになりました。）](https://changelog.soracom.io/ja/sorakamedui-ying-kameraniniu-duketedetawo-soracom-harvest-data-nibao-cun-dekiruyouninarimasita.-1j7Pi)により、ソラカメというデバイス的な概念に対して今回はSORACOM APIアクションを使って、SORACOM Harvestにデータを送信することが可能になりましたので、その手順をベースに進めていきます。
+:::
+
+
+:::details Inventoryを使った手順（参考）
 ### その前に
 その前にSORACOM Fluxで解析したデータをSORACOM Harvestにいれるための準備をしておきます。
 あれ？SORACOM HarvestってSORACOM AirとかSORACOM ArcみたいなSIM的なものが必要なんじゃ・・・と思ったそこのあなた。
@@ -145,9 +151,10 @@ https://changelog.soracom.io/ja/soracom-flux-ni-soracom-api-akusiyongazhui-jia-s
 
 ちょっと下の方にスクロールして、「SORACOM Harvest Data 設定」のトグルスイッチをONして有効化します。
 ![](https://storage.googleapis.com/zenn-user-upload/99e22c511266-20241016.png)
+:::
 
 ### いよいよFluxの設定
-このブログのクライマックスです。慌てず落ち着いていきましょう。
+それでは慌てず落ち着いていきましょう。
 
 #### タイマー起動の設定
 ハンバーガーメニューから「SORACOM Flux」-> 「Fluxアプリ」
@@ -361,6 +368,11 @@ ${payload.url}
 テストはの実施方法は省略しますが、うまくいくと以下のようなレスポンスがAIから返ってくるはずです。
 ![](https://storage.googleapis.com/zenn-user-upload/f93e67784a60-20241016.png)
 
+:::message
+以前の手順では、はじめにInventoryデバイスを作成して、WebhookでSORACOM Harvestにデータを送信するという手順がありましたが、[2024/12/9のアップデート（ソラカメ対応カメラに紐づけてデータを SORACOM Harvest Data に保存できるようになりました。）](https://changelog.soracom.io/ja/sorakamedui-ying-kameraniniu-duketedetawo-soracom-harvest-data-nibao-cun-dekiruyouninarimasita.-1j7Pi)により、ソラカメというデバイス的な概念に対して今回はSORACOM APIアクションを使って、SORACOM Harvestにデータを送信することが可能になりましたので、その手順をベースに進めていきます。
+:::
+
+:::details Inventoryを使った手順（参考）
 #### 解析させた結果（データ）と切り出した画像をSORACOM Harvestに送信する
 STUDIOに戻ると以下のようになっていると思います。
 ![](https://storage.googleapis.com/zenn-user-upload/15566e6f0bca-20241016.png)
@@ -399,6 +411,45 @@ Inventoryを使っているので、「デバイス」の中からリソース�
 
 確認するとちゃんと送られているようです。
 ![](https://storage.googleapis.com/zenn-user-upload/28fb9f19b56a-20241017.png)
+:::
+
+#### 解析させた結果（データ）と切り出した画像をSORACOM Harvestに送信する
+STUDIOに戻ると以下のようになっていると思います。
+![](https://storage.googleapis.com/zenn-user-upload/15566e6f0bca-20241016.png)
+
+当然心の目で見ると
+![](https://storage.googleapis.com/zenn-user-upload/8dfecf140946-20241016.png)
+オレンジの線が見えてきます。
+
+最後のアクションは青い箱から出ている土管に接続します。
+![](https://storage.googleapis.com/zenn-user-upload/f8c5a26e2936-20241016.png)
+
+ここではSORACOM APIアクションを使います。
+![](https://storage.googleapis.com/zenn-user-upload/ca55923064de-20241225.png)
+
+検索欄に`createSoraCamDeviceDataEntry`と入力し、表示されたパネルをクリックします。
+![](https://storage.googleapis.com/zenn-user-upload/ddb61751716c-20241225.png)
+
+URLのところの`{device_id}`をソラカメのデバイスIDに置き換えます。
+
+BODYはAIアクションのレスポンスのボディからoutputを抜き出して設定するので、`${payload.output}`となります。
+
+![](https://storage.googleapis.com/zenn-user-upload/60c0eae6fbb5-20241225.png)
+
+テストしてちゃんと送信できたか確認してみましょう。
+webhookアクションの実行履歴が緑色でcompletedとなっていればOKですが、念の為Harvest Dataの方でも確認してみます。
+
+
+「データ収集・蓄積・可視化」から、「SORACOM Harvest Data」を選択します。
+![](https://storage.googleapis.com/zenn-user-upload/d5c438dede27-20241017.png)
+
+Inventoryを使っているので、「デバイス」の中からリソースを指定して、
+![](https://storage.googleapis.com/zenn-user-upload/11b69802e9f5-20241017.png)
+
+確認するとちゃんと送られているようです。
+![](https://storage.googleapis.com/zenn-user-upload/28fb9f19b56a-20241017.png)
+
+
 
 ### SORACOM Harvestに送信されたデータをSORACOM Lagoonで表示する
 Harvest DataまでくればあとはいつもどおりLagoonで可視化するだけです。

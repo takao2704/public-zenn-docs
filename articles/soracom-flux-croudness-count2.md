@@ -401,7 +401,7 @@ STUDIOに戻ると以下のようになっていると思います。
 ![alt text](/images/soracom-flux-croudness-count2/image-13.png)
 
 最後のアクションは青い箱から出ている土管に接続します。
-今回はSORACOM APIアクションを使います。
+ここではSORACOM APIアクションを使います。
 ![](https://storage.googleapis.com/zenn-user-upload/ca55923064de-20241225.png)
 
 検索欄に`createSoraCamDeviceDataEntry`と入力し、表示されたパネルをクリックします。
@@ -412,6 +412,19 @@ URLのところの`{device_id}`をソラカメのデバイスIDに置き換え�
 BODYはAIアクションのレスポンスのボディからoutputを抜き出して設定するので、`${payload.output}`となります。
 
 ![](https://storage.googleapis.com/zenn-user-upload/60c0eae6fbb5-20241225.png)
+
+テストしてちゃんと送信できたか確認してみましょう。
+webhookアクションの実行履歴が緑色でcompletedとなっていればOKですが、念の為Harvest Dataの方でも確認してみます。
+
+
+「データ収集・蓄積・可視化」から、「SORACOM Harvest Data」を選択します。
+![](https://storage.googleapis.com/zenn-user-upload/d5c438dede27-20241017.png)
+
+Inventoryを使っているので、「デバイス」の中からリソースを指定して、
+![](https://storage.googleapis.com/zenn-user-upload/11b69802e9f5-20241017.png)
+
+確認するとちゃんと送られているようです。
+![](https://storage.googleapis.com/zenn-user-upload/28fb9f19b56a-20241017.png)
 
 
 ### SORACOM Harvestに送信されたデータをSORACOM Lagoonで表示する
