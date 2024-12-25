@@ -16,6 +16,11 @@ published: true
 こんな感じのものが出来上がります。
 ![](https://storage.googleapis.com/zenn-user-upload/ab48246b4d38-20241017.png)
 
+:::message
+タイトルのとおりですが、このブログの方法ではexport画像を保存することはできません。
+exportされた画像を保存する方法は[こちら](https://zenn.dev/takao2704/articles/soracom-flux-croudness-count2)を参照してください。
+https://zenn.dev/takao2704/articles/soracom-flux-croudness-count2
+:::
 
 ## 準備
 
