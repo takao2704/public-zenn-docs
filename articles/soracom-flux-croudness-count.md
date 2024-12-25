@@ -153,7 +153,7 @@ https://changelog.soracom.io/ja/soracom-flux-ni-soracom-api-akusiyongazhui-jia-s
 ![](https://storage.googleapis.com/zenn-user-upload/99e22c511266-20241016.png)
 :::
 
-### いよいよFluxの設定
+### Fluxの設定
 それでは慌てず落ち着いていきましょう。
 
 #### タイマー起動の設定
