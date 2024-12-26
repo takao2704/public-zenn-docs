@@ -413,7 +413,7 @@ Inventoryを使っているので、「デバイス」の中からリソース�
 ![](https://storage.googleapis.com/zenn-user-upload/28fb9f19b56a-20241017.png)
 :::
 
-#### 解析させた結果（データ）と切り出した画像をSORACOM Harvestに送信する
+### 解析させた結果（データ）と切り出した画像をSORACOM Harvestに送信する
 STUDIOに戻ると以下のようになっていると思います。
 ![](https://storage.googleapis.com/zenn-user-upload/15566e6f0bca-20241016.png)
 
