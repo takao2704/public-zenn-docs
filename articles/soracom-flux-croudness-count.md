@@ -443,8 +443,9 @@ webhookアクションの実行履歴が緑色でcompletedとなっていればO
 「データ収集・蓄積・可視化」から、「SORACOM Harvest Data」を選択します。
 ![](https://storage.googleapis.com/zenn-user-upload/d5c438dede27-20241017.png)
 
-Inventoryを使っているので、「デバイス」の中からリソースを指定して、
-![](https://storage.googleapis.com/zenn-user-upload/11b69802e9f5-20241017.png)
+データソースとしてソラカメを使っているので、「ソラカメ」の中からリソースを指定して、
+![](https://storage.googleapis.com/zenn-user-upload/1057f3a99c04-20250103.png)
+（Inventoryを使った場合は、「デバイス」を選択してリソースを指定してください。）
 
 確認するとちゃんと送られているようです。
 ![](https://storage.googleapis.com/zenn-user-upload/28fb9f19b56a-20241017.png)
