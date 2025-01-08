@@ -293,8 +293,8 @@ https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${payload.deviced
 
 これは逆ジオコーディングを行うAPIです。
 逆ジオコーディングとは、緯度経度から住所を割り出すことを意味します。このAPIはOpenStreetMapのNominatimというサーバーでホストされたAPIを使っています。
-openstreetmapおよびこのAPIを提供しているnominatimは商用利用を禁止していませんが、高頻度の利用や大規模の利用をする場合は商用サービスを利用するか、自前でサーバーを立てて利用することを推奨しています。
-今回のような、1回線程度の規模であれば特に問題と思いますが大規模で利用することを考える場合は注意しましょう。
+openstreetmapおよびこのAPIを提供しているnominatimは商用利用を禁止していませんが、高頻度の利用や大規模の利用(2024年12月時点の規約では`No heavy uses (an absolute maximum of 1 request per second)`とのことです)をする場合は商用サービスを利用するか、自前でサーバーを立てて利用することを推奨しています。
+今回のような、1回線程度の規模でGPSマルチユニットからのデータの送信頻度を抑えた方法であれば特に問題と思いますが大規模で利用することを考える場合は注意しましょう。
 
 APIの仕様は[こちらのサイト](https://nominatim.org/release-docs/latest/api/Reverse/)のとおりです.
 https://nominatim.org/release-docs/latest/api/Reverse/
