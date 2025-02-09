@@ -11,7 +11,7 @@ published: false
 ## やりたいこと
 タイトルのとおりです。ソラカメの画質をHDに保つ方法をSORACOM Fluxを使って実現します。
 
-以前書いた下記のブログで勝手を実装したら勝手に画質が下がっちゃって困ってる方向けの記事です。
+以前書いた下記のブログを実装したら勝手に画質が下がっちゃって急に精度が出なくなって困ってる方向けの記事です。
 
 https://zenn.dev/takao2704/articles/soracom-flux-croudness-count
 https://zenn.dev/takao2704/articles/soracom-flux-croudness-count2
@@ -61,7 +61,6 @@ https://sora-cam.com/setup/
 https://weathernews.jp/s/topics/202403/180215/
 
 ### カメラチェック
-![alt text](/images/soracamimagetos3towp/image-25.png)
 何はともあれ、カメラが正常に動作しているか確認しましょう。
 
 「ソラコムクラウドカメラサービス」 -> 「デバイス管理」
