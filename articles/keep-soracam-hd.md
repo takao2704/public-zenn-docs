@@ -3,7 +3,7 @@ title: "SORACOM Fluxでソラカメの画質をHDに保つ"
 emoji: "😎"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [SORACOM,ソラカメ,IoT]
-published: false
+published: true
 ---
 :::message
 「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
@@ -223,4 +223,5 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
 
 ## まとめ
 ここまでの設定で、もしソラカメの画質がlowまたはmidになった場合、自動的に画質をhighに設定することができます。
-また、5分起きに画質を取得して、その結果をSORACOM Harvest Dataに保存することができるので、もし頻繁にlowまたはmidになる場合はその時間帯や状況を把握することができ速度低下の原因究明に役立てましょう。
+また、5分起きに画質を取得して、その結果をSORACOM Harvest Dataに保存することができるので、もし頻繁にlowまたはmidになる場合はその時間帯や状況を把握することができます。
+あまりにも頻度が多い場合はボトルネックを解消する、特定のイベントに連動している場合（電子レンジを使っているタイミングで画質が落ちるなど）は、その影響を受けないようにするなど、速度低下の原因究明と抜本対策に役立てましょう。
