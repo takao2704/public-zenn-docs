@@ -524,3 +524,8 @@ Save current time range as dashboard defaultのチェックを入れて保存し
 ![](https://storage.googleapis.com/zenn-user-upload/54fa7acffdef-20241017.png)
 
 お疲れ様でした！！
+
+## 補足
+長期間運用していると、どこかのタイミングでソラカメの画質が落ちて戻らなくなることがあります。
+これは正常な動作なのですが、精度が劣化することもあるため画質を戻す必要がある場合は以下のブログの対処法を参考にしてください。
+https://zenn.dev/takao2704/articles/keep-soracam-hd
