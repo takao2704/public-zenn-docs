@@ -3,7 +3,7 @@ title: "SORACOM Air タリフチートシート(日本)"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [soracom]
-published: false
+published: true
 ---
 
 :::message
