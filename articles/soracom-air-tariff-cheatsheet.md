@@ -14,7 +14,7 @@ published: false
 日本で使うとき、結局どのプランを選べばいいかいっぱいありすぎてわからなくなっちゃうときがあるのでまとめてみました。
 商談中にドヤ顔早口でテクニカル話をしてたのに急に値段のこと聞かれた途端、急に答えられなくなっちゃうのカッコ悪いので。
 
-## プラン別機能比較（よく気にする項目）
+## グローバルカバレッジプラン別機能比較（よく気にする項目）
 
 | 項目 | [plan01s](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01s) | [plan01s - Low Data Volume](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01sLDV) | [planX1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX1) | [planX2](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_esim_profile_download/#planX2) | [planP1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planP1) | [planX3](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX3) |
 |--------------|---------|------------------------|--------|--------|--------| ------ |
@@ -23,8 +23,8 @@ published: false
 | **KDDI** |  ✓  |  ✓  |  ✓  |  ✓  |  |  |
 | **LTE-M 対応可否** | ✓ | ✓ | ✓ |  |  | ✓ |
 | **tokyoLBO** | ✓ | ✓ | ✓ | ✓ | ✓ |  |
-| **プリイン** | black | black |  |  | navy | orange |
-| **QR** | ✓ |  | ✓ | ✓ | ✓ |  |
+| **プリインSIMの色** | black | black |  |  | navy | orange |
+| **eSIMプロファイル（QR）** | ✓ |  | ✓ | ✓ | ✓ |  |
 | **embedded SIM** | ✓ | ✓ |  |  |  | ✓ |
 
 
@@ -66,6 +66,7 @@ published: false
 
 ### 複数キャリア対応、超小容量（〜5MiB/月）
 ![alt text](/images/cheatsheet/image-2.png)
+
 分岐点
 - plan01s LDV = planX3
 
@@ -85,11 +86,11 @@ published: false
 ![alt text](/images/cheatsheet/image-3.png)
 
 ### plan-DUのバンドルプラン
+![alt text](/images/cheatsheet/image-5.png)
 
 分岐点
 下記のしきい値を超えたら一度高い方のバンドルに切り替えてすぐに戻すとその月は高いバンドルの料金が適用される。
 （バンドルが低いプランのままだと、しきい値を超えた分の料金が高くなってしまう逆転現象が発生する）
-![alt text](/images/cheatsheet/image-5.png)
 - DU-10GB = DU-50GB
 
     20GB/月 
@@ -99,14 +100,18 @@ published: false
     70GB/月
 
 ### plan-DU vs plan-D D300MB
+![alt text](/images/cheatsheet/image-7.png)
+
 plan-DUで下りの使いすぎに注意。
 上り：下りの不均衡が、概ね8：2を超えるとplan-D D300MBのほうが安くなる。
-![alt text](/images/cheatsheet/image-7.png)
 
 
 ### plan-KM1
-うっかりplan-KM1の使いすぎに注意。
 ![alt text](/images/cheatsheet/image-6.png)
+
+うっかりplan-KM1の使いすぎに注意。
+
+
 | 通信量 | 月額料金|
 |---------|--------|
 | 10kB | 116円 |
