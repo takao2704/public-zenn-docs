@@ -10,13 +10,18 @@ published: true
 「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
 :::
 
+:::message
+この記事はブログ執筆時（2025年2月）の情報をもとにして作成しています。
+念の為最新の情報を[こちら](https://soracom.jp/services/air/cellular/pricing/)からご確認ください。
+:::
+
 ## はじめに
 日本で使うとき、結局どのプランを選べばいいかいっぱいありすぎてわからなくなっちゃうときがあるのでまとめてみました。
 商談中にドヤ顔早口でテクニカル話をしてたのに値段のこと聞かれた途端、急に答えられなくなっちゃうのカッコ悪いので。
 
 ## グローバルカバレッジプラン別機能比較（よく気にする項目）
 
-| 項目 | [plan01s](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01s) | [plan01s - Low Data Volume](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01sLDV) | [planX1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX1) | [planX2](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_esim_profile_download/#planX2) | [planP1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planP1) | [planX3](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX3) |
+| 項目 | [plan01s](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01s) | [plan01s - Low Data Volume](https://soracom.jp/services/air/cellular/pricing/price_iot_sim/#plan01sLDV) | [planX1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX1) | [planX2](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX2) | [planP1](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planP1) | [planX3](https://soracom.jp/services/air/cellular/pricing/price_iot_sim_add_subscription/#planX3) |
 |--------------|---------|------------------------|--------|--------|--------| ------ |
 | **docomo** |  ✓  |  |  ✓  |  | ✓ | ✓  |
 | **softbank** |  ✓  |  ✓  |  ✓  |  |  ✓  | ✓  |
