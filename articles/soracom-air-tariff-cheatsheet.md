@@ -43,13 +43,13 @@ published: true
 ![alt text](/images/cheatsheet/image.png)
 
 月額料金代表値
-|| plan01s | planX1 (D,SB,K) | planX1 (SB,K) | planX3 |
+|| plan01s (D,SB,K) | planX1 (D,SB,K) | planX1 (SB,K) | planX3 (D,SB) |
 |---------|--------|--------|--------|------|
 |@100MiB/月| 21.9 | 21.8 | 3.8 | 7.9 |
 |@200MiB/月| 41.9 | 41.8 | 5.8 | 15.2 |
 |@300MiB/月| 61.9 | 61.8 | 7.8 | 22.5 |
 
-この領域ではplan01s ≒ planX1(D,SB,K) > planX3 > planX1(SB,K)の順で月額料金が高い。
+この領域ではplan01s(D,SB,K) ≒ planX1(D,SB,K) > planX3 (D,SB) > planX1(SB,K)の順で月額料金が高い。
 
 ### 複数キャリア対応、小容量（〜60MiB/月）
 
@@ -106,7 +106,6 @@ published: true
 
 ### plan-DU vs plan-D D300MB
 ![alt text](/images/cheatsheet/image-7.png)
-
 plan-DUで下りの使いすぎに注意。
 上り：下りの不均衡が、概ね8：2を超えるとplan-D D300MBのほうが安くなる。
 
