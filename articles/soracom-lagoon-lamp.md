@@ -18,13 +18,13 @@ SORACOM Lagoonで可視化を行う際に、信号灯のように正常な場合
 ## 事前準備
 ### 1. SORACOM Harvest Dataにデータを貯める
 
-    https://users.soracom.io/ja-jp/docs/harvest/send-data/
+https://users.soracom.io/ja-jp/docs/harvest/send-data/
 
 ※まだデータがない場合はデモデータが使えるので必須ではない
 
 ### 2. SORACOM Lagoon 3 の利用を開始する
 
-    https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
+https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
 
 ## 手順
 ### 1. Folder を作成する
