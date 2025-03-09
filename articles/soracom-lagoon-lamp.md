@@ -13,6 +13,8 @@ published: true
 SORACOM Lagoonで可視化を行う際に、信号灯のように正常な場合は緑、異常な場合は赤のランプ表示で状態を確認できるダッシュボードを作る。
 こんな感じのやつ
 ![alt text](/images/lagoon-lamp/image-20.png)
+または
+![alt text](/images/lagoon-lamp/chap2/image-10.png)
 
 
 ## 事前準備
