@@ -1,3 +1,11 @@
+---
+title: "センチュリー・システムズのルーターにlighttpdをインストールしてCGIを有効にする方法"
+emoji: "📡"
+type: "tech" # tech: 技術記事 / idea: アイデア
+topics: [SORACOM,IoT]
+published: false
+---
+
 # センチュリー・システムズのルーターにlighttpdをインストールしてCGIを有効にする方法
 
 この記事では、センチュリー・システムズのLTEルーター（Ubuntu上で動作）にlighttpdをインストールし、CGIを有効にしてシェルスクリプトを動作させる手順を説明します。
