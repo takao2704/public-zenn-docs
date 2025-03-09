@@ -77,6 +77,16 @@ https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
     |Threshold | 0.3 / 0.7 | 0.3 / 0.7 | 0.3 / 0.7 |
     |X/Y Positions| 30 / 50 | 50 / 50 | 70 / 50 |
 
+    `Save` をクリックして保存するとこのようなダッシュボードができます。
+    ![alt text](image-19.png)
+
+    `Device-1`のbattery値が`0.32`、`Device-2`のbattery値が`1`、`Device-3`のbattery値が`0`の場合の表示です。
+    これでもいいのですが、これだとどのアイコンがどのデバイス／センサーの値かわからないので、アイコンごとにパネルを分けてしまうのも一つの手です。
+    ![alt text](image-20.png)
+
+
+以上、お疲れ様でした。
+
 
 
 
