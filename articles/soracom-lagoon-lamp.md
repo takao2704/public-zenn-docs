@@ -102,44 +102,44 @@ Timeseries Panel が2枚できました。
 ![alt text](/images/lagoon-lamp/image-15.png)
 
 `Visualization` で `Canvas` を選択
-![alt text](image.png)
+![alt text](/images/lagoon-lamp/chap2/image.png)
 
 `Layer`の中にある`Elements`でデフォルトで入っている`Element1`を削除
-![alt text](image-1.png)
+![alt text](/images/lagoon-lamp/chap2/image-1.png)
 
 `Layer`の中にある`Elements`で`+ Add Element`をクリックし、`Icon`を選択
-![alt text](image-2.png)
+![alt text](/images/lagoon-lamp/chap2/image-2.png)
 これを３つ追加します。
 
 以下のようになっているはずです。
-![alt text](image-3.png)
+![alt text](/images/lagoon-lamp/chap2/image-3.png)
 
 `Element1`をクリックすると、`Selected element(Element1)`というフィールドが現れます。
-![alt text](image-4.png)
+![alt text](/images/lagoon-lamp/chap2/image-4.png)
 
 `SVG path`をクリックして好きなアイコンを選択したら`Select`をクリックします。
-![alt text](image-5.png)
+![alt text](/images/lagoon-lamp/chap2/image-5.png)
 
 `Fill color`を選択して、`Devuce-1 battery`を選択します。
 
 `Thresholds`を設定します。`0.3`と`0.7`を入力します。
-![alt text](image-6.png)
+![alt text](/images/lagoon-lamp/chap2/image-6.png)
 
 `Elements2`と`Elements3`も同様に設定します。
 このとき、Layoutのleftを`100`,`200`にして、それぞれのアイコンを配置します。
 こんな感じになればOKです。`Apply`をクリックして保存します。
-![alt text](image-7.png)
+![alt text](/images/lagoon-lamp/chap2/image-7.png)
 
 パネルのサイズを調整して、
-![alt text](image-8.png)
+![alt text](/images/lagoon-lamp/chap2/image-8.png)
 
 更に`text`の`Element`を追加して、そこに`Sensor-1`、`Sensor-2`、`Sensor-3`を表示するとわかりやすくなります。
 
 設定画面
-![alt text](image-9.png)
+![alt text](/images/lagoon-lamp/chap2/image-9.png)
 
 結果
-![alt text](image-10.png)
+![alt text](/images/lagoon-lamp/chap2/image-10.png)
 
 
 `Canvas`のほうが設定はめんどくさいですが、配置設定の柔軟性やIconと色を比較的自由に決めることができて便利です。
