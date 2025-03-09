@@ -11,17 +11,23 @@ published: true
 
 ## やりたいこと
 SORACOM Lagoonで可視化を行う際に、信号灯のように正常な場合は緑、異常な場合は赤のランプ表示で状態を確認できるダッシュボードを作る。
+こんな感じのやつ
+![alt text](/images/lagoon-lamp/image-20.png)
+
 
 ## 事前準備
-1. SORACOM Harvest Dataにデータを貯める
-https://users.soracom.io/ja-jp/docs/harvest/send-data/
+### 1. SORACOM Harvest Dataにデータを貯める
+
+    https://users.soracom.io/ja-jp/docs/harvest/send-data/
+
 ※まだデータがない場合はデモデータが使えるので必須ではない
 
-2. SORACOM Lagoon 3 の利用を開始する
-https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
+### 2. SORACOM Lagoon 3 の利用を開始する
+
+    https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
 
 ## 手順
-1. Folder を作成する
+### 1. Folder を作成する
     `Dashboards` の `Browse` タブ から `New` をクリックして
 
     ![alt text](/images/lagoon-lamp/image-3.png)
@@ -33,7 +39,7 @@ https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
     適切なフォルダ名を入力して `Create` をクリックする
     ![alt text](/images/lagoon-lamp/image-5.png)
 
-2. DashboardとTime Series(時系列の折れ線グラフ) Panel を作成する
+### 2. DashboardとTime Series(時系列の折れ線グラフ) Panel を作成する
     遷移した画面から `+ Create Dashboard` をクリックして
 
     ![alt text](/images/lagoon-lamp/image-6.png)
@@ -58,7 +64,7 @@ https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
     Timeseries Panel が2枚できました。
     ![alt text](/images/lagoon-lamp/image-14.png)
 
-3. 信号機のようなランプ表示のパネルを作る
+### 3. 信号機のようなランプ表示のパネルを作る
 
     `Panel Title` をクリックして出てくるプルダウンから `Edit` をクリック
     ![alt text](/images/lagoon-lamp/image-15.png)
