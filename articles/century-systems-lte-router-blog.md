@@ -88,7 +88,7 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
        alias.url += (
            "/cgi-bin/" => "/usr/lib/cgi-bin/"
        )
-       # 拡張子なしファイルをCGIとする場合
+       # 拡張子なしファイルをCGIとする
        cgi.assign = ( "" => "" )
    }
    
