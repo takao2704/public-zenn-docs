@@ -117,9 +117,9 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
    ```bash
    systemctl restart lighttpd
    ```
-
+   
 4. **シェルスクリプトの設置**
-
+   
    必要なディレクトリを作成し、スクリプトを配置します。
 
    ```bash
@@ -154,7 +154,7 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
    echo 1 > /sys/class/leds/DO0/brightness  
    echo '{"result":"close"}'
    ```
-
+   
 5. **tmpfilesでのパーミッション調整**
 
    `/etc/tmpfiles.d/leds.conf`を作成して以下を記述し、CGIからLED制御が可能なように設定します。
