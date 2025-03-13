@@ -45,16 +45,17 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
 
 3. **lighttpdのインストールとCGIの設定**
 
-   まず、ルーターにシリアルコンソールでアクセスし、以下のコマンドを実行してlighttpdをインストールします。
+   まず、ルーターにシリアルコンソールでアクセスし、
    :::message
    初期のid,passwordは`root`,`root`です。
    :::
 
    :::message
-   ローカルからSSH接続することも可能で、その場合の初期のid,passwordは`user1`,`user1`です。
-   その場合の以下のコマンドは`sudo`を付けて実行してください。
+   ローカルからSSH接続することも可能で、初期のid,passwordは`user1`,`user1`です。
+   その場合の本ブログで実行するコマンドはすべて`sudo`を付けて実行してください。
    :::
 
+  　以下のコマンドを実行してlighttpdをインストールします。
    ```bash
    apt-get update
    apt-get install lighttpd
