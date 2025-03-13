@@ -12,7 +12,7 @@ published: true
 ## やりたいこと
 センチュリー・システムズのLTEルーターに搭載されている、DO（デジタル出力）を遠隔操作してLチカ（LEDをチカっと光らせる行為）を行います。
 
-![alt text](/images/lchika/output.gif)
+![alt text](/images/lchika/compressed.gif)
 
 ## 概要
 センチュリーシステムズ社のMAシリーズのゲートウェイは接点出力信号を持っており、OSはLinux（Ubuntu）を採用しています。
@@ -235,7 +235,7 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
 
   テスト実行の様子
 
-   ![alt text](/images/lchika/output.gif)
+   ![alt text](/images/lchika/compressed.gif)
 
 以上、お疲れ様でした！
 
