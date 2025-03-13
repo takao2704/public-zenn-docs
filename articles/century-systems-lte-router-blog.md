@@ -204,13 +204,13 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
    以下のようなことを実施するフローを作っていきます。
    - IoTデバイストリガ
    - SORACOM API アクション(上段)
-    接点を開くAPI（`GET /DO0/open`）を実行
-    - アクションの実行条件：`payload.command == "open"`
-     ![alt text](/images/lchika/image-16.png)
-    - API : sendDownlinkHTTP
-     ![alt text](/images/lchika/image-17.png)
-    - HTTP ボディ : 
-     ```json
+     接点を開くAPI（`GET /DO0/open`）を実行
+     - アクションの実行条件：`payload.command == "open"`
+      ![alt text](/images/lchika/image-16.png)
+     - API : sendDownlinkHTTP
+      ![alt text](/images/lchika/image-17.png)
+       - HTTP ボディ : 
+       ```json
        {
          "method": "GET",
          "path": "/DO0/open",
@@ -218,21 +218,21 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
          "skipVerify": true,
          "ssl": false
        }
-     ```
-    - SORACOM API アクション(下段)
-    接点を閉じるAPI（`GET /DO0/close`）を実行
-    - アクションの実行条件：`payload.command == "close"`
-    - API : sendDownlinkHTTP
-    - HTTP ボディ : 
-     ```json
-       {
-         "method": "GET",
-         "path": "/DO0/close",
-         "port": 50080,
-         "skipVerify": true,
-         "ssl": false
-       }
-     ```
+       ```
+     - SORACOM API アクション(下段)
+      接点を閉じるAPI（`GET /DO0/close`）を実行
+       - アクションの実行条件：`payload.command == "close"`
+       - API : sendDownlinkHTTP
+       - HTTP ボディ : 
+        ```json
+         {
+          "method": "GET",
+          "path": "/DO0/close",
+          "port": 50080,
+          "skipVerify": true,
+          "ssl": false
+         }
+        ```
 2. **テスト実行**
   作成したフローをテスト実行します。
   IoTデバイストリガのボックスをクリックします。
