@@ -1,9 +1,9 @@
 ---
 title: "センチュリー・システムズのルーターのDO（デジタル出力）を遠隔操作する（入門編）"
-emoji: "📡"
+emoji: "💡"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [SORACOM,IoT,Ubuntu,lighttpd,CGI]
-published: false
+published: true
 ---
 :::message
 「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
@@ -12,14 +12,14 @@ published: false
 ## やりたいこと
 センチュリー・システムズのLTEルーターに搭載されている、DO（デジタル出力）を遠隔操作してLチカ（LEDをチカっと光らせる行為）を行います。
 
-![alt text](output.gif)
+![alt text](/images/lchika/output.gif)
 
 ## 概要
 センチュリーシステムズ社のMAシリーズのゲートウェイは接点出力信号を持っており、OSはLinux（Ubuntu）を採用しています。
 ゲートウェイにHTTPサーバーを立てておき、リクエストをトリガにしてゲートウェイのDOを遠隔操作できるようにしておきます。
 デバイスにHTTPリクエストを送信する仕組みとしては、[2025/3/10にリリース](https://changelog.soracom.io/ja/ssh-to-http-woshi-tutedebaisunikomandoyarikuesutowosong-xin-siteshi-xing-jie-guo-woshou-kequ-reruyouninarimasita-downlink-api-9nRT2)された[DownlinkAPI](https://users.soracom.io/ja-jp/docs/device-downlink/)を利用します。
 
-![alt text](image-13.png)
+![alt text](/images/lchika/image-13.png)
 
 ## 必要なもの
 - センチュリー・システムズのLTEルーター（今回は MA-S120/L）
@@ -39,7 +39,7 @@ published: false
 
 2. **ファイアウォール設定**
    `Firewall 設定`の画面から、`Filter 設定`のタブを選択し、TCPの80番ポートと50080番ポートを開放します。
-   ![alt text](image-14.png)
+   ![alt text](/images/lchika/image-14.png)
 
   　
 
@@ -193,15 +193,15 @@ published: false
 SORACOM Fluxの設定をしていきます。
 SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/docs/flux/overview/)をご覧ください。
 1. **設定の概要**
-   ![alt text](image-15.png)
+   ![alt text](/images/lchika/image-15.png)
    以下のようなことを実施するフローを作っていきます。
    - IoTデバイストリガ
    - SORACOM API アクション(上段)
     接点を開くAPI（`GET /DO0/open`）を実行
     - アクションの実行条件：`payload.command == "open"`
-     ![alt text](image-16.png)
+     ![alt text](/images/lchika/image-16.png)
     - API : sendDownlinkHTTP
-     ![alt text](image-17.png)
+     ![alt text](/images/lchika/image-17.png)
     - HTTP ボディ : 
      ```json
        {
@@ -230,10 +230,12 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
   作成したフローをテスト実行します。
   IoTデバイストリガのボックスをクリックします。
   `テスト実行`のタブで、bodyに`{"command":"open"}`または、`{"command":"close"}`を入力して`実行`をクリックしテスト実行の結果、接点が開閉されることを確認します。
-  ![alt text](image-18.png)
+  
+   ![alt text](/images/lchika/image-18.png)
 
   テスト実行の様子
-  ![alt text](output.gif)
+
+   ![alt text](/images/lchika/output.gif)
 
 以上、お疲れ様でした！
 
