@@ -35,7 +35,7 @@ published: true
 
    ルーターのセットアップを行います。詳細は[こちら](https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/)を参照してください。
 
-   https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
+https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
 
 2. **ファイアウォール設定**
    `Firewall 設定`の画面から、`Filter 設定`のタブを選択し、TCPの80番ポートと50080番ポートを開放します。
