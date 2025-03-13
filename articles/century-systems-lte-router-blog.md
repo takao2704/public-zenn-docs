@@ -54,8 +54,8 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
    ローカルからSSH接続することも可能で、初期のid,passwordは`user1`,`user1`です。
    その場合の本ブログで実行するコマンドはすべて`sudo`を付けて実行してください。
    :::
-
-  　以下のコマンドを実行してlighttpdをインストールします。
+  　
+   以下のコマンドを実行してlighttpdをインストールします。
    ```bash
    apt-get update
    apt-get install lighttpd
@@ -98,11 +98,11 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
      "^/DO([0-9]+)/close$" => "/cgi-bin/DO$1/close"
    )
    ```
-
-  :::message
-  若干複雑な設定になってしまっていますが、なんとなく`cgi-bin`をHTTPリクエストのパスからなくしておきたかったのと、拡張子もなしでCGIを実行できるようにしておいたほうがかっこいいかなと思っての設定です。
-  リライト機能を使うことで、`/DO0/open`のようなURLを`/cgi-bin/DO0/open`にマッピングしてCGIを実行できるようにします。
-  :::
+   
+   :::message
+   若干複雑な設定になってしまっていますが、なんとなく`cgi-bin`をHTTPリクエストのパスからなくしておきたかったのと、拡張子もなしでCGIを実行できるようにしておいたほうがかっこいいかなと思っての設定です。
+   リライト機能を使うことで、`/DO0/open`のようなURLを`/cgi-bin/DO0/open`にマッピングしてCGIを実行できるようにします。
+   :::
 
 
    リライト機能とCGIを有効化します。
