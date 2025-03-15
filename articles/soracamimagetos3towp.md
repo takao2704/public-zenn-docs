@@ -94,7 +94,7 @@ APIを利用するためには、APIキーを発行する必要があります�
         {
         "api": [
             "SoraCam:exportSoraCamDeviceRecordedImage",
-            "SoraCam: getSoraCamDeviceExportedImage",
+            "SoraCam:getSoraCamDeviceExportedImage",
             "OAuth2:authorize"
         ],
         "effect": "allow"
