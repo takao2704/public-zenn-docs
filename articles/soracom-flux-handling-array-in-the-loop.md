@@ -45,7 +45,6 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     ![alt text](/images/202505/image-39.png)
 
     
-    出力チャネル： Output
 
     出力されるJSON
     ```json
@@ -149,6 +148,9 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     }
     ```
     :::
+    出力チャネル： Output
+
+
 2. ループカウンタ(num)とループ上限(length)と分解したい配列をセット
 
     入力チャネル：Output
@@ -181,7 +183,6 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
 
     ![alt text](/images/202505/image-40.png)
 
-    出力チャネル： Output Channel
 
     出力されるJSON
     ```json
@@ -193,11 +194,13 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     ```
     ※`objects`の中身は省略しています。
     :::
+    
+    出力チャネル： Output Channel
 
 3. `num`のインクリメントと`payload.objects`の`num`番目の要素の取り出し
-  
-    :::details Repubishブロックの設定
     入力チャネル： Output Channel
+
+    :::details Repubishブロックの設定
     ```json
     {
         "num":0,
@@ -216,7 +219,6 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     | CONFIG | Content |{<br>"num":${payload.num+1},<br>"length": ${payload.length},<br>"objects": ${payload.objects}<br>} | 入力された`num`をインクリメントして出力する。<br> インクリメントの`+1`は`${}`内に書く。<br>`length`と`objects`はそのまま出力する。 |
     |OUTPUT | 送信先チャネル | Output Channel | 入力チャネルに戻して再びこのアクションに入ってくるようにループをかける |
 
-    出力チャネル： Output Channel（このアクションへの入力チャネルと同じ）
 
     ```json
     {
@@ -228,6 +230,10 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     ※`objects`の中身は省略しています。
 
     :::
+
+    出力チャネル： Output Channel（このアクションへの入力チャネルと同じ）
+
+
 4. num番目の要素を通知
     入力チャネル： Output Channel
     :::details Slack通知アクションの設定
@@ -252,8 +258,6 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     ![alt text](/images/202505/image-41.png)
 
     :::
-
-    出力チャネル： Quality Data
 
 ### 実行結果
 以下のようにSORACOMのSlackに通知されます。
