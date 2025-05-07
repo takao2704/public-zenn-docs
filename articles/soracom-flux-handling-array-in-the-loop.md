@@ -194,7 +194,7 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     ```
     ※`objects`の中身は省略しています。
     :::
-    
+
     出力チャネル： Output Channel
 
 3. `num`のインクリメントと`payload.objects`の`num`番目の要素の取り出し
@@ -251,7 +251,7 @@ SORACOM Flux is 何？という方は[こちら](https://users.soracom.io/ja-jp/
     | 大項目 | 詳細項目| 設定値 | 備考 |
     | --- | ------ | --- | ------ |
     | CONDITION | アクションの実行条件 | 空欄 |  |
-    | CONFIG | URL |  |  |
+    | CONFIG | URL | `https://hooks.slack.com/services`から始まるURL | sebhookURLは[こちら](https://users.soracom.io/ja-jp/guides/other-services/notifications/slack-app-incoming-webhook/#slack-app-%e3%81%ae-incoming-webhook-%e3%81%ae-webhook-url-%e3%82%92%e7%99%ba%e8%a1%8c%e3%81%99%e3%82%8b)の方法を参照してして入手する |
     | CONFIG | Payload | ${payload.num} : <br> ${payload.objects[payload.num]} | 1行目に番号を、2行目に`payload.objects`の `num`番目の要素をいれる |  |
     |OUTPUT | アクションのアウトプットを別のチャネルに送信する | 無効 | |
 
