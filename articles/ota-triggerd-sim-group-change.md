@@ -10,6 +10,7 @@ published: false
 :::
 
 ## やりたいこと
+
 SIMのプラン（サブスクリプション）のOTA（Over The Air）による変更が完了したと同時に、そのSIMが所属しているグループを移動させます。
 
 サブスクリプションコンテナのOTAはユーザーコンソールなどで設定した後に実施されるのですが、通信状態やその間に行われるいろいろな処理の実施進捗によって実際にサブスクリプションが切り替わって新しいプランが適用されるタイミングは異なります。
@@ -57,16 +58,19 @@ sequenceDiagram
 ```
 
 ## 実現方法
+
 　サブスクリプションコンテナのOTA完了をイベントハンドラで検知し、検知したと同時にSORACOM FluxのWebhookを実行します。
 　SORACOM FluxのWebhookをトリガーにして、SORACOM APIを実行し、SIMのグループを変更します。
 
 ## 準備するもの
+
 - SORACOM アカウント
 - SORACOM IoT SIM
 - SORACOM Beamなどの転送先のサーバー（この部分は本ブログでは言及しません）
 
 ## 手順
-0. （前提）移行前のSIMはすべて同じグループに入っているものとします。　
+
+0. （前提）移行前のSIMはすべて同じグループに入っているものとします。
  今回の例では以下のように、すべてのSIMが「group_from」というグループに入っているものとします。
  ![alt text](/images/202505/image-13.png)
 
@@ -105,39 +109,43 @@ sequenceDiagram
  「SORACOM API」を選択してOKをクリックします。
  ![alt text](/images/202505/image-31.png)
  アクションの実行条件に
+
  ```
  payload.otastatus == "finished"
  ```
- 
+
  を入力します。
  ![alt text](/images/202505/image-32.png)
  configのAPI検索フォームに
  'setsimgropup'と入力して、「setSimGroup （IoT SIM を SIM グループに所属させる）」を選択します。
  ![alt text](/images/202505/image-32.png)
  URL欄のプレイスホルダーを`${payload.simId}`として、全体が以下のようになればOKです。
+
  ```
  /v1/sims/${payload.simId}/set_group
  ```
+
  HTTPボディは先ほどメモした移行後のグループIDを設定します。.
+
  ```json
  {
   "groupId": "移行後のグループID"
  }
  ```
- 
+
  以下のようになっていればOKです。
  ![alt text](/images/202505/image-33.png)
- 
+
  注意点を理解したらチェックボックスを入れて、新しくSAMを作成するを選択して、アウトプットを有効化して、送信先チャネルを新しく作成して作成をクリックします。
  ![alt text](/images/202505/image-34.png)
- 
+
  以下のような感じになっていればOKです。
  ![alt text](/images/202505/image-35.png)
- 
+
  基本はこれでOKなのですが、進捗やエラーの確認をするためにslackに通知をするようにします。
  下記を参考にして、slackのIncoming Webhookを作成します。
- https://users.soracom.io/ja-jp/guides/other-services/notifications/slack-app-incoming-webhook/
- 
+ <https://users.soracom.io/ja-jp/guides/other-services/notifications/slack-app-incoming-webhook/>
+
  先ほど設定したSORACOM APIとパラレルになるように「slack通知」アクションを追加します。
  ![alt text](/images/202505/image-36.png)
 
@@ -147,7 +155,6 @@ sequenceDiagram
  「+イベント作成」をクリックします。
  ![alt text](/images/202505/image-19.png)
  イベント名を「」
-
 
 2. 移行前のグループにあるSIMをOTAで新しいサブスクリプションに変更します。
 3. OTAが完了するのを待ちます。
