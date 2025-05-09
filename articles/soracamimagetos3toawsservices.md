@@ -12,11 +12,11 @@ published: false
 
 ## やりたいこと
 ソラカメで撮影した画像をAWSのサービスを使って解析して表示する！
-![alt text](image-47.png)
+![alt text](/images/202505/image-47.png)
 
 構成はこんな感じ
 
-![alt text](image-46.png)
+![alt text](/images/202505/image-46.png)
 
 ## 準備
 ### 必要なもの
@@ -377,20 +377,19 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
     https://github.com/takao2704/public-zenn-docs/raw/refs/heads/main/files/soracam-viewer.zip
     
 2.    AWS Amplifyを開きます。
-    ![alt text](image-43.png)
+    ![alt text](/images/202505/image-43.png)
 
 3. アプリをデプロイしていきます。
     「新しいアプリを作成」から「Gitなしでデプロイ」を選択して「次へ」。
-    ![alt text](image-44.png)
+    ![alt text](/images/202505/image-44.png)
 
 4. zipファイルをアップロード
     アプリケーションの名称（任意）を設定して、「ドラッグアンドドロップ」からファイルを選択してアップロードし、「保存してデプロイ」。
 
 5. デプロイが完了したら、URLをクリックしてアプリケーションにアクセスします。
-    ![alt text](image-45.png)
 
-6. S3バケット名を入力して「表示」ボタンをクリックしたら画像が表示されることを確認します。
-    ![alt text](image-46.png)
+6. S3バケット名とプレフィックスを入力して「表示」ボタンをクリックしたら画像が表示されることを確認します。
+    ![alt text](/images/202505/image-48.png)
 
 ## ソラカメの画像をrekognitionで解析する
 
@@ -573,4 +572,5 @@ Lambda関数のIAMポリシーを更新して、S3とRekognitionへのアクセ�
         ]
     }
     ```
+    
 7. 
