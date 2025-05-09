@@ -70,6 +70,8 @@ sequenceDiagram
 
 ## 手順
 
+### SIMとグループの設定
+
 0. （前提）移行前のSIMはすべて同じグループに入っているものとします。
  今回の例では以下のように、すべてのSIMが「group_from」というグループに入っているものとします。
  ![alt text](/images/202505/image-13.png)
@@ -83,6 +85,8 @@ sequenceDiagram
  この後の手順でこのグループのIDを使用しますので、メモしておきます。
  ![alt text](/images/202505/image-17.png)
  作成が完了したら必要な設定（Beam等の転送設定etc.）を行います。
+
+### SORACOM Fluxの設定
 
 1. SORACOM Fluxを設定します。
  ハンバーガーメニューから「SORACOM Flux」の中にある「Flux アプリ」を選択します。
