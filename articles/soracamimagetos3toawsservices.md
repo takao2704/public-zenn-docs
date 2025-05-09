@@ -392,7 +392,7 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
     上段の枠内に画像が表示されたら成功です（下段はこれから作り込んでいきますのでまだ表示されません）
     ![alt text](/images/202505/image-48.png)
 
-## ソラカメの画像をrekognitionで解析する
+## ソラカメの画像をAmazon Rekognitionで解析する
 
 1. AWSマネジメントコンソールからLambda関数を作成
    - ランタイム: `Python 3.13`
