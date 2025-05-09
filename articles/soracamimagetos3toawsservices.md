@@ -557,7 +557,10 @@ def lambda_handler(event, context):
     - ZIPファイルをダウンロード
         https://github.com/takao2704/public-zenn-docs/raw/refs/heads/main/files/pillow-layer.zip
     - 提供されたZIPファイル（`pillow-layer.zip`）を使用して、カスタムレイヤーを作成
+        ![alt text](/images/202505/image-51.png)
     - 作成したレイヤーをLambda関数に追加
+        関数の設定画面の「コード」タブを開き、一番下までスクロールしてレイヤーの追加をクリック
+        ![alt text](/images/202505/image-52.png)
 
 4. 環境変数の設定
    - `MIN_CONFIDENCE`: `70.0`
