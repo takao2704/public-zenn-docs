@@ -2,7 +2,7 @@
 title: "ソラカメで撮影した画像をAWSのサービスで解析する！"
 emoji: "📷"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["ソラカメ","IoT","AWS","rekognition","bedrock"]
+topics: ["ソラカメ","IoT","AWS","rekognition","amplify"]
 published: false
 ---
 
@@ -593,4 +593,42 @@ Lambda関数のIAMポリシーを更新して、S3とRekognitionへのアクセ�
     }
     ```
 
-7. 
+7. S3のバケットポリシーの更新
+    解析後の画像へアクセスできるように修正します。対象のプレフィックスを追加します。
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:GetObject",
+                "Resource": [
+                    "arn:aws:s3:::世界に一つだけのバケット名/live-camera/*",
+                    "arn:aws:s3:::世界に一つだけのバケット名/analyzed-images/*"
+                ]
+            }
+        ]
+    }
+    ```
+8. S3のトリガーの設定
+    - lambda関数のトリガーを追加
+    - S3を選択
+    - バケット名を選択
+    - イベントタイプを「すべてのオブジェクト作成イベント」に設定
+    - プレフィックスに`live-camera/`を指定
+    - サフィックスに`.jpg`を指定
+    - 「保存」をクリック
+    ![alt text](/images/202505/image-50.png)
+    ![alt text](/images/202505/image-49.png)
+
+## 画像を表示する
+アプリに解析前と解析後の画像を表示する準備が整いました。
+
+1. 先ほどamplifyでデプロイしたアプリにアクセスします。 
+
+2. S3バケット名とプレフィックスを入力して「表示」ボタンをクリックします。
+    ![alt text](/images/202505/image-47.png)
+
+
+
