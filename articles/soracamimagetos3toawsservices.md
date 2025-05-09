@@ -385,10 +385,12 @@ SORACOM APIの認証を行い、ソラカメの録画データから画像を取
 
 4. zipファイルをアップロード
     アプリケーションの名称（任意）を設定して、「ドラッグアンドドロップ」からファイルを選択してアップロードし、「保存してデプロイ」。
+    （1.のURLを直入力してもOKです。）
 
 5. デプロイが完了したら、URLをクリックしてアプリケーションにアクセスします。
 
 6. S3バケット名とプレフィックスを入力して「表示」ボタンをクリックしたら画像が表示されることを確認します。
+    上段の枠内に画像が表示されたら成功です（下段はこれから作り込んでいきますのでまだ表示されません）
     ![alt text](/images/202505/image-48.png)
 
 ## ソラカメの画像をrekognitionで解析する
@@ -406,7 +408,7 @@ import os
 import urllib.parse
 from datetime import datetime
 from io import BytesIO
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 # Python 3.13 ARM64用に最適化
 
@@ -418,6 +420,10 @@ rekognition_client = boto3.client('rekognition', region_name=REGION)
 # 環境変数
 MIN_CONFIDENCE = float(os.environ.get('MIN_CONFIDENCE', 70.0))  # デフォルト信頼度閾値: 70%
 OUTPUT_PREFIX = os.environ.get('OUTPUT_PREFIX', 'analyzed-images/')  # 出力先ディレクトリ
+
+# フォントサイズの設定
+LABEL_FONT_SIZE = 24  # ラベルリスト用フォントサイズ
+BOX_FONT_SIZE = 20    # バウンディングボックス用フォントサイズ
 
 def lambda_handler(event, context):
     try:
@@ -466,6 +472,18 @@ def lambda_handler(event, context):
         image = Image.open(BytesIO(image_content))
         draw = ImageDraw.Draw(image)
         
+        # フォントの設定
+        # 古いPILバージョンとの互換性のため、try-exceptで処理
+        try:
+            # 新しいバージョンのPIL
+            label_font = ImageFont.load_default(size=LABEL_FONT_SIZE)
+            box_font = ImageFont.load_default(size=BOX_FONT_SIZE)
+        except TypeError:
+            # 古いバージョンのPIL - サイズ指定なしのデフォルトフォント
+            print("Warning: Using default font without size specification")
+            label_font = ImageFont.load_default()
+            box_font = ImageFont.load_default()
+        
         # 画像の幅と高さを取得
         width, height = image.size
         
@@ -492,7 +510,7 @@ def lambda_handler(event, context):
                     
                     # ラベル名と信頼度を描画
                     text = f"{label_name}: {confidence:.1f}%"
-                    draw.text((left, top - 20), text, fill='red')
+                    draw.text((left, top - 30), text, fill='red', font=box_font)
         
         # 画像の上部に検出されたラベルの一覧を表示
         y_position = 10
@@ -500,8 +518,8 @@ def lambda_handler(event, context):
             label_name = label['Name']
             confidence = label['Confidence']
             text = f"{label_name}: {confidence:.1f}%"
-            draw.text((10, y_position), text, fill='blue')
-            y_position += 20
+            draw.text((10, y_position), text, fill='blue', font=label_font)
+            y_position += LABEL_FONT_SIZE + 10  # フォントサイズに合わせて間隔を調整
         
         # 処理済み画像をバイトストリームに変換
         output_image = BytesIO()
@@ -536,8 +554,10 @@ def lambda_handler(event, context):
 ```
 
 3. Pillowレイヤーの追加
-   - 提供されたZIPファイル（`pillow-layer.zip`）を使用して、カスタムレイヤーを作成
-   - 作成したレイヤーをLambda関数に追加
+    - ZIPファイルをダウンロード
+        https://github.com/takao2704/public-zenn-docs/raw/refs/heads/main/files/pillow-layer.zip
+    - 提供されたZIPファイル（`pillow-layer.zip`）を使用して、カスタムレイヤーを作成
+    - 作成したレイヤーをLambda関数に追加
 
 4. 環境変数の設定
    - `MIN_CONFIDENCE`: `70.0`
@@ -572,5 +592,5 @@ Lambda関数のIAMポリシーを更新して、S3とRekognitionへのアクセ�
         ]
     }
     ```
-    
+
 7. 
