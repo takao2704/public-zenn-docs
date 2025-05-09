@@ -3,7 +3,7 @@ title: "ソラカメで撮影した画像をAWSのサービスで解析する！
 emoji: "📷"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ソラカメ","IoT","AWS","rekognition","amplify"]
-published: false
+published: true
 ---
 
 :::message
