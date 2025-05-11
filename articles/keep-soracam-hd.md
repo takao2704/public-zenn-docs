@@ -2,7 +2,7 @@
 title: "SORACOM Fluxでソラカメの画質をHDに保つ"
 emoji: "😎"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: [SORACOM,ソラカメ,IoT]
+topics: [SORACOM,ソラカメ,IoT,soracomflux]
 published: true
 ---
 :::message

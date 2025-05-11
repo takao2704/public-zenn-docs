@@ -2,7 +2,7 @@
 title: "SORACOM Fluxでループを使って配列を処理する"
 emoji: "🔄"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: [SORACOM,IoT]
+topics: [SORACOM,IoT,soracomflux,Tips]
 published: false
 ---
 :::message

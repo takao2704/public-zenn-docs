@@ -2,7 +2,7 @@
 title: "SORACOM Fluxを使って混雑度を可視化する(export画像は保存されないパターン)"
 emoji: "🈵"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: [soracom,ソラカメ,生成AI]
+topics: [soracom,ソラカメ,生成AI,soracomflux]
 published: true
 ---
 :::message
