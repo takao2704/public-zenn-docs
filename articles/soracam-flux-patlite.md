@@ -37,7 +37,7 @@ LAN側のIPアドレスを変えます。
 ネットワーク設定から、LANを選択してIP1に`192.168.10.100/24`を入力し、更新をクリックします
 (UD-LT2のLANポートのIPアドレスが192.168.10.100になります)。
 
-![alt text](image-8.png)
+![alt text](/images/202505/image-8.png)
 
 IPアドレスが変わってしまうので、
 http://192.168.10.100/　にアクセスして、UD-LT2の設定画面に入りなおします。
@@ -45,7 +45,7 @@ http://192.168.10.100/　にアクセスして、UD-LT2の設定画面に入り�
 
 UD-LT2に送信したコマンドをパトライトに転送する設定（DNAT設定）を行う
 1. UD-LT2 の設定画面で [転送設定] → [NAT] → [追加] の順にクリックしてます。
- ![alt text](image.png)
+ ![alt text](/images/202505/image.png)
 
 
 2. 以下のように設定し,
@@ -61,32 +61,32 @@ UD-LT2に送信したコマンドをパトライトに転送する設定（DNAT�
  |マッピングアドレス| 192.168.10.1 |
  |マッピングポート| 80 |
 
-![alt text](image-9.png)
+![alt text](/images/202505/image-9.png)
 
 
 ### パトライトの設定
 パトライトの設定画面 http://192.168.10.1/ にアクセス
 
-![alt text](image-1.png)
+![alt text](/images/202505/image-1.png)
 
 言語を変更
-![alt text](image-2.png)
+![alt text](/images/202505/image-2.png)
 
 パスワードを設定
-![alt text](image-3.png)
+![alt text](/images/202505/image-3.png)
 
 設定完了
-![alt text](image-4.png)
+![alt text](/images/202505/image-4.png)
 
 さっきのパスワードでログイン
-![alt text](image-5.png)
+![alt text](/images/202505/image-5.png)
 
 DHCPに設定
 ネットワーク設定 -> IPアドレス設定方法を「自動的に取得する」を選択肢、設定をクリック
-![alt text](image-6.png)
+![alt text](/images/202505/image-6.png)
 
 コマンド受信設定で、HTTPコマンド受信設定が「有効」になっていることを確認
-![alt text](image-7.png)
+![alt text](/images/202505/image-7.png)
 
 右上のmacアドレスをメモ
 
@@ -97,7 +97,7 @@ DHCPに設定
 
 
 Ir-5lanに
-![alt text](image-11.png)
+![alt text](/images/202505/image-11.png)
 
 ### ソラカメの設定
 :::details ソラカメが初めての方はこちら(購入から設置まで)！
