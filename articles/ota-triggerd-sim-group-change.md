@@ -1,5 +1,5 @@
 ---
-title: "サブスクリプションコンテナのOTA完了と同時にSIM所属するSIMグループを変更する"
+title: "サブスクリプションコンテナのOTA完了と同時にSIMが所属するSIMグループを変更する"
 emoji: "🐕"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [IoT,SORACOM,soracomflux,自動化]
