@@ -209,7 +209,7 @@ SORACOM Fluxを設定手順です。
 11. configのAPI検索フォームに
     'setsimgropup'と入力して、「setSimGroup （IoT SIM を SIM グループに所属させる）」を選択します。
 
-        ![alt text](/images/202505/image-32.png)
+    ![alt text](/images/202505/image-32.png)
 
     URL欄のプレイスホルダーを`${payload.simId}`として、全体が以下のようになればOKです。
 
@@ -267,7 +267,7 @@ OTA完了をトリガにして、さきほどの作業で作成したSORACOM Flu
     ![alt text](/images/202505/image-19.png)
 
 3. イベント名を「OTA_finished」とします。
-    （このあと、同様の手順で「OTA_finished」,および「OTA_failed」というイベントを作成します。）
+    （このあと、同様の手順で「OTA_started」,および「OTA_failed」というイベントを作成します。）
     設定内容は以下のとおりです。
 
     設定内容
