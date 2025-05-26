@@ -23,6 +23,8 @@ published: false
 - SORACOM Air
 - LTEルーター
 - パトライト（HTTP対応）
+
+    今回使用したのは[LR5-LAN](https://online-shop.patlite.co.jp/c/network/network_LR5LAN/LR5L-302E)
 - スイッチングハブ
 - LANケーブル
 - 設定用PC
@@ -156,6 +158,142 @@ https://weathernews.jp/s/topics/202403/180215/
 設定の概要
 ![alt text](/images/soracam-flux-patlite/1747233997143.png)
 
+#### 1. モーション検知 webhook
+
+イベントソース : API/マニュアル実行
+出力チャネル： API Cnannel
+ソラカメがモーション検知した際のアクションとして叩くwebhookのURLを設定します。
+（ソラカメのモーション検知の設定については後述します。）
+
+入力されるJSON
+
+```json
+{
+    "eventType": "event_detected",
+    "deviceId": "カメラのデバイスID",
+    "deviceName": "カメラの名前",
+    "alarmType": "motion_detected"
+}
+```
+
+#### 2. パトライト点灯コマンド作成
+
+
+
+:::details republish アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | payload.deviceId=="カメラのデバイスID" | 特定のカメラからの通知のみを処理 |
+| CONFIG | データを変換する | ✅️ |  |
+| CONFIG | Content Type | application/json | JSONフォーマットで出力 |
+| CONFIG | Content | {<br> "command":"011990"<br>} | パトライト制御コマンド（黄色と緑色を点灯） |
+| OUTPUT | アクションのアウトプットを別のチャネルに送信する | 有効 | 出力先チャネル |
+| OUTPUT | 送信先チャネル | Output Channel | 出力先チャネル |
+:::
+
+#### 3. ダウンリンクAPIコマンド発行
+
+:::details SORACOM API アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | なし | すべてのイベントを処理 |
+| CONFIG | path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID` |
+| CONFIG | method | POST | HTTPメソッド |
+| CONFIG | body | {<br> "method": "GET",<br> "path": "/api/control?alert=${payload.command}",<br> "port": 50080,<br> "skipVerify": true,<br> "ssl": false<br>} | パトライト制御API呼び出し |
+| OUTPUT | 送信先チャネル | Output | 出力先チャネル |
+
+
+:::
+
+#### 4. 画像切り出し（Harvest Files保存）
+
+:::details アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | event.payload.deviceId != null | デバイスIDが存在する場合のみ処理 |
+| CONFIG | path | /v1/sora_cam/devices/${event.payload.deviceId}/images/exports | ソラカメ画像エクスポートAPI |
+| CONFIG | method | POST | HTTPメソッド |
+| CONFIG | body | {"time": ${now()}, "imageFilters": [], "harvestFiles": {"pathPrefix": "/ITweek2025Spring/images"}} | 画像エクスポート設定 |
+| OUTPUT | 送信先チャネル | なし | 出力なし |
+:::
+
+#### 5. ボタンデバイスからのデータ（unified endpoint）
+
+
+
+#### 6. パトライト消灯コマンド作成
+
+:::details republish アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | payload.deviceId=="カメラID" | 特定のカメラからの通知のみを処理 |
+| CONFIG | データを変換する | ✅️ |  |
+| CONFIG | Content Type | application/json | JSONフォーマットで出力 |
+| CONFIG | Content | {<br> "command":"011990"<br>} | パトライト制御コマンド（黄色と緑色を点灯） |
+| OUTPUT | アクションのアウトプットを別のチャネルに送信する | 有効 | 出力先チャネル |
+| OUTPUT | 送信先チャネル | Output Channel | 出力先チャネル |
+:::
+
+#### 7. 画像切り出し完了
+
+
+
+#### 8. 生成系AI（マルチモーダル基盤モデル）　を使った画像の解析
+
+:::details アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | なし | すべてのイベントを処理 |
+| CONFIG | service | azure-openai | 使用するAIサービス |
+| CONFIG | model | gpt-4o | 使用するAIモデル |
+| CONFIG | user_prompt | 画像を解析し、画像の中にエメラルドグリーン色のTシャツを来ている人が写っているか確認してください。出力はJSONで... | AIへの指示 |
+| CONFIG | response_format | json | 応答フォーマット |
+| CONFIG | image_url | ${payload.presignedUrls.get} | 解析する画像のURL |
+| OUTPUT | 送信先チャネル | Output AI | 出力先チャネル |
+:::
+
+#### 9. パトライト点灯コマンド作成
+
+:::details republish アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | payload.deviceId=="カメラID" | 特定のカメラからの通知のみを処理 |
+| CONFIG | データを変換する | ✅️ |  |
+| CONFIG | Content Type | application/json | JSONフォーマットで出力 |
+| CONFIG | Content | {<br> "command":"011990"<br>} | パトライト制御コマンド（黄色と緑色を点灯） |
+| OUTPUT | アクションのアウトプットを別のチャネルに送信する | 有効 | 出力先チャネル |
+| OUTPUT | 送信先チャネル | Output Channel | 出力先チャネル |
+:::
+
+#### 10. パトライト点灯コマンド作成
+
+:::details republish アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | payload.deviceId=="カメラID" | 特定のカメラからの通知のみを処理 |
+| CONFIG | データを変換する | ✅️ |  |
+| CONFIG | Content Type | application/json | JSONフォーマットで出力 |
+| CONFIG | Content | {<br> "command":"011990"<br>} | パトライト制御コマンド（黄色と緑色を点灯） |
+| OUTPUT | アクションのアウトプットを別のチャネルに送信する | 有効 | 出力先チャネル |
+| OUTPUT | 送信先チャネル | Output Channel | 出力先チャネル |
+:::
+
+#### 11. パトライト点灯/消灯コマンド発行
+
+:::details SORACOM API アクションの詳細設定
+| 大項目 | 詳細項目 | 設定値 | 備考 |
+| --- | ------ | --- | ------ |
+| CONDITION | アクションの実行条件 | なし | すべてのイベントを処理 |
+| CONFIG | path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID` |
+| CONFIG | method | POST | HTTPメソッド |
+| CONFIG | body | {<br> "method": "GET",<br> "path": "/api/control?alert=${payload.command}",<br> "port": 50080,<br> "skipVerify": true,<br> "ssl": false<br>} | パトライト制御API呼び出し |
+| OUTPUT | 送信先チャネル | Output | 出力先チャネル |
+
+
+:::
 
 ### ソラカメの通知を設定する
 
+## Appendix
+
+### パトライトの制御について
