@@ -40,11 +40,11 @@ Google Apps Script (GAS) を使って、Google Calendarのinvitationを受け取
 1. [script.google.com](https://script.google.com)にアクセスします。
 1. 「新しいプロジェクト」をクリックします。
 
-    ![alt text](../images/no-look-yes-man/1748269258900.png)
+    ![alt text](/images/no-look-yes-man/1748269258900.png)
 
 1. プロジェクト名を入力します（例: "Auto Accept Calendar Invites"）。
 
-    ![alt text](../images/no-look-yes-man/1748269357468.png)
+    ![alt text](/images/no-look-yes-man/1748269357468.png)
 
 1. 以下のコードをコピーしてエディタに貼り付けます。
 
@@ -79,7 +79,7 @@ Google Apps Script (GAS) を使って、Google Calendarのinvitationを受け取
     ```
 1. 保存ボタンを押します。
 
-    ![alt text](../images/no-look-yes-man/1748271296854.png)
+    ![alt text](/images/no-look-yes-man/1748271296854.png)
 
 1. フローを可視化すると、以下のようになります。
     ```mermaid
@@ -110,7 +110,7 @@ Google Apps Script (GAS) を使って、Google Calendarのinvitationを受け取
 
 1. エディタの左側の「時計」アイコンをクリックして、トリガーの設定画面を開きます。
 
-    ![alt text](../images/no-look-yes-man/1748271182382.png)
+    ![alt text](/images/no-look-yes-man/1748271182382.png)
 
 1. 「トリガーを追加」をクリックします。
 
@@ -122,13 +122,13 @@ Google Apps Script (GAS) を使って、Google Calendarのinvitationを受け取
     - カレンダーの詳細を入力: `カレンダー更新済み`
     - カレンダーのオーナーのメールアドレス: `自分のメールアドレス`
 
-    ![alt text](../images/no-look-yes-man/1748271680681.png)
+    ![alt text](/images/no-look-yes-man/1748271680681.png)
 
 1. なんやかんや出てくるメッセージをAllowします。
 
 1. こんな感じになったらOKです。
 
-    ![alt text](../images/no-look-yes-man/1748272156687.png)
+    ![alt text](/images/no-look-yes-man/1748272156687.png)
 
 ## 動作確認
 1. Google Calendarで、他のアカウントから自分のカレンダーにイベントを招待します。
