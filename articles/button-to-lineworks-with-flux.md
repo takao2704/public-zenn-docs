@@ -12,7 +12,13 @@ published: false
 
 ## はじめに
 
-SORACOM Buttonは簡単にIoTシステムを構築できる便利なデバイスですが、単体では通知先が限られています。今回は、SORACOM FluxとLINE WORKS APIを組み合わせることで、ボタンが押されたときに指定したLINE WORKSグループへ自動で通知を送る仕組みを構築してみましょう。
+SORACOM Buttonは簡単にIoTシステムを構築できる便利なデバイスですが、単体では通知先が限られています。今回は、SORACOM FluxとLINE WORKSを組み合わせることで、ボタンが押されたときに指定したLINE WORKSグループへ自動で通知を送る仕組みを構築してみましょう。
+
+LINE WORKSとの連携には主に2つのアプローチがあります：
+1. **Bot API** - 高機能だが設定が複雑
+2. **Incoming Webhook** - シンプルで導入が簡単
+
+この記事では両方の方法を解説し、用途に応じて選択できるようにします。
 
 ## 実現できること
 
@@ -43,8 +49,27 @@ SORACOM Buttonは簡単にIoTシステムを構築できる便利なデバイス
 
 ### 事前準備
 - SORACOM Buttonの初期設定完了
-- LINE WORKSでのBot作成とAPI利用設定
+- LINE WORKSでの設定（Bot作成またはIncoming Webhook設定）
 - SORACOM Console へのアクセス権限
+
+## 連携方法の比較
+
+実装に入る前に、2つのアプローチの特徴を比較してみましょう：
+
+| 項目 | Bot API | Incoming Webhook |
+|------|---------|------------------|
+| **設定の簡単さ** | 複雑（OAuth認証が必要） | 簡単（URLのみ） |
+| **認証** | OAuth 2.0 | なし（URLベース） |
+| **メッセージ種類** | テキスト、画像、リッチメッセージ等 | テキストのみ |
+| **双方向通信** | 可能（ボタン、返信受信等） | 不可（送信のみ） |
+| **トークルーム指定** | 動的に可能 | 固定（設定時に決定） |
+| **料金** | 無料 | 無料 |
+| **運用・保守** | トークン管理が必要 | ほぼメンテナンスフリー |
+
+### 推奨使い分け
+
+- **Incoming Webhook**: 単純な通知のみで十分な場合
+- **Bot API**: 複雑な処理や双方向通信が必要な場合
 
 ## 全体の構成
 
@@ -97,9 +122,51 @@ SORACOM Buttonには専用のSIMが内蔵されています。
 SORACOM Buttonは初回利用時にネットワーク接続の設定が必要な場合があります。LEDの点滅パターンでネットワーク状態を確認してください。
 :::
 
-## STEP 2: LINE WORKS Botの作成と設定
+## STEP 2: LINE WORKS連携の設定
 
-### 2-1. LINE WORKS Developer Consoleでの設定
+ここでは2つの方法を解説します。**初心者の方はまずWebhook方式から試すことをお勧めします。**
+
+### 方法A: Incoming Webhook（推奨・簡単）
+
+#### A-1. Incoming Webhookアプリの作成
+
+1. [LINE WORKS Developer Console](https://developers.worksmobile.com/)にアクセス
+2. 「新しいアプリ」→「Incoming Webhook」を選択
+3. アプリ情報を入力：
+   - アプリ名: 「SORACOM通知」など
+   - 説明: 「SORACOM Buttonからの通知を受信」
+
+#### A-2. Webhook URLの取得と設定
+
+1. 作成したアプリの「Webhook設定」を開く
+2. 通知を送りたいトークルームを選択
+3. **Webhook URL**をコピー（この値を後でSORACOM Fluxで使用）
+4. 必要に応じてアイコンとボット名を設定
+
+:::message
+Webhook URLは秘匿情報です。他人に教えないよう注意してください。このURLを知っている人は誰でもトークルームにメッセージを送信できます。
+:::
+
+#### A-3. テスト送信
+
+curlコマンドでテスト送信して動作確認：
+
+```bash
+curl -X POST "https://auth.worksmobile.com/oauth2/v2.0/bot/xxxxx/message/webhook" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": {
+      "type": "text",
+      "text": "テスト通知です"
+    }
+  }'
+```
+
+### 方法B: Bot API（高機能）
+
+より高度な機能が必要な場合のBot API設定方法：
+
+#### B-1. LINE WORKS Botの作成
 
 1. [LINE WORKS Developer Console](https://developers.worksmobile.com/)にアクセス
 2. 「新しいアプリ」→「Bot」を選択
@@ -108,7 +175,7 @@ SORACOM Buttonは初回利用時にネットワーク接続の設定が必要な
    - 説明: 「SORACOM Buttonからの通知を受信」
    - アイコン画像をアップロード（任意）
 
-### 2-2. Bot APIの設定
+#### B-2. Bot APIの設定
 
 1. 作成したBotの詳細画面を開く
 2. 「Bot設定」タブで以下を設定：
@@ -120,7 +187,7 @@ SORACOM Buttonは初回利用時にネットワーク接続の設定が必要な
    - **Server API Consumer Key**: 控えておく
    - **Server List ID**: 控えておく
 
-### 2-3. トークルームの準備
+#### B-3. トークルームの準備
 
 1. LINE WORKSアプリで通知を受け取りたいトークルームを作成
 2. 作成したBotをトークルームに招待
@@ -143,24 +210,35 @@ SORACOM Buttonは初回利用時にネットワーク接続の設定が必要な
 
 ### 3-2. フローの構築
 
-SORACOM Fluxでは以下のようなフローを構築します：
+選択した連携方法によってフローが異なります：
 
+#### フロー構成（Webhook版）
 ```mermaid
 graph LR
     A[SORACOM<br/>デバイス] --> B[データ変換<br/>処理]
-    B --> C[条件分岐<br/>処理]
-    C --> D[LINE WORKS<br/>API呼び出し]
-    D --> E[レスポンス<br/>ログ出力]
+    B --> C[HTTP Request<br/>Webhook送信]
+    C --> D[ログ出力]
 ```
 
-#### 3-2-1. トリガーの設定
+#### フロー構成（Bot API版）
+```mermaid
+graph LR
+    A[SORACOM<br/>デバイス] --> B[データ変換<br/>処理]
+    B --> C[認証処理<br/>トークン取得]
+    C --> D[HTTP Request<br/>Bot API呼び出し]
+    D --> E[ログ出力]
+```
+
+### 3-3. 共通設定：トリガーとデータ変換
+
+#### 3-3-1. トリガーの設定
 
 1. 「トリガー」として「SORACOM デバイス」を選択
 2. トリガー条件を設定：
    - **デバイス**: 登録したSORACOM Buttonを選択
    - **イベント**: 「ボタン押下」を選択
 
-#### 3-2-2. データ変換処理の追加
+#### 3-3-2. データ変換処理の追加
 
 1. 「処理」→「データ変換」を追加
 2. JavaScript処理で受信データを解析：
@@ -205,7 +283,36 @@ return {
 };
 ```
 
-#### 3-2-3. LINE WORKS API呼び出し処理
+### 3-4. 方法A: Webhook送信の設定
+
+**Webhook方式の場合（推奨・簡単）**
+
+1. 「処理」→「HTTP リクエスト」を追加
+2. 以下の設定を行う：
+
+**基本設定:**
+- **URL**: （STEP2で取得したWebhook URL）
+- **メソッド**: POST
+- **Content-Type**: application/json
+
+**リクエストボディ:**
+```json
+{
+  "content": {
+    "type": "text", 
+    "text": "{{message.content.text}}"
+  }
+}
+```
+
+**設定例:**
+- URL: `https://auth.worksmobile.com/oauth2/v2.0/bot/xxxxx/message/webhook`
+- ヘッダー: `Content-Type: application/json` のみ
+- 認証: 不要（URLに認証情報が含まれている）
+
+### 3-5. 方法B: Bot API呼び出しの設定
+
+**Bot API方式の場合（高機能）**
 
 1. 「処理」→「HTTP リクエスト」を追加
 2. 以下の設定を行う：
@@ -234,12 +341,12 @@ return {
 ```
 
 :::message
-LINE WORKS APIのアクセストークンは事前に取得する必要があります。詳細は次のセクションで説明します。
+Bot API方式ではOAuth 2.0認証が必要です。アクセストークンの取得方法は次のセクションで説明します。
 :::
 
-### 3-3. LINE WORKS APIアクセストークンの取得
+### 3-6. Bot API認証処理（方法Bの場合のみ）
 
-LINE WORKS APIを利用するためには、OAuth 2.0認証でアクセストークンを取得する必要があります。
+Bot API方式を選択した場合のみ、OAuth 2.0認証でアクセストークンを取得する必要があります。
 
 #### 3-3-1. 認証フローの実装
 
