@@ -216,7 +216,7 @@ https://weathernews.jp/s/topics/202403/180215/
 | 大項目 | 詳細項目 | 設定値 | 備考 |
 | --- | ------ | --- | ------ |
 | CONDITION | アクションの実行条件 | なし | すべてのイベントを処理 |
-| CONFIG | URL:path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID` |
+| CONFIG | URL:path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID` <br>[sendDownlinkHttp](https://users.soracom.io/ja-jp/tools/api/reference/#/Sim/sendDownlinkHttp) |
 | CONFIG | URL:method | POST | HTTPメソッド |
 | CONFIG | body | {<br> "method": "GET",<br> "path": "/api/control?alert=${payload.command}",<br> "port": 50080,<br> "skipVerify": true,<br> "ssl": false<br>} | パトライト制御API呼び出し |
 | OUTPUT | 送信先チャネル | Output | 出力先チャネル |
@@ -236,7 +236,7 @@ https://weathernews.jp/s/topics/202403/180215/
 | 大項目 | 詳細項目 | 設定値 | 備考 |
 | --- | ------ | --- | ------ |
 | CONDITION | アクションの実行条件 | event.payload.deviceId != null | デバイスIDが存在する場合のみ処理 |
-| CONFIG | URL:path | /v1/sora_cam/devices/${event.payload.deviceId}/images/exports | ソラカメ画像エクスポートAPI |
+| CONFIG | URL:path | /v1/sora_cam/devices/${event.payload.deviceId}/images/exports | ソラカメ画像エクスポートAPI<br>[exportSoraCamDeviceRecordedImage](https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam/exportSoraCamDeviceRecordedImage) |
 | CONFIG | URL:method | POST | HTTPメソッド |
 | CONFIG | body | {"time": ${now()}, "imageFilters": [], "harvestFiles": {"pathPrefix": "画像エクスポート（保存）先ディレクトリ名"}} | 画像エクスポート設定 |
 | OUTPUT | 送信先チャネル | なし | 出力なし |
@@ -306,7 +306,7 @@ https://weathernews.jp/s/topics/202403/180215/
 
 出力チャネル：Output AI
 
-#### 9. パトライト点灯コマンド作成()
+#### 9. パトライト点灯コマンド作成
 
 入力チャネル：Output AI
 
@@ -356,7 +356,7 @@ https://weathernews.jp/s/topics/202403/180215/
 | 大項目 | 詳細項目 | 設定値 | 備考 |
 | --- | ------ | --- | ------ |
 | CONDITION | アクションの実行条件 | なし | すべてのイベントを処理 |
-| CONFIG | path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID` |
+| CONFIG | path | /v1/sims/`SIM ID`/downlink/http | SIMのHTTPダウンリンク<br>`SIM ID` はパトライトに接続しているルーターに挿入した`SIM ID`<br>[sendDownlinkHttp](https://users.soracom.io/ja-jp/tools/api/reference/#/Sim/sendDownlinkHttp) |
 | CONFIG | method | POST | HTTPメソッド |
 | CONFIG | body | {<br> "method": "GET",<br> "path": "/api/control?alert=${payload.command}",<br> "port": 50080,<br> "skipVerify": true,<br> "ssl": false<br>} | パトライト制御API呼び出し |
 | OUTPUT | 送信先チャネル | Output | 出力先チャネル |
