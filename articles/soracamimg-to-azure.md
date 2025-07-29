@@ -3,7 +3,7 @@ title: "ソラカメの画像をAzure Data Lake Storageに保存する"
 emoji: "📸"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Azure", "SORACOM", "Python", "ソラカメ", "IoT"]
-published: false
+published: true
 ---
 
 :::message
