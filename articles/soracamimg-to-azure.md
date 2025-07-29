@@ -1,24 +1,129 @@
 ---
-title: "ソラカメ画像自動保存システム - 初心者向けセットアップガイド"
+title: "ソラカメの画像をAzure Data Lake Storageに保存する"
 emoji: "📸"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["Azure", "SORACOM", "Python", "ソラカメ", "IoT"]
 published: false
 ---
 
-このガイドでは、SORACOM SoraCamの画像を自動的にAzure Data Lake Storageに保存するシステムを、Azure Portalを使って構築する手順を説明します。
+:::message
+「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
+:::
+
+## やりたいこと
+
+Azure Data Factoryを経由して様々な分析サービスに接続するために、SORACOMのソラカメで撮影した画像をAzure Data Lake Storageに保存していきます。
+このブログでは、Azure Functionsを使用して5分ごとにSORACOMのソラカメから画像を取得し、Azure Data Lake Storageに保存する仕組みを構築します。
 
 ## システム構成図
 
-```
-ソラカメデバイス → SORACOM API → Azure Functions → Azure Data Lake Storage
-```
+![alt text](/images/soracamimg-to-azure/1753802197945.png)
 
 ## 必要な情報
 
 セットアップを開始する前に、以下の情報を準備してください：
 
+
+### 必要なもの
+- SORACOM アカウント
+- ソラカメ関連
+    - ソラカメ（AtomCam2）
+    - Wifi環境
+    - ソラカメライセンス(常時録画ライセンス 7日間プラン)  
+
+:::details ソラカメが初めての方はこちら(購入から設置まで)！
+
+### SORACOMのアカウント作成など
+https://users.soracom.io/ja-jp/guides/getting-started/create-account/
+
+カバレッジタイプはJPで。
+
+### ソラカメの購入〜セットアップまで
+
+https://sora-cam.com/setup/
+
+実は最近はソラカメのセットアップにアプリを使わなくても良くなっていたりする。
+
+### ソラカメの設置
+
+設置に関する知見はここにたくさん溜まっています。
+https://weathernews.jp/s/topics/202403/180215/
+
+:::
+- Microsoft Azure アカウント
+
+
+## カメラチェック
+
+:::details カメラのチェック
+![alt text](/images/soracamimagetos3towp/image-25.png)
+何はともあれ、カメラが正常に動作しているか確認しましょう。
+
+「ソラコムクラウドカメラサービス」 -> 「デバイス管理」
+
+![alt text](/images/soracamimagetos3towp/image.png)
+
+デバイスの一覧表示で、先ほど登録したカメラがオンラインになっていることを確認します。
+
+![alt text](/images/soracamimagetos3towp/image-1.png)
+
+さらに、カメラの名前をクリックすると、カメラの映像が表示されます。
+![alt text](/images/soracamimagetos3towp/image-2.png)
+
+    :::message
+    この画面を見続けていると月72時間までの動画エクスポート時間無料枠を消費してしまうので注意しましょう。
+    :::
+
+:::
+
+## SORACOM APIキーを発行する
+
+:::details SORACOM APIキーの発行
+![alt text](/images/soracamimagetos3towp/image-26.png)
+ソラカメの録画データから画像を取得するために、SORACOM APIを利用します。
+APIを利用するためには、APIキーを発行する必要がありますので、以下の手順でAPIキーを発行しましょう。
+1. 右上のログインしているユーザー名（ルートユーザーであればメールアドレス、SAMユーザーであればSAMユーザー名）をクリックして出てくるメニューから、「セキュリティ」をクリック
+    ![alt text](/images/soracamimagetos3towp/image-3.png)
+
+2. 「ユーザー」タブで「SAMユーザー作成」をクリック
+    ![alt text](/images/soracamimagetos3towp/image-4.png)
+
+3. 後で見たときに何をするためのSAMユーザーかわかるように名前をつけます。必要に応じて概要にも記載して「作成」をクリックします。
+    ![alt text](/images/soracamimagetos3towp/image-6.png)
+
+4. 作ったSAMユーザーが一覧に表示されていることを確認して、名前をクリックします。
+    ![alt text](/images/soracamimagetos3towp/image-7.png)
+
+5. 権限を設定します。
+    ![alt text](/images/soracamimagetos3towp/image-8.png)
+    直接指定で以下をコピペしてください。
+
+    ```json
+    {
+     "statements": [
+        {
+        "api": [
+            "SoraCam:exportSoraCamDeviceRecordedImage",
+            "SoraCam:getSoraCamDeviceExportedImage",
+            "OAuth2:authorize"
+        ],
+        "effect": "allow"
+        }
+    ]
+    }
+    ```
+
+6. 「認証設定」のタブに移り、「認証キーを生成」作成します。
+    ![alt text](/images/soracamimagetos3towp/image-9.png)
+
+7. 生成された認証キーをメモ帳などにコピーして保存しておきます。
+    画面を閉じてしまうと再度表示されないので注意してください。
+    ![alt text](/images/soracamimagetos3towp/image-10.png)
+
+:::
+
 ### SORACOM情報
+ここまでの作業で以下の情報が入手されたものとして進めていきます。
 - **SORACOM Auth Key ID**: `keyId-xxxxxxxxxx`
 - **SORACOM Auth Key**: `secret-xxxxxxxxxx` 
 - **SORACOM Device ID**: `xxxxxxxxxx`
@@ -95,31 +200,30 @@ published: false
 ### 2-1. Functions Appの作成
 1. Azure Portal上部の検索バーで「関数アプリ」と検索
 2. 「関数アプリ」をクリック
+![alt text](/images/soracamimg-to-azure/1753712373247.png)
 3. 「+ 作成」をクリック
+![alt text](/images/soracamimg-to-azure/1753712394613.png)
 
 ### 2-2. 基本設定
-以下の通り入力：
+ホスティングオプションは「従量課金」を選択します。
+![alt text](/images/soracamimg-to-azure/1753712527736.png)
+
+関数アプリの作成画面では以下の通り入力：
+
+![alt text](/images/soracamimg-to-azure/1753712711461.png)
 
 | 項目 | 値 |
 |------|-----|
 | **サブスクリプション** | 同じサブスクリプションを選択 |
 | **リソースグループ** | `soracam-rg`（既存を選択） |
 | **関数アプリ名** | `soracam-functions` + 任意の数字 |
-| **公開** | `コード` |
+| **オペレーティング システム** | `Linux(legacy)` |
 | **ランタイム スタック** | `Python` |
-| **バージョン** | `3.11` |
+| **バージョン** | `3.12` |
 | **地域** | `Japan East` |
 
-### 2-3. ホスティング設定
-「ホスティング」タブで：
 
-| 項目 | 値 |
-|------|-----|
-| **ストレージ アカウント** | 新規作成（自動生成される名前でOK） |
-| **オペレーティング システム** | `Linux` |
-| **プラン** | `従量課金 (サーバーレス)` |
-
-### 2-4. 作成完了
+### 2-3. 作成完了
 1. 「確認および作成」をクリック
 2. 「作成」をクリック
 3. デプロイが完了するまで待機（約3-5分）
@@ -128,11 +232,16 @@ published: false
 
 ### 3-1. Functions Appの設定画面へ
 1. 作成されたFunctions Appにアクセス
-2. 左メニューの「構成」をクリック
-3. 「アプリケーション設定」タブを選択
+![alt text](/images/soracamimg-to-azure/1753712998426.png)
+2. 左メニューの「設定」→「構成」をクリック
+![alt text](/images/soracamimg-to-azure/1753713094930.png)
+3. 「ここをクリックして [環境変数] メニューに移動する」をクリック
+
+
 
 ### 3-2. 環境変数の追加
 「+ 新しいアプリケーション設定」をクリックして、以下の環境変数を**1つずつ**追加：
+![alt text](/images/soracamimg-to-azure/1753713175772.png)
 
 #### Azure Storage設定
 | 名前 | 値 |
@@ -144,29 +253,44 @@ published: false
 | 名前 | 値 |
 |------|-----|
 | `USE_SORACOM_API` | `true` |
-| `SORACOM_AUTH_KEY_ID` | あなたのSORACAM Auth Key ID |
-| `SORACOM_AUTH_KEY` | あなたのSORACAM Auth Key |
+| `SORACOM_AUTH_KEY_ID` | あなたのSORACAM Auth Key ID(keyId-から始まる文字列) |
+| `SORACOM_AUTH_KEY` | あなたのSORACAM Auth Key(secret-から始まる文字列) |
 | `SORACOM_DEVICE_ID` | あなたのSORACAM Device ID |
 
+![alt text](/images/soracamimg-to-azure/1753713529355.png)
+
+
 ### 3-3. 設定の保存
-1. すべての環境変数を追加したら「保存」をクリック
-2. 「続行」で確定
+1. すべての環境変数を追加したら「適用」をクリック
+2. 「確認」で確定
 
 ## ステップ4: Python関数コードの作成
 
 ### 4-1. 関数の作成
-1. Functions Appで「関数」をクリック
-2. 「+ 作成」をクリック
-3. 「テンプレートから開発」を選択
-4. 「タイマー トリガー」を選択
-5. 関数名: `SoraCamFunction`
+1. Functions Appで「概要」->「関数」をクリック
+![alt text](/images/soracamimg-to-azure/1753713709319.png)
+2. Azure portalで作成の「関数の作成」をクリック
+4. 「Timer Trigger」を選択し、次へ
+![alt text](/images/soracamimg-to-azure/1753713872138.png)
+5. ジョブの種類: 新しいアプリの作成
+6. Provide a function name: `SoraCamFunction`
 6. スケジュール: `0 */5 * * * *`（5分間隔）
+![alt text](/images/soracamimg-to-azure/1753713975095.png)
 7. 「作成」をクリック
 
-### 4-2. requirements.txtの設定
-1. 作成された関数で「App Serviceエディター」をクリック
-2. 左側のファイル一覧で `requirements.txt` をクリック
-3. 以下の内容に**置き換え**：
+
+### 4-2. プロジェクトファイルの作成
+このプロジェクトには、既に以下のファイルが準備していきます。
+```
+azure-soracam/
+├── requirements.txt          # Python依存関係
+├── host.json                # Azure Functions設定
+└── SoraCamFunction/         # Azure Function
+    └── __init__.py         # メイン関数コード
+```
+
+### 4-3. requirements.txtの設定
+1. 以下の内容のファイルを `requirements.txt` として作成
 
 ```txt
 azure-functions
@@ -175,9 +299,34 @@ requests
 python-dateutil
 ```
 
-### 4-3. メイン関数コードの設定
-1. `SoraCamFunction` フォルダの `__init__.py` をクリック
-2. 以下のコードに**全て置き換え**：
+### 4-4. host.jsonの設定
+1. `host.json` ファイルを作成
+2. 以下の内容をコピー＆ペースト
+
+```json
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  },
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[3.*, 4.0.0)"
+  },
+  "functionTimeout": "00:10:00"
+}
+```
+
+### 4-5. メイン関数コードの設定
+1. `SoraCamFunction/__init__.py` ファイルを作成
+2. 以下のコードをコピー＆ペースト
+
+:::details 関数（`__init__.py`）コード
 
 ```python
 import datetime
@@ -212,7 +361,18 @@ def main(mytimer: func.TimerRequest) -> None:
         missing_vars = [var for var in required_vars if not os.environ.get(var)]
         
         if missing_vars:
+            logger.error(f"SORACOM環境変数が不足: {', '.join(missing_vars)}")
             raise ValueError(f"SORACOM環境変数が不足: {', '.join(missing_vars)}")
+        
+        # Azure Storage認証情報チェック
+        azure_vars = ['AZURE_STORAGE_CONNECTION_STRING', 'AZURE_STORAGE_CONTAINER_NAME']
+        missing_azure_vars = [var for var in azure_vars if not os.environ.get(var)]
+        
+        if missing_azure_vars:
+            logger.error(f"Azure Storage環境変数が不足: {', '.join(missing_azure_vars)}")
+            raise ValueError(f"Azure Storage環境変数が不足: {', '.join(missing_azure_vars)}")
+        
+        logger.info("全ての必要な環境変数が設定されています")
         
         # SORACOM APIから画像取得
         image_data = fetch_soracom_image()
@@ -225,68 +385,127 @@ def main(mytimer: func.TimerRequest) -> None:
         logger.info(f'サイズ: {save_result["size"]} bytes')
         
     except Exception as e:
-        logger.error(f'エラー発生: {str(e)}')
+        logger.error(f'エラー発生: {str(e)}', exc_info=True)
         raise
 
 def fetch_soracom_image() -> Dict:
     """SORACOM APIから画像を取得"""
     logger = logging.getLogger(__name__)
     
+    # 環境変数の存在チェックと値のマスキング表示
+    auth_key_id = os.environ.get('SORACOM_AUTH_KEY_ID')
+    auth_key = os.environ.get('SORACOM_AUTH_KEY')
+    device_id = os.environ.get('SORACOM_DEVICE_ID')
+    
+    logger.info(f"認証情報チェック - AuthKeyId: {'***' + auth_key_id[-4:] if auth_key_id and len(auth_key_id) > 4 else 'None'}")
+    logger.info(f"認証情報チェック - AuthKey: {'***' + auth_key[-4:] if auth_key and len(auth_key) > 4 else 'None'}")
+    logger.info(f"認証情報チェック - DeviceId: {device_id}")
+    
     # SORACOM API認証
     auth_data = {
-        "authKeyId": os.environ.get('SORACOM_AUTH_KEY_ID'),
-        "authKey": os.environ.get('SORACOM_AUTH_KEY')
+        "authKeyId": auth_key_id,
+        "authKey": auth_key
     }
     
     # 認証トークン取得
-    auth_response = requests.post(
-        'https://api.soracom.io/v1/auth',
-        json=auth_data,
-        headers={'Content-Type': 'application/json'},
-        timeout=30
-    )
-    auth_response.raise_for_status()
-    
-    token = auth_response.json()['token']
-    device_id = os.environ.get('SORACOM_DEVICE_ID')
+    try:
+        logger.info("SORACOM API認証開始...")
+        auth_response = requests.post(
+            'https://api.soracom.io/v1/auth',
+            json=auth_data,
+            headers={'Content-Type': 'application/json'},
+            timeout=30
+        )
+        auth_response.raise_for_status()
+        logger.info("SORACOM API認証成功")
+        
+        token_data = auth_response.json()
+        api_key = token_data['apiKey']
+        token = token_data['token']
+        logger.info(f"取得したAPIKey: {'***' + api_key[-8:] if len(api_key) > 8 else 'short_key'}")
+        logger.info(f"取得したトークン: {'***' + token[-8:] if len(token) > 8 else 'short_token'}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"SORACOM API認証エラー: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            logger.error(f"認証レスポンス: Status={e.response.status_code}, Body={e.response.text}")
+        raise
     
     # 画像エクスポート要求
+    current_time = int(datetime.datetime.utcnow().timestamp() * 1000)
     export_data = {
         "deviceId": device_id,
-        "time": int(datetime.datetime.utcnow().timestamp() * 1000)
+        "time": current_time
     }
     
-    export_response = requests.post(
-        'https://api.soracom.io/v1/sora_cam/devices/images/exports',
-        json=export_data,
-        headers={
-            'X-Soracom-API-Key': token,
-            'Content-Type': 'application/json'
-        },
-        timeout=30
-    )
-    export_response.raise_for_status()
+    logger.info(f"画像エクスポート要求開始 - DeviceId: {device_id}, Time: {current_time}")
+    
+    try:
+        export_response = requests.post(
+            f'https://api.soracom.io/v1/sora_cam/devices/{device_id}/images/exports',
+            json={'time': current_time},
+            headers={
+                'X-Soracom-API-Key': api_key,
+                'X-Soracom-Token': token,
+                'Content-Type': 'application/json'
+            },
+            timeout=30
+        )
+        
+        logger.info(f"エクスポート応答: Status={export_response.status_code}")
+        
+        if export_response.status_code != 200:
+            logger.error(f"エクスポート失敗: Status={export_response.status_code}")
+            logger.error(f"エクスポート応答内容: {export_response.text}")
+            
+        export_response.raise_for_status()
+        logger.info("画像エクスポート要求成功")
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"画像エクスポート要求エラー: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            logger.error(f"エクスポートエラー詳細: Status={e.response.status_code}, Body={e.response.text}")
+        raise
     
     export_id = export_response.json()['exportId']
     
     # エクスポート完了待機
     import time
+    logger.info(f"エクスポート完了待機開始 - ExportId: {export_id}")
+    
     for attempt in range(10):
-        status_response = requests.get(
-            f'https://api.soracom.io/v1/sora_cam/devices/images/exports/{export_id}',
-            headers={'X-Soracom-API-Key': token}
-        )
-        status_response.raise_for_status()
+        logger.info(f"エクスポートステータス確認中 - 試行{attempt + 1}/10")
         
-        status_data = status_response.json()
-        if status_data['status'] == 'completed':
-            image_url = status_data['url']
-            break
-        elif status_data['status'] == 'failed':
-            raise Exception('SORACOM画像エクスポートが失敗しました')
+        try:
+            status_response = requests.get(
+                f'https://api.soracom.io/v1/sora_cam/devices/{device_id}/images/exports/{export_id}',
+                headers={
+                    'X-Soracom-API-Key': api_key,
+                    'X-Soracom-Token': token,
+                    'Content-Type': 'application/json'
+                },
+                timeout=30
+            )
+            status_response.raise_for_status()
+            
+            status_data = status_response.json()
+            logger.info(f"エクスポートステータス: {status_data.get('status', 'unknown')}")
+            
+            if status_data['status'] == 'completed':
+                image_url = status_data['url']
+                logger.info("画像エクスポート完了")
+                break
+            elif status_data['status'] == 'failed':
+                logger.error(f"SORACOM画像エクスポートが失敗: {status_data}")
+                raise Exception('SORACOM画像エクスポートが失敗しました')
+            
+        except requests.exceptions.RequestException as e:
+            logger.error(f"ステータス確認エラー (試行{attempt + 1}): {e}")
+            if attempt == 9:  # 最後の試行
+                raise
         
         time.sleep(2)
     else:
+        logger.error("エクスポートがタイムアウトしました")
         raise Exception('SORACOM画像エクスポートがタイムアウトしました')
     
     # 画像データ取得
@@ -301,7 +520,9 @@ def fetch_soracom_image() -> Dict:
         'content_type': 'image/jpeg',
         'timestamp': datetime.datetime.utcnow(),
         'source_url': image_url,
-        'device_id': device_id
+        'device_id': device_id,
+        'api_key': api_key,
+        'token': token
     }
 
 def save_to_data_lake(image_data: Dict) -> Dict:
@@ -345,68 +566,84 @@ def save_to_data_lake(image_data: Dict) -> Dict:
         'upload_time': datetime.datetime.utcnow().isoformat()
     }
 ```
+:::
 
-### 4-4. コードの保存
-1. `Ctrl + S` でファイルを保存
-2. 画面上部の「保存」ボタンもクリック
+**重要:** プロジェクトルート（azure-soracam）全体をデプロイフォルダとして使用します。
+
+
+処理フローは以下のとおりです。
+
+```mermaid
+graph TD
+    A[Timer Trigger] --> B[環境変数チェック]
+    B --> C[SORACOM API認証]
+    C --> D[画像エクスポート要求]
+    D --> E[エクスポートID取得]
+    E --> F[ステータス確認ループ開始]
+    F --> G{ステータス確認}
+    G -->|completed| H[画像URL取得]
+    G -->|processing| I[2秒待機]
+    I --> J{試行回数 < 10?}
+    J -->|Yes| G
+    J -->|No| K[タイムアウトエラー]
+    G -->|failed| L[エクスポート失敗]
+    
+    H --> M[画像データダウンロード]
+    M --> N[Azure Data Lake接続]
+    N --> O[ファイルアップロード]
+    O --> P[処理完了]
+    
+    %% エラー終了
+    K --> Q[エラー終了]
+    L --> Q
+```
+
+
+### 4-6. VSCode でプロジェクトを開く
+1. VSCode を起動
+2. 「ファイル」→「フォルダーを開く」
+3. `azure-soracam` フォルダ（プロジェクトルート）を選択
+4. VSCodeがAzure Functionsプロジェクトを認識することを確認
+
+### 4-7. Azure にサインイン
+1. VSCode で `Ctrl+Shift+P`（コマンドパレット）
+2. 「Azure: Sign In」を実行
+3. ブラウザが開くのでAzureアカウントでログイン
+
+### 4-8. Functions App にデプロイ
+1. VSCode左サイドバーの「Azure」アイコンをクリック
+2. 「Functions」セクションを展開
+3. 作成した Functions App（`soracam-functions-xxx`）を選択
+![alt text](/images/soracamimg-to-azure/1753796913472.png)
+4. デプロイ先の関数を右クリックして「Deploy to Function App...」を選択
+![alt text](/images/soracamimg-to-azure/1753796961972.png)
+5. フォルダを選択してデプロイ確認で「Deploy」を選択
+![alt text](/images/soracamimg-to-azure/1753797066989.png)
+6. デプロイ完了まで待機（数分）
+![alt text](/images/soracamimg-to-azure/1753797116791.png)
 
 ## ステップ5: 動作確認
 
 ### 5-1. 関数の手動実行
 1. 関数一覧で `SoraCamFunction` をクリック
 2. 「テスト/実行」をクリック
+![alt text](/images/soracamimg-to-azure/1753798686953.png)
 3. 「実行」をクリック
 4. ログを確認（実行には30秒程度かかります）
+![alt text](/images/soracamimg-to-azure/1753799866529.png)
 
-### 5-2. 実行ログの確認
-1. 「監視」タブをクリック
-2. 最新の実行結果を確認
-3. 緑色のチェックマークが表示されれば成功
 
 ### 5-3. 保存された画像の確認
 1. ストレージアカウントにアクセス
-2. 「Data Lake Gen2」→「コンテナー」
+2. 「データストレージ」→「コンテナー」
+![alt text](/images/soracamimg-to-azure/1753799968132.png)
 3. `soracam-images` をクリック
+![alt text](/images/soracamimg-to-azure/1753799993769.png)
 4. `2025/01/28/` のようなフォルダ構造で画像が保存されていることを確認
+![alt text](/images/soracamimg-to-azure/1753800037905.png)
+5. 画像ファイルを確認
+![alt text](/images/soracamimg-to-azure/1753800072114.png)
 
-## ステップ6: 自動実行の確認
-
-### 6-1. スケジュール実行の確認
-- 関数は5分間隔で自動実行されます
-- 次回実行時刻は「概要」タブで確認できます
-
-### 6-2. 継続監視
-1. 「監視」→「ログ」で実行履歴を確認
-2. エラーがある場合は「Application Insights」でデバッグ
-
-## トラブルシューティング
-
-### よくある問題と解決方法
-
-#### 1. 「SORACOM環境変数が不足」エラー
-- ステップ3の環境変数設定を再確認
-- 名前と値にタイプミスがないかチェック
-
-#### 2. 「認証エラー」
-- SORACOM Auth Key ID/Keyが正しいかSORACOMコンソールで確認
-- デバイスIDが正しいか確認
-
-#### 3. 「Azure Storage接続エラー」
-- ストレージアカウントの接続文字列を再確認
-- コンテナ名が `soracam-images` で正しいか確認
-
-#### 4. 関数がタイムアウトする
-- Azure Portal の関数設定で「タイムアウト」を10分に延長
-
-## 完了！
 
 これで、ソラカメの画像が5分間隔で自動的にAzure Data Lake Storageに保存されるシステムが完成しました。
 
-### システムの特徴
-- ✅ 完全自動化（手動操作不要）
-- ✅ サーバーレス（サーバー管理不要）
-- ✅ 高可用性（Azure基盤）
-- ✅ コスト最適化（従量課金）
-- ✅ 画像の整理（年/月/日フォルダ構造）
-
-何か問題が発生した場合は、Azure Portalの「監視」機能でログを確認してください。
