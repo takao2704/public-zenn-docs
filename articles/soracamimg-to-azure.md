@@ -12,13 +12,12 @@ published: true
 
 ## やりたいこと
 
-Azure Data Factoryを経由して様々な分析サービスに接続するために、SORACOMのソラカメで撮影した画像をAzure Data Lake Storageに保存していきます。
+Azure Databricks のプラットフォームサービスに接続するために、SORACOMのソラカメで撮影した画像をAzure Data Lake Storageに保存していきます。
 このブログでは、Azure Functionsを使用して5分ごとにSORACOMのソラカメから画像を取得し、Azure Data Lake Storageに保存する仕組みを構築します。
 
 ## システム構成図
 
-![alt text](/images/soracamimg-to-azure/1753802197945.png)
-
+![alt text](/images/soracamimg-to-azure/1753835735294.png)
 ## 必要な情報
 
 セットアップを開始する前に、以下の情報を準備してください：
