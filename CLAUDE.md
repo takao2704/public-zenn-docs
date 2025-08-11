@@ -41,22 +41,32 @@ published: true
 
 ## Content Management Workflow
 1. Create new articles in `/articles/` directory
-2. Place images in organized folders under `/images/`
-3. Use relative paths `../images/folder/image.png` when writing
+2. Place images in organized folders under `/images/` (use date-based folders like `202505/` or topic-based folders)
+3. Use relative paths `../images/folder/image.png` when writing articles
 4. Run `./imagepathpatch.sh` to convert to absolute paths `/images/folder/image.png`
 5. Publish through Zenn platform
+
+## Image Organization Strategy
+Images are organized in topic-specific or date-based folders:
+- Date-based: `/images/202505/` for monthly collections
+- Topic-based: `/images/soracam-flux-patlite/`, `/images/forms-sending-photo/`
+- Use descriptive image names or numbered sequences (image-1.png, image-2.png)
+- Include dummy files in folders to maintain git structure
 
 ## Content Focus
 Articles primarily cover:
 - SORACOM Air (cellular connectivity)
-- SORACOM Flux (data processing platform)
+- SORACOM Flux (data processing platform) 
 - SoraCam (IoT cameras)
 - AWS integrations
+- Azure integrations
 - IoT tutorials and cheat sheets
+- LINE WORKS integrations
 
 ## Development Notes
 - No build process - content-only repository
 - No package.json or Node.js dependencies
 - Manual content management through Zenn CLI
-- Images should be organized in topic-specific folders
 - SORACOM CLI is used for data collection and monitoring utilities
+- Articles contain Japanese disclaimer text for corporate compliance
+- Use zsh scripts for automation utilities
