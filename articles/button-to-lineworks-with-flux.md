@@ -1,7 +1,7 @@
 ---
-title: "SORACOM ButtonとLINE WORKSをFluxで連携して業務通知を自動化する"
+title: "SORACOM Button と LINE WORKS を Flux で連携して業務通知を自動化する"
 emoji: "🔔"
-type: "tech" # tech: 技術記事 / idea: アイデア
+type: "tech"
 topics: ["soracom", "lineworks", "flux", "iot"]
 published: false
 ---
@@ -12,382 +12,274 @@ published: false
 
 ## はじめに
 
-SORACOM Buttonは簡単にIoTシステムを構築できる便利なデバイスですが、単体では通知先が限られています。今回は、SORACOM FluxとLINE WORKSのIncoming Webhookを組み合わせることで、ボタンが押されたときに指定したLINE WORKSグループへ自動で通知を送る仕組みを構築してみましょう。
+SORACOM Button は簡単に IoT 通知の仕組みを作れるデバイスです。本記事では SORACOM Flux の最新仕様を用い、Button 押下をトリガに LINE WORKS の Incoming Webhook へメッセージを送信する仕組みを解説します。
+
+Flux では UI 上での設定とテンプレート変数を使用したデータ参照が中心となり、JavaScriptコードを記述することはありません。本記事は以下の公式ドキュメントに準拠しています：
+- [Flux 概要](https://users.soracom.io/ja-jp/docs/flux/)
+- [イベントソース: IoT デバイス](https://users.soracom.io/ja-jp/docs/flux/event-source-iot-device/)
+- [アクション: Webhook](https://users.soracom.io/ja-jp/docs/flux/action-webhook/)
 
 ## 実現できること
 
-この記事で構築するシステムでは、以下のようなことが実現できます：
+- SORACOM Button の押下（シングル／ダブル／ロング）を検知し、指定の LINE WORKS トークルームに通知
+- 押下種別・時刻・デバイス ID を含むメッセージの自動送信
+- Flux のテンプレート機能を使った柔軟なメッセージ構築
 
-- SORACOM Buttonを押すだけで、LINE WORKSの指定したトークルームにメッセージを送信
-- ボタンの種類（シングルクリック、ダブルクリック、ロングプレス）に応じて異なるメッセージを送信
-- 押下時刻や場所情報も含めた詳細な通知
-- 複数のボタンからの通知を一元管理
+### 想定ユースケース
+- 設備点検完了の簡易報告
+- 異常検知の一次連絡
+- 在庫補充依頼
+- 会議室利用開始／終了の共有
 
-### 想定される利用シーン
+## 事前準備
 
-- **設備点検完了報告**: 現場作業者が点検完了時にボタンを押して報告
-- **緊急時の連絡**: 異常発生時にボタンを押して即座にチームに通知
-- **在庫補充依頼**: 店舗や倉庫で在庫が少なくなった際の補充依頼
-- **会議室利用状況**: 会議室の利用開始・終了をワンプッシュで共有
+- SORACOM アカウント
+- SORACOM Button（LTE-M Button powered by AWS / Button Plus など）と内蔵 SIM のアクティブ化
+- LINE WORKS テナント（Incoming Webhook 利用権限）
+- SORACOM Flux 利用（月額料金が発生します）
 
-## 必要なもの
-
-### ハードウェア
-- SORACOM Button（LTE-M Button powered by AWS、SORACOM Button Plus等）
-- SORACOMのSIMカード（ボタンに内蔵済み）
-
-### サービス・アカウント
-- SORACOMアカウント
-- LINE WORKSアカウント（管理者権限推奨）
-- SORACOM Flux（月額料金が発生します）
-
-### 事前準備
-- SORACOM Buttonの初期設定完了
-- LINE WORKSでのIncoming Webhook設定
-- SORACOM Console へのアクセス権限
-
-## 全体の構成
-
-今回構築するシステムの全体像は以下のようになります：
+## 全体構成
 
 ```mermaid
 graph TD
-    A[SORACOM Button] -->|ボタン押下| B[SORACOM プラットフォーム]
-    B --> C[SORACOM Flux]
-    C -->|HTTP Request| D[LINE WORKS Webhook]
-    D --> E[LINE WORKSトークルーム]
-    
-    F[管理者] -->|設定| C
-    F -->|Webhook作成| D
-    
-    style A fill:#ff9999
-    style E fill:#99ff99
-    style C fill:#9999ff
+  A[SORACOM Button]
+  B[SORACOM Platform]
+  C[Flux (IoT Device)]
+  D[HTTP Webhook (POST)]
+  E[LINE WORKS Room]
+
+  A --> B
+  B --> C
+  C --> D
+  D --> E
 ```
 
-## STEP 1: SORACOM Buttonの設定
+## STEP 1: SORACOM Button の基本確認
 
-### 1-1. デバイスの登録
+### 1-1. デバイスの登録と確認
 
-まず、SORACOM ButtonをSORACOMアカウントに登録します。
-
-1. [SORACOMコンソール](https://console.soracom.io/)にログイン
-2. 左メニューから「デバイス管理」→「デバイス」を選択
-3. 「デバイス登録」ボタンをクリック
-4. デバイスタイプで「SORACOM Button」を選択
-5. デバイスのIMEIやシリアル番号を入力して登録
-
-### 1-2. SIMの確認と設定
-
-SORACOM Buttonには専用のSIMが内蔵されています。
-
-1. 左メニューから「SIM管理」を選択
-2. 該当するSIMを見つけて詳細を確認
-3. SIMの状態が「アクティブ」になっていることを確認
-4. 必要に応じてSIMグループを作成・割り当て
-
-### 1-3. 初回ボタンテスト
-
-1. SORACOM Buttonの電源ボタンを長押しして起動
-2. LEDが緑色に点灯することを確認
-3. ボタンを1回押してテスト送信
-4. SORACOMコンソールの「ログ」でデータ送信を確認
+1. [SORACOM コンソール](https://console.soracom.io/) にログイン
+2. SIM 管理で内蔵 SIM がアクティブであることを確認
+3. 初回起動と押下テストを実施し、接続ランプ・ログ送信を確認
 
 :::message alert
-SORACOM Buttonは初回利用時にネットワーク接続の設定が必要な場合があります。LEDの点滅パターンでネットワーク状態を確認してください。
+LED 点滅パターンでネットワーク状態を確認してください。詳細はデバイス同梱のガイドを参照。
 :::
 
-## STEP 2: LINE WORKS Incoming Webhookの設定
+## STEP 2: LINE WORKS Incoming Webhook の準備
 
-### 2-1. Incoming Webhookアプリの作成
+### 2-1. Webhook の設定
 
-1. [LINE WORKS Developer Console](https://developers.worksmobile.com/)にアクセス
-2. 「新しいアプリ」→「Incoming Webhook」を選択
-3. アプリ情報を入力：
-   - アプリ名: 「SORACOM通知」など
-   - 説明: 「SORACOM Buttonからの通知を受信」
+LINE WORKS で Incoming Webhook を設定します。詳細は [LINE WORKS Incoming Webhook](https://line-works.com/appdirectory/incoming-webhook/) を参照してください。
 
-### 2-2. Webhook URLの取得と設定
+1. [アプリディレクトリ](https://apps.worksmobile.com/appdirectory) で Incoming Webhook を設定
+![alt text](/images/button-to-lineworks-with-flux/1754910209102.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910241217.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910264228.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910281433.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910335090.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910352604.png)
 
-1. 作成したアプリの「Webhook設定」を開く
-2. 通知を送りたいトークルームを選択
-3. **Webhook URL**をコピー（この値を後でSORACOM Fluxで使用）
-4. 必要に応じてアイコンとボット名を設定
+2. 通知先のトークルーム（グループ）に Webhook を追加
+![alt text](/images/button-to-lineworks-with-flux/1754910544687.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910566836.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910616214.png)
+![alt text](/images/button-to-lineworks-with-flux/1754910691338.png)
+![alt text](/images/button-to-lineworks-with-flux/1754911260093.png)
+![alt text](/images/button-to-lineworks-with-flux/1754911275062.png)
+![alt text](/images/button-to-lineworks-with-flux/1754911300220.png)
+3. 発行された「Webhook URL」を控える
+![alt text](/images/button-to-lineworks-with-flux/1754911393469.png)
+4. アイコン・表示名など任意設定
 
 :::message
-Webhook URLは秘匿情報です。他人に教えないよう注意してください。このURLを知っている人は誰でもトークルームにメッセージを送信できます。
+Webhook URL は秘匿情報です。第三者に共有しないでください。
 :::
 
-### 2-3. テスト送信
+### 2-2. 動作確認（任意）
 
-curlコマンドでテスト送信して動作確認：
+curl コマンドでテスト送信して動作確認：
 
 ```bash
-curl -X POST "https://auth.worksmobile.com/oauth2/v2.0/bot/xxxxx/message/webhook" \
+curl -X POST "<取得した Webhook URL>" \
   -H "Content-Type: application/json" \
   -d '{
-    "content": {
-      "type": "text",
+    "title": "送信テスト",
+    "body": {
       "text": "テスト通知です"
-    }
+    },
+    "button":
+      {
+        "label": "詳細を表示",
+        "url": "https://soracom.jp"
+      }
   }'
 ```
 
+![alt text](/images/button-to-lineworks-with-flux/1754922329501.png)
 
-## STEP 3: SORACOM Fluxの設定
+## STEP 3: SORACOM Flux の設定
 
-### 3-1. Flux アプリの作成
+SORACOM Flux では、イベントソースとアクションを UI 上で設定します。コードの記述は不要で、テンプレート変数を使用してデータを参照・加工します。
 
-1. SORACOMコンソールの左メニューから「データ処理」→「SORACOM Flux」を選択
-2. 「アプリ作成」ボタンをクリック
-3. アプリ名を入力（例：「Button-to-LineWorks」）
-4. 説明を入力（任意）
+### 3-1. アプリ作成
 
-### 3-2. フローの構築
+1. コンソール左メニュー「データ処理」→「SORACOM Flux」
+2. 「アプリ作成」→ アプリ名（例: button-to-lineworks）と説明を入力
 
-SORACOM Fluxでは以下のようなフローを構築します：
+### 3-2. イベントソース（IoT デバイス）の設定
 
-```mermaid
-graph LR
-    A[SORACOM<br/>デバイス] --> B[データ変換<br/>処理]
-    B --> C[HTTP Request<br/>Webhook送信]
-    C --> D[ログ出力]
-```
+1. イベントソースを追加 → 種別「IoT デバイス」を選択
+2. 対象デバイスとして SORACOM Button の属する SIM/グループを指定
+3. イベント条件を設定（押下イベント全てを対象にする場合は特に条件指定は不要）
 
-### 3-3. トリガーの設定
+イベントソースから取得できる主なデータ：
+- `{{event.deviceId}}` - デバイス識別子
+- `{{event.timestamp}}` - イベント発生時刻（UNIX ミリ秒）
+- `{{event.payload.clickType}}` - ボタンの押下種別（1:シングル、2:ダブル、3:ロング）
 
-1. 「トリガー」として「SORACOM デバイス」を選択
-2. トリガー条件を設定：
-   - **デバイス**: 登録したSORACOM Buttonを選択
-   - **イベント**: 「ボタン押下」を選択
+参考: [イベントソース: IoT デバイス](https://users.soracom.io/ja-jp/docs/flux/event-source-iot-device/)
 
-### 3-4. データ変換処理の追加
+### 3-3. アクション（HTTP Webhook）の設定
 
-1. 「処理」→「データ変換」を追加
-2. JavaScript処理で受信データを解析：
+1. アクションを追加 → 種別「Webhook」を選択
+2. 基本設定：
+   - **メソッド**: POST
+   - **URL**: STEP 2 で取得した LINE WORKS Webhook URL
+   - **ヘッダ**: Content-Type: application/json
 
-```javascript
-// SORACOM Buttonからのデータを解析
-const payload = event.payload;
-const deviceId = event.deviceId;
-const timestamp = new Date(event.timestamp);
+### 3-4. メッセージ内容の構築
 
-// ボタンの種類を判定
-let clickType = '不明';
-let message = '';
+Flux の UI では、テンプレート変数と条件式を使用してメッセージを構築します。JavaScriptコードの記述は不要です。
 
-if (payload.clickType === 1) {
-    clickType = 'シングルクリック';
-    message = '📍 点検が完了しました';
-} else if (payload.clickType === 2) {
-    clickType = 'ダブルクリック';  
-    message = '⚠️ 異常を検出しました';
-} else if (payload.clickType === 3) {
-    clickType = 'ロングプレス';
-    message = '🚨 緊急事態が発生しました';
-}
+**リクエストボディの設定例：**
 
-// LINE WORKS送信用のデータを構築
-const lineWorksMessage = {
-    content: {
-        type: 'text',
-        text: `${message}\n\n` +
-              `デバイス: ${deviceId}\n` +
-              `押下種類: ${clickType}\n` +
-              `時刻: ${timestamp.toLocaleString('ja-JP')}`
-    }
-};
+アクションの設定画面で、以下のようなJSONテンプレートを設定します：
 
-return {
-    message: lineWorksMessage,
-    deviceId: deviceId,
-    clickType: clickType,
-    timestamp: timestamp.toISOString()
-};
-```
-
-### 3-5. Webhook送信の設定
-
-1. 「処理」→「HTTP リクエスト」を追加
-2. 以下の設定を行う：
-
-**基本設定:**
-- **URL**: （STEP2で取得したWebhook URL）
-- **メソッド**: POST
-- **Content-Type**: application/json
-
-**リクエストボディ:**
 ```json
 {
   "content": {
-    "type": "text", 
-    "text": "{{message.content.text}}"
+    "type": "text",
+    "text": "{{clickTypeMessage}}\n\nデバイス: {{event.deviceId}}\n押下種類: {{clickTypeName}}\n時刻: {{formattedTime}}"
   }
 }
 ```
 
-**設定例:**
-- URL: `https://auth.worksmobile.com/oauth2/v2.0/bot/xxxxx/message/webhook`
-- ヘッダー: `Content-Type: application/json` のみ
-- 認証: 不要（URLに認証情報が含まれている）
+**テンプレート変数の定義：**
 
+Flux の UI 上で、以下のような変数を定義できます（実際の設定方法は UI に従ってください）：
 
-## STEP 4: 動作テストと確認
+- `clickTypeMessage`: 
+  - clickType が 1 の場合: "📍 点検が完了しました"
+  - clickType が 2 の場合: "⚠️ 異常を検出しました"
+  - clickType が 3 の場合: "🚨 緊急事態が発生しました"
 
-### 4-1. Fluxアプリのデプロイ
+- `clickTypeName`:
+  - clickType が 1 の場合: "シングルクリック"
+  - clickType が 2 の場合: "ダブルクリック"
+  - clickType が 3 の場合: "ロングプレス"
 
-1. SORACOM Fluxでフローの構築が完了したら「保存」をクリック
-2. 「デプロイ」ボタンでアプリを本番環境にデプロイ
-3. デプロイ状況を確認し、エラーがないことを確認
+- `formattedTime`: タイムスタンプを日本時間の読みやすい形式に変換
+
+:::message
+条件分岐は Flux UI の条件設定機能や、テンプレート内での三項演算子などを使用して実現します。具体的な設定方法は Flux の UI ガイドに従ってください。
+:::
+
+参考: [アクション: Webhook](https://users.soracom.io/ja-jp/docs/flux/action-webhook/)
+
+### 3-5. 高度な設定（任意）
+
+#### 複数アクションの設定
+
+異なる押下種別に応じて異なるアクションを実行したい場合は、条件付きアクションを複数設定できます：
+
+1. アクションに条件を設定（例：`event.payload.clickType == 3`）
+2. 条件に応じて異なる Webhook URL や メッセージ内容を設定
+
+#### Republish アクションの活用
+
+デバッグや他システムへの連携のために、Republish アクションを追加できます：
+- イベントデータを別のトピックに再発行
+- 複数の宛先への同時配信
+
+参考: [アクション: Republish](https://users.soracom.io/ja-jp/docs/flux/action-republish/)
+
+## STEP 4: テストと動作確認
+
+### 4-1. Flux アプリのデプロイ
+
+1. Flux アプリを保存
+2. 「デプロイ」ボタンでアプリを有効化
+3. デプロイ状態を確認
 
 ### 4-2. エンドツーエンドテスト
 
-#### テスト手順
+1. **SORACOM Button を押下**
+   - シングル、ダブル、ロングの各パターンでテスト
 
-1. **SORACOM Buttonを押下**
-   - シングルクリック、ダブルクリック、ロングプレスを各1回実行
+2. **Flux の実行ログ確認**
+   - コンソールの Flux アプリ詳細画面で実行ログを確認
+   - イベント受信とアクション実行の成功を確認
 
-2. **SORACOM コンソールでログ確認**
-   - 「データ処理」→「SORACOM Flux」→該当アプリ
-   - 「実行ログ」でデータ処理状況を確認
+3. **LINE WORKS での受信確認**
+   - 設定したトークルームでメッセージ受信を確認
 
-3. **LINE WORKSで通知確認**
-   - 設定したトークルームに通知が届いているか確認
-   - メッセージ内容が正しいか確認
-
-#### 期待される通知例
-
-**シングルクリック時:**
+期待される通知例：
 ```
 📍 点検が完了しました
 
-デバイス: button-xxxx-xxxx
-押下種類: シングルクリック  
-時刻: 2024/12/16 14:30:15
+デバイス: button-xxxx
+押下種類: シングルクリック
+時刻: 2025/08/11 15:00:15
 ```
 
-**ダブルクリック時:**
-```
-⚠️ 異常を検出しました
+## トラブルシューティング
 
-デバイス: button-xxxx-xxxx
-押下種類: ダブルクリック
-時刻: 2024/12/16 14:31:22
-```
+### Button からイベントが来ない場合
+- LED 状態、SIM ステータス、電波状況を確認
+- SORACOM コンソールのログでデータ送信を確認
 
-**ロングプレス時:**
-```
-🚨 緊急事態が発生しました
-
-デバイス: button-xxxx-xxxx
-押下種類: ロングプレス
-時刻: 2024/12/16 14:32:45
-```
-
-### 4-3. トラブルシューティング
-
-#### よくある問題と解決方法
-
-**1. SORACOM Buttonからデータが送信されない**
-- LEDの点滅パターンを確認
-- SIMの状態が「アクティブ」か確認
-- ネットワーク接続状況を確認
-
-**2. Fluxでエラーが発生する**
+### Flux でエラーが発生する場合
 - 実行ログでエラー詳細を確認
-- JavaScriptの構文エラーをチェック
-- 環境変数が正しく設定されているか確認
+- テンプレート変数の参照パスが正しいか確認
+- まずは固定文字列でテストし、段階的に変数を追加
 
-**3. LINE WORKSに通知が届かない**
-- アクセストークンの有効期限を確認
-- Bot権限とトークルーム参加状況を確認
-- API URLとパラメータが正しいか確認
+### LINE WORKS に届かない場合
+- Webhook URL のコピーミスを確認
+- JSON 形式が正しいか確認（Content-Type も含む）
+- LINE WORKS 側の Webhook 設定・権限を確認
 
-**4. 認証エラーが発生する**
-- Consumer KeyとSecretが正しいか確認
-- OAuth scopeが適切か確認
-- トークンの取得処理に問題がないか確認
+## 応用と拡張
 
-## 応用例とカスタマイズ
+### 複数デバイスの管理
 
-### 5-1. 複数デバイスの管理
+デバイス ID に基づいて異なるメッセージや宛先を設定：
+- Flux の条件機能を使用してデバイスごとにアクションを分岐
+- デバイス ID をキーとした変数マッピングを活用
 
-複数のSORACOM Buttonを使用する場合の設定例：
+### 時間帯による制御
 
-```javascript
-// デバイスごとの設定
-const deviceConfig = {
-    'button-office-001': {
-        location: '本社1F受付',
-        responsible: 'reception-team'
-    },
-    'button-factory-002': {
-        location: '工場A棟',
-        responsible: 'factory-team'
-    }
-};
+Flux の条件機能を使用して時間帯による制御を実装：
+- 営業時間内外での通知先変更
+- 緊急度に応じた通知の優先度設定
 
-const config = deviceConfig[event.deviceId] || {
-    location: '不明な場所',
-    responsible: 'general'
-};
+### データの蓄積と分析
 
-const message = `${baseMessage}\n` +
-              `場所: ${config.location}\n` +
-              `担当: ${config.responsible}`;
-```
-
-### 5-2. 時間帯による通知制御
-
-業務時間外の通知を制御する例：
-
-```javascript
-const now = new Date();
-const hour = now.getHours();
-const isBusinessHour = hour >= 9 && hour < 18;
-
-if (!isBusinessHour && payload.clickType !== 3) {
-    // 緊急時以外は業務時間外は通知しない
-    return { skip: true };
-}
-```
-
-### 5-3. エスカレーション機能
-
-重要度に応じて通知先を変更する例：
-
-```javascript
-let notificationTarget = 'general-room';
-
-if (payload.clickType === 3) {
-    // 緊急時は管理者グループに通知
-    notificationTarget = 'emergency-room';
-} else if (payload.clickType === 2) {
-    // 異常時は保守チームに通知  
-    notificationTarget = 'maintenance-room';
-}
-```
+- SORACOM Harvest との連携でデータ蓄積
+- SORACOM Lagoon でのダッシュボード作成
+- 押下履歴の可視化と分析
 
 ## まとめ
 
-この記事では、SORACOM ButtonとLINE WORKSをSORACOM Fluxで連携する方法を詳しく解説しました。
+SORACOM Flux の最新仕様では、UI 上での設定とテンプレート変数を使用することで、コーディング不要で柔軟なデータ処理が可能です。主なポイント：
 
-### 構築したシステムの特徴
+- イベントソースとアクションを UI で設定
+- テンプレート変数（`{{event.payload.clickType}}` など）でデータ参照
+- 条件分岐は UI の条件設定機能で実現
+- JavaScriptコードの記述は不要
 
-- **簡単操作**: ボタンを押すだけで通知送信
-- **柔軟な通知**: 押下方法に応じてメッセージを変更
-- **リアルタイム**: 即座にチーム全体に情報共有
-- **拡張性**: 複数デバイス、時間制御、エスカレーション等に対応
-
-### 今後の発展可能性
-
-- **位置情報の活用**: GPS付きButtonで場所情報も通知
-- **画像連携**: SoraComカメラとの連携で状況を可視化
-- **データ蓄積**: SORACOM Harvestでボタン押下履歴を分析
-- **他サービス連携**: Slack、Teams、メール等への同時通知
-
-SORACOM FluxとLINE WORKSの組み合わせにより、従来の業務フローを大幅に効率化できます。ぜひ皆さんの業務でも活用してみてください！
+この仕組みにより、SORACOM Button と LINE WORKS の連携が簡単に実現でき、業務の効率化に貢献できます。
 
 :::message
-この記事で紹介した設定や料金は2024年12月時点の情報です。最新の情報は各サービスの公式ドキュメントをご確認ください。
+本記事は 2025年8月時点の公式ドキュメントに基づいています。各サービスの仕様は更新される可能性があるため、導入時は必ず最新の公式ドキュメントをご確認ください。
 :::
