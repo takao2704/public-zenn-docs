@@ -40,31 +40,14 @@ Flux では UI 上での設定とテンプレート変数を使用したデー�
 
 ## 全体構成
 
-```mermaid
-graph TD
-  A[SORACOM Button]
-  B[SORACOM Platform]
-  C[Flux (IoT Device)]
-  D[HTTP Webhook (POST)]
-  E[LINE WORKS Room]
+![alt text](/images/button-to-lineworks-with-flux/1754975318101.png)
 
-  A --> B
-  B --> C
-  C --> D
-  D --> E
-```
+## STEP 1: SORACOM LTE-M Button for Enterprise の基本確認
 
-## STEP 1: SORACOM Button の基本確認
+### 1-1. デバイスの登録
 
-### 1-1. デバイスの登録と確認
-
-1. [SORACOM コンソール](https://console.soracom.io/) にログイン
-2. SIM 管理で内蔵 SIM がアクティブであることを確認
-3. 初回起動と押下テストを実施し、接続ランプ・ログ送信を確認
-
-:::message alert
-LED 点滅パターンでネットワーク状態を確認してください。詳細はデバイス同梱のガイドを参照。
-:::
+[ユーザーコンソールに SORACOM LTE-M Button for Enterprise を登録する](https://users.soracom.io/ja-jp/guides/soracom-lte-m-button-series/lte-m-button-enterprise/register/)に従って、ボタンの初期セットアップを行います。
+https://users.soracom.io/ja-jp/guides/soracom-lte-m-button-series/lte-m-button-enterprise/register/
 
 ## STEP 2: LINE WORKS Incoming Webhook の準備
 
