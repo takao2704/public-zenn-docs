@@ -18,7 +18,7 @@ SORACOM LTE-M Button for Enterprise は簡単に IoT 通知の仕組みを作れ
 
 - SORACOM Button の押下（シングル／ダブル／ロング）を検知し、指定の LINE WORKS トークルームに通知
 - 押下種別・時刻・デバイス ID を含むメッセージの自動送信
-- Flux のテンプレート機能を使った柔軟なメッセージ構築
+- ローコードIoTアプリケーションビルダー SORACOM Flux を使った柔軟なメッセージ構築
 
 
 ## 事前準備
