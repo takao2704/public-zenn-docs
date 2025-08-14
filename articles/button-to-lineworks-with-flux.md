@@ -12,11 +12,11 @@ published: true
 
 ## はじめに
 
-SORACOM LTE-M Button for Enterprise は簡単に IoT 通知の仕組みを作れるデバイスです。本記事では SORACOM Flux を使ってButton 押下をトリガに LINE WORKS の Incoming Webhook へメッセージを送信する仕組みを解説します。
+[SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/) は簡単に IoT 通知の仕組みを作れるデバイスです。本記事では SORACOM Flux を使ってButton 押下をトリガに LINE WORKS の Incoming Webhook へメッセージを送信する仕組みを解説します。
 
 ## 実現できること
 
-- SORACOM Button の押下（シングル／ダブル／ロング）を検知し、指定の LINE WORKS トークルームに通知
+- [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/) の押下（シングル／ダブル／ロング）を検知し、指定の LINE WORKS トークルームに通知
 - 押下種別・時刻・デバイス ID を含むメッセージの自動送信
 - ローコードIoTアプリケーションビルダー SORACOM Flux を使った柔軟なメッセージ構築
 
@@ -24,7 +24,7 @@ SORACOM LTE-M Button for Enterprise は簡単に IoT 通知の仕組みを作れ
 ## 事前準備
 
 - SORACOM アカウント
-- SORACOM LTE-M Button for Enterpriseのアクティブ化
+- [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/)のアクティブ化
 - LINE WORKS テナント（Incoming Webhook 利用権限）
 
 ## 全体構成
@@ -177,7 +177,7 @@ SORACOM Flux では、イベントソースとアクションを UI 上で設定
 
 ## STEP 4: 動作確認
 
-1. **SORACOM Button を押下**
+1. **SORACOM LTE-M Button for Enterprise を押下**
    - ボタンをシングルクリック
    - オレンジの点滅後に緑の点灯があれば成功。
 
@@ -205,7 +205,7 @@ STEP 3-4 で設定した静的なテストメッセージを、実際のボタ�
   メッセージ: 「🚨 異常を検知しました」
 
 
-### 5-1. SORACOM Button のデータフォーマット
+### 5-1. SORACOM LTE-M Button for Enterprise のデータフォーマット
 
 #### 基本的なデータ構造
 IoTデバイスイベントチャネルのpayloadは以下のようなJSONとなっています。
