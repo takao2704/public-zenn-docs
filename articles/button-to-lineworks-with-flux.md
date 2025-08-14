@@ -14,6 +14,10 @@ published: true
 
 [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/) は簡単に IoT 通知の仕組みを作れるデバイスです。本記事では SORACOM Flux を使ってButton 押下をトリガに LINE WORKS の Incoming Webhook へメッセージを送信する仕組みを解説します。
 
+## 全体構成
+
+![alt text](/images/button-to-lineworks-with-flux/1754975318101.png)
+
 ## 実現できること
 
 - [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/) の押下（シングル／ダブル／ロング）を検知し、指定の LINE WORKS トークルームに通知
@@ -27,9 +31,6 @@ published: true
 - [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/)のアクティブ化
 - LINE WORKS テナント（Incoming Webhook 利用権限）
 
-## 全体構成
-
-![alt text](/images/button-to-lineworks-with-flux/1754975318101.png)
 
 ## STEP 1: SORACOM LTE-M Button for Enterprise のセットアップ
 
