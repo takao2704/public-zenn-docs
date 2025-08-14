@@ -228,7 +228,7 @@ IoTデバイスイベントチャネルのpayloadは以下のようなJSONとな
 | `batteryLevel` | 数値 | バッテリー残量（4段階） | 1.0: 満充電<br>0.75: 75%<br>0.5: 50%<br>0.25: 25% |
 | `binaryParserEnabled` | 真偽値 | バイナリパーサーの有効/無効 | true または false |
 
-### 5-4. Republish アクションの設定変更
+### 5-2. Republish アクションの設定変更
 クリックタイプごとに別々のrepublishアクションを作成し、それぞれに実行条件（condition）を設定します。
 最終形態はこんな感じになります。
 ![alt text](/images/button-to-lineworks-with-flux/1755090011103.png)
@@ -296,7 +296,7 @@ IoTデバイスイベントチャネルのpayloadは以下のようなJSONとな
 
 
 
-### 5-5. Webhook ボディの修正
+### 5-3. Webhook ボディの修正
 
 STEP 3-4 で設定した Webhook アクションを編集し、republishアクションから受け取ったデータを使用するようにHTTPボディを変更します：
 
