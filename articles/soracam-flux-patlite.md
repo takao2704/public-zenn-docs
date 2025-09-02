@@ -28,7 +28,7 @@ https://ascii.jp/elem/000/004/278/4278992/img.html
 ## 準備するもの
 - SORACOM アカウント
 - ソラカメ
-- SORACOM Air
+- SORACOM Air（SIMカード）
 - LTEルーター
 - パトライト（HTTP対応）
 
@@ -36,6 +36,7 @@ https://ascii.jp/elem/000/004/278/4278992/img.html
 - スイッチングハブ
 - LANケーブル
 - 設定用PC
+- [SORACOM LTE-M Button for Enterprise](https://soracom.jp/store/5206/) 
 
 ## 手順
 
@@ -247,6 +248,10 @@ https://weathernews.jp/s/topics/202403/180215/
 :::
 
 #### 5. ボタンデバイスからのデータ（unified endpoint）
+
+[ユーザーコンソールに SORACOM LTE-M Button for Enterprise を登録する](https://users.soracom.io/ja-jp/guides/soracom-lte-m-button-series/lte-m-button-enterprise/register/)に従って、ボタンの初期セットアップを行います。
+https://users.soracom.io/ja-jp/guides/soracom-lte-m-button-series/lte-m-button-enterprise/register/
+
 
 イベントソース：IoTデバイス
 有効化して、ボタンデバイスの所属するグループを選択しておきます。
