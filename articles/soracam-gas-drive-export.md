@@ -1,5 +1,5 @@
 ---
-title: "GASでソラカメ静止画をGoogle Driveへ保存"
+title: "GASでソラカメ静止画をGoogle Driveへ保存しよう"
 emoji: "📸"
 type: "tech"
 topics: ["SORACOM","GAS","GoogleDrive","ソラカメ"]
