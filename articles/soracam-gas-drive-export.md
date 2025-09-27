@@ -435,7 +435,7 @@ flowchart TD
     A["認証: POST /auth で apiKey と token を取得"]
     B["エクスポート要求: POST /sora_cam/devices/{deviceId}/images/exports で exportId を取得"]
     C{"ポーリング（個別GET）"}
-    C2["GET /sora_cam/devices/{deviceId}/images/exports/{exportId}（実装）"]
+    C2["GET /sora_cam/devices/{deviceId}/images/exports/{exportId}"]
     D{"status?"}
     E["completed かつ url"]
     F["署名付きURLをダウンロード"]
