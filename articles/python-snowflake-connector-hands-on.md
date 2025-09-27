@@ -1,6 +1,6 @@
 ---
-title: "VS Code × Python Snowflake Connector ハンズオン：インストールから実務活用まで（Google SSO対応・pandas/SQLAlchemy/Jupyter）"
-emoji: "🐍❄️"
+title: "VS Code × Python Snowflake Connector"
+emoji: "❄️"
 type: "tech"
 topics: ["snowflake", "python", "vscode", "sqlalchemy", "pandas", "jupyter", "dataengineering"]
 published: false
