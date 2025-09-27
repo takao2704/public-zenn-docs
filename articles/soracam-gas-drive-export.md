@@ -470,19 +470,19 @@ flowchart TD
 ## 参考リンク・関連記事
 外部リンク:
 - SORACOM Developers: API リファレンス（ソラカメ）
-　https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam
+https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam
 - ソラカメ ドキュメント
-　https://users.soracom.io/ja-jp/docs/soracom-cloud-camera-services/
+https://users.soracom.io/ja-jp/docs/soracom-cloud-camera-services/
 - Google Apps Script: UrlFetchApp
-  https://developers.google.com/apps-script/reference/url-fetch/url-fetch-app
+https://developers.google.com/apps-script/reference/url-fetch/url-fetch-app
 - Google Apps Script: DriveApp
-　https://developers.google.com/apps-script/reference/drive/drive-app
+https://developers.google.com/apps-script/reference/drive/drive-app
 - Google Apps Script: 時間主導型トリガー
-  https://developers.google.com/apps-script/guides/triggers/installable
+https://developers.google.com/apps-script/guides/triggers/installable
 - ソラカメ: exportSoraCamDeviceRecordedImage（POST /sora_cam/devices/{deviceId}/images/exports）
-  https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam/exportSoraCamDeviceRecordedImage
+https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam/exportSoraCamDeviceRecordedImage
 - ソラカメ: getSoraCamDeviceExportedImage（GET /sora_cam/devices/{deviceId}/images/exports/{exportId}）
-  https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam/getSoraCamDeviceExportedImage
+https://users.soracom.io/ja-jp/tools/api/reference/#/SoraCam/getSoraCamDeviceExportedImage
 
 ## まとめ
 - SORACOM API で静止画をエクスポートし、署名付きURLから GAS で Drive 保存できます。
