@@ -420,7 +420,8 @@ function sampleRun() {
 2. `runExportAndSave()` の第2引数にその ID を渡します。
 
 ### GASをスタンドアロンで作成した場合のスプレッドシートへの記録（任意）
-ここまでの手順で、スプレッドシートのextentionsとしてGASを設定しており、ログなどが自動的に、スタンドアロンで構築した場合
+ここまでの手順では、プレッドシートのextentionsとしてGASを設定しております。
+スタンドアロンで構築した場合に実行ログや保存先DriveのURLをスプレッドシートに記録したい場合はGASの環境変数に情報を入れておくことで対応できるようにコーディングしてあります。
 1. 新規にスプレッドシートを作成し、URL の ID（例: https://docs.google.com/spreadsheets/d/XXXXXXXXXXX/... の XXXXX... 部分）を控えます。
 2. GAS エディタの「歯車マーク」→「Project Settings」を開きます。
 ![alt text](/images/soracam-gas-drive-export/1758985711285.png)
