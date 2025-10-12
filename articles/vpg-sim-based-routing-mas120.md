@@ -3,7 +3,7 @@ title: "VPGのSIMベースルーティング機能をセンチュリー・シス
 emoji: "🛠️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [soracom, vpg, mas120, routing, network]
-published: false
+published: true
 ---
 
 :::message
@@ -15,38 +15,24 @@ published: false
 もう少し技術的な表現をすると、PC から WireGuard / SORACOM Arc を用いて SORACOM の VPG に接続し、VPG に収容された SORACOM Air（セルラー）側の経路を経由して、MA-S120 配下の Raspberry Pi に到達する構成を解説します。VPG を中核に据えることで、SIM（回線）を軸にした到達制御・セキュリティ制御・監視がしやすくなります。
 
 ## 構成
-```mermaid
-flowchart LR
-  PC[PC]
-  ARC[WireGuard SORACOM Arc]
-  VPG[SORACOM VPG]
-  AIR[SORACOM Air]
-  MAS120[MA S120]
-  LAN[LAN]
-  RPI[Raspberry Pi]
+![alt text](/images/vpg-sim-based-routing-mas120/1759937150049.png)
+SORACOM Arc のvSIM の入ったPCから、SORACOM Air の入った MA-S120 配下の Raspberry Pi にDNATをせずに通信を到達させていきます。
 
-  PC --> ARC --> VPG --> AIR --> MAS120 --> LAN --> RPI
-```
-
-**アドレス情報:**
-- Arc: 172.16.0.0/12
-- SIM WAN: 172.16.0.0/12
-
-## 役割（コンポーネント解説）
-- PC:
+## コンポーネント解説
+- LAPTOP:
   - 社内/自宅などから VPG へ WireGuard / SORACOM Arc でセキュア接続
   - 目的の Raspberry Pi 宛のトラフィックをトンネルへルーティング
-- SORACOM VPG:
+- VPG (Type-F):
   - プライベートネットワークの中核。Arc/WireGuard の終端、Air セッションの収容点
   - SIM グループと紐付け、SIM ベースでの経路制御やアクセス制御を適用可能
 - SORACOM Air (SIM):
   - セルラー経由で VPG に取り込まれる回線
-  - MA-S120 のモバイル側セッションとして収容
-- MA-S120:
+  - ルーター(MA-S120) のモバイル側セッションとして収容
+- ルーター(MA-S120):
   - LTE ルータ。セルラー（WAN）と LAN を中継
   - Raspberry Pi を収容し、ローカル側アドレス設計の要
 - Raspberry Pi:
-  - 到達対象のエッジ端末。固定 IP を推奨（例: 192.168.100.2/24、GW=192.168.10.1）
+  - 到達対象のエッジ端末。MA-S120 の LAN 側に接続。
 
 ## そもそも
 ### VPGとは
@@ -101,45 +87,47 @@ https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
 ## 手順
 
 ### 1. SORACOM 側の主にVPGの設定（VPG、Arc/WireGuard 設定、SIM グループ紐付けて SIM間通信まで確認する）
+まずは、この図のオレンジ色の経路を作っていきます。
+![alt text](/images/vpg-sim-based-routing-mas120/1760082974290.png)
 
 1. SORACOM ArcのvSIMとSORACOM AirのSIMを1回線ずつ用意して、同じグループに所属させます。
 今回は「takao_D2D_test」というグループを作成しました。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759843632766.png)
 
-1. type-FのVPGを作成します。
+2. type-FのVPGを作成します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759840580412.png)
 ![alt text](/images/vpg-sim-based-routing-mas120/1759840630647.png)
 
-1. 適切な設定を選択してVPGを作成します。
+3. 適切な設定を選択してVPGを作成します。
 インターネットゲートウェイ：今回の手順ではどちらでも問題ないです必要に応じて有効/無効を選択してください。
 ランデブーポイント：SIMのサブスクリプションに応じて選択します。plan01s -> 最寄りの場所, planX3 -> フランクフルト
 デバイスサブネットレンジ: 今回は172.16.0.0/12（クラスB）にしました。
 ご自身のネットワーク設計に応じて適切な範囲を選択してください。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759840734019.png)
 
-1. VPG建立
+4. VPG建立
 ![alt text](/images/vpg-sim-based-routing-mas120/1759842034189.png)
 
-1. VPGにグループを紐づけます。
+5. VPGにグループを紐づけます。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759842123161.png)
 
-1. VPGとグループがひも付きました。
+6. VPGとグループがひも付きました。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759842217644.png)
 が、まだこのタイミングではSIMおよびvSIMはVPGに接続されていません。
 IPアドレスが10.xx.xx.xxとなっていますが、一度セッションが切れて新たなセッションで接続される際にこのVPGに接続されて172.16.0.0/12となります。
 SORACOMのセッションというのはVPGとのセッションと言っても過言ではないのです。
 
-1. セッションを切ります。
+7. セッションを切ります。
 チェックを入れて、
 ![alt text](/images/vpg-sim-based-routing-mas120/1759844137114.png)
 「操作」->「セッション切断」を選択します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759844175513.png)
 ![alt text](/images/vpg-sim-based-routing-mas120/1759844194131.png)
 
-1. しばらくして、両方ともオンラインに復帰したらIPアドレスが更新されていることを確認しましょう。
+8. しばらくして、両方ともオンラインに復帰したらIPアドレスが更新されていることを確認しましょう。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759844266969.png)
 
-1. SORACOM Arc の接続情報を更新しておきます。
+9. SORACOM Arc の接続情報を更新しておきます。
 SIM詳細のバーチャルSIMタブを開き、WireGuard設定をコピーします。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759844692123.png)
 `Address =` の行から下をすべて更新します。
@@ -148,7 +136,7 @@ SIM詳細のバーチャルSIMタブを開き、WireGuard設定をコピーし�
 さらに、`AllowedIPs =` の行に `172.16.0.0/12`と、`192.168.100.0/24`を追加します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759845100368.png)
 
-1. PCのWireguardを接続してSORACOMに接続できることを確認します。
+10. PCのWireguardを接続してSORACOMに接続できることを確認します。
 pong.soracom.ioにpingを飛ばしてみましょう。
 ```
 takao@TakaonoMacBook-Pro ~ % ping pong.soracom.io
@@ -182,14 +170,14 @@ Request timeout for icmp_seq 3
 takao@TakaonoMacBook-Pro ~ % 
 
 ```
-
+ 
 返ってこないのが正解です。まだVPGのSIM間通信の機能がONになっていないからです。
-
-1. VPGの設定に戻って、SIM間通信を有効にします。
+ 
+11. VPGの設定に戻って、SIM間通信を有効にします。
 「デバイスLAN設定」を開いて
 ![alt text](/images/vpg-sim-based-routing-mas120/1759845580354.png)
 
-1. 「SORACOM Gate C2D / D2Dを有効化する」をONにして保存します。
+12. 「SORACOM Gate C2D / D2Dを有効化する」をONにして保存します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759845643741.png)
 
 この状況でもう一度MA-S120にpingを飛ばしてみましょう。
@@ -215,23 +203,31 @@ takao@TakaonoMacBook-Pro ~ %
 ここからは一度MA-S120の設定に入ります。
 この画面はまた戻ってくるので開いておきましょう。
 
-### 2. MA-S120 の基本設定（APN、LAN 設計、必要に応じ静的ルート/NAT）
+### 2. MA-S120 の基本設定
+ルーターのWAN側から来たパケットをLAN側に流すための設定を行います。
+![alt text](/images/vpg-sim-based-routing-mas120/1760235804182.png)
+上図のオレンジ色の線を通すための設定を行います。
+
+この手順が実施できていることをもう一度確認しましょう
+- [ ] MA-S120 が SORACOM Air でモバイル接続できること
+https://blog.soracom.com/ja-jp/2023/02/20/ma-s120-introduction/
+
+
 1. MA-S120 の下流にRaspberry Piを接続します。
 
-1. Raspberry Pi のデスクトップからChromiumを起動して、MA-S120 の管理画面にアクセスします。
+2. Raspberry Pi のデスクトップからChromiumを起動して、MA-S120 の管理画面にアクセスします。
 （この時点で、MA-S120のeth0は`192.168.253.253`(デフォルト), Raspberry Piのeth0はstaticに`192.168.253.250`となっているはずです。）
 
-1. MA-S120のUI管理画面`https://192.168.253.253`にログインします。
+3. MA-S120のUI管理画面`https://192.168.253.253`にログインします。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759846883610.png)
 
-1. 「Network関係」から「Ethernet設定」を開きます。
-- ifup Method: Static
-- IP Address: `192.168.100.1`
-- Netmask: `255.255.255.0`
-として、「即時反映」はOFFで「設定」をクリックします。
-![alt text](/images/vpg-sim-based-routing-mas120/1759847251860.png)
-
-1. DHCPサーバーを設定します。
+4. 「Network関係」から「Ethernet設定」を開きます。
+  - ifup Method: Static
+  - IP Address: `192.168.100.1`
+  - Netmask: `255.255.255.0`
+  として、「即時反映」はOFFで「設定」をクリックします。
+  ![alt text](/images/vpg-sim-based-routing-mas120/1759847251860.png)
+5. DHCPサーバーを設定します。
 今回、Raspberry Pi にはDHCPでIPアドレスを払い出すことにします。
 「Network関係」から「DHCPサーバー設定」を開きます。
 - 設定するInterface: eth0
@@ -240,14 +236,18 @@ takao@TakaonoMacBook-Pro ~ %
 として、「eth0で有効」をONして「設定」をクリックします。
 その後「起動」をクリックしてDHCPサーバーを起動します。
 
-この時点ではまだDHCPサーバーは起動しておらず再起動によって起動します。
+この時点ではまだDHCPサーバーは動作しておらず再起動によって動作します。
+![alt text](/images/vpg-sim-based-routing-mas120/1760242274362.png)
 
-1. 再起動
+6. 再起動
 ![alt text](/images/vpg-sim-based-routing-mas120/1759882282752.png)
 電源マークをクリックして「REBOOT」をクリックします。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759882325774.png)
 
-### 3. Raspberry Pi のネットワーク設定（IPアドレス / デフォルトゲートウェイの付与）
+### 3. Raspberry Pi のネットワーク設定
+引き続き下図のオレンジ色の線を通すための設定を行います。
+![alt text](/images/vpg-sim-based-routing-mas120/1760235804182.png)
+
 
 1. ラズベリーパイのEth0をDHCPに設定します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759883131421.png)
@@ -256,11 +256,12 @@ IPアドレスが`192.168.100.x`になっていることを確認します。
 今回の場合は`192.168.100.10`が払い出されました。
 後で利用するのでMACアドレスを控えておきましょう。
 
-1. Raspberry Pi に必ず192.168.100.10が割り当てられるように、MA-S120のDHCPサーバーでMACアドレスとIPアドレスの紐付けを行います。
+2. Raspberry Pi に必ず192.168.100.10が割り当てられるように、MA-S120のDHCPサーバーでMACアドレスとIPアドレスの紐付けを行います。
 
-1. PCにコンソールケーブルを接続します。
+3. PCにコンソールケーブルを接続します。
+参考：https://ma-tech.centurysys.jp/doku.php?id=console_ssh_login:start
 
-1. ターミナルソフトでシリアルコンソールに接続します。
+4. ターミナルソフトでシリアルコンソールに接続します。
 macOSの場合
 ```
 screen /dev/tty.usbserial-xxxx 115200
@@ -269,10 +270,10 @@ screen /dev/tty.usbserial-xxxx 115200
 Windowsの場合
 Tera Termなどのターミナルソフトで接続します。
 
-1. rootでログインします。
+5. rootでログインします。
 ログイン後、`root@gemini:~#`という表示がされればOKです。
 
-1. dnsmasqでRaspberry PiのMACアドレスとIPアドレスを紐付けます。
+6. dnsmasqでRaspberry PiのMACアドレスとIPアドレスを紐付けます。
 /etc/dnsmasq.confを適当なエディタで編集します。
 最終行に以下の行を追加します。
 ```
@@ -283,18 +284,22 @@ PIアドレスは`192.168.100.100`にしましたが、`192.168.100.0/24`の範�
 ![alt text](/images/vpg-sim-based-routing-mas120/1759884561345.png)
 編集が済んだら保存して終了します。
 
-1. dnsmasqを再起動します。
+7. dnsmasqを再起動します。
 ```
 systemctl restart dnsmasq
 ```
 ![alt text](/images/vpg-sim-based-routing-mas120/1759884642819.png)
 特に応答はありません（エラーが出なければOK）。
 
-1. raspberry piのIPアドレスが変化したか確認します。
+8. raspberry piのIPアドレスが変化したか確認します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759884744116.png)
 さっきは`192.168.100.10`だったのが、`192.168.100.100`に変わっていますね。
 
 ### 4. SIMベースルーティングの設定と確認
+LAN内のサブネット宛のパケットをルーターに通すためのVPGとルーターの設定を行います。
+下図のオレンジ色の線を通すための設定です。
+![alt text](/images/vpg-sim-based-routing-mas120/1760237126286.png)
+
 1. SORACOM Arcを有効にしたPCからRaspberry Piにpingを飛ばしてみます。
 ```
 takao@TakaonoMacBook-Pro ~ % ping 192.168.100.100
@@ -310,21 +315,21 @@ takao@TakaonoMacBook-Pro ~ %
 ```
 返ってこないのが正解です。VPGのSIM間通信は有効になっていますがSIMベースルーティングが有効になっていないからです。
 
-1. VPGの設定に戻って、SIMベースルーティングを有効にします。
+2. VPGの設定に戻って、SIMベースルーティングを有効にします。
 「デバイスLAN設定」を開いて、
 ![alt text](/images/vpg-sim-based-routing-mas120/1759885698820.png)
 「SIMベースルーティング」の設定をしていきます。
 
-1. ルーティング設定の「追加」をクリックします。
+3. ルーティング設定の「追加」をクリックします。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759885804040.png)
 
-1. 表示された入力欄にIPアドレスレンジとSIMを指定します。
+4. 表示された入力欄にIPアドレスレンジとSIMを指定します。
 IPアドレスレンジ: `192.168.100.0/24`
 SIM: 先ほどMA-S120に挿入したSORACOM AirのSIMを指定します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759885898999.png)
 左下の保存ボタンをクリックします。
 
-1. SIMベースルーティングを有効にします。
+5. SIMベースルーティングを有効にします。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759886852872.png)
 このあと、一度SORACOM AirとSORACOM Arcの両方のセッションを切断して再接続します。
 ![alt text](/images/vpg-sim-based-routing-mas120/1759886535371.png)
@@ -348,7 +353,7 @@ takao@TakaonoMacBook-Pro ~ %
 ```
 まだ通りませんね。おそらくMA-S120がこのパケットを処理できていないためです。
 
-1. MA-S120のiptablesにルーティング設定を追加します。
+6. MA-S120のiptablesにルーティング設定を追加します。
 webUIの「Network関係」->「Firewall設定」-> 「Filter設定」を開きます。
 以下のように
 In Zone: WAN
@@ -362,7 +367,7 @@ Action: ACCEPT
 ![alt text](/images/vpg-sim-based-routing-mas120/1759887491765.png)
 
 
-1. 満を持して、もう一度PCからRaspberry Piにpingを飛ばしてみます。
+7. 満を持して、もう一度PCからRaspberry Piにpingを飛ばしてみます。
 ```
 takao@TakaonoMacBook-Pro ~ % ping 192.168.100.100
 PING 192.168.100.100 (192.168.100.100): 56 data bytes
@@ -405,7 +410,7 @@ PC側では以下のコマンドを起動しておきます。
 ```
 sudo tcpdump -ni utun4 'icmp'
 ```
-utun4というのがSORACOM Arcのインターフェースです。環境によって異なるので`ifconfig`で確認してください.
+utun4というのが私の環境のSORACOM Arcのインターフェースです。環境によって異なるので`ifconfig`などで確認してください.
 ここに流入するICMPパケットをキャプチャします。
 
 
@@ -415,6 +420,9 @@ raspberry pi 側からpingを飛ばします。
 なんと、SORACOM Arc のPC側で受信したソースIPアドレスが`172.29.220.112`となっています。
 これは、MA-S120のppp0インターフェースのIPアドレスです。
 したがって、Raspberry PiからのパケットはMA-S120を経由してVPGに到達しますが、VPGから見ると送信元IPアドレスがMA-S120のIPアドレスに変換されています。
+
+つまりこういうことです。
+![alt text](/images/vpg-sim-based-routing-mas120/1760237471930.png)
 
 SIMベースルーティングを使うシチュエーションでは、MA-S120の下にあるRaspberry Piなどのエッジ端末からVPGに接続している別の端末に対して、ソースIPアドレスをローカルIPアドレスに変換したい場合があります。
 
@@ -461,7 +469,86 @@ sudo iptables-save | sudo tee /etc/iptables/rules-save
 
 ## appendix
 
+### 設定確認ポイント
+#### SORACOM
+- VPG
+  - タイプがType-Fであること
+  - デバイスサブネットレンジ：実際にSIM/vSIMに振られているIPアドレスの範囲と一致していること
+  - 基本設定：このVPGを利用しているグループ：設定したグループが紐付いていること
+  - プライバシーセパレーター：チェックボックスOFF![alt text](/images/vpg-sim-based-routing-mas120/1759937603114.png)
+  - デバイスLAN設定
+    - SORACOM Gate C2D / D2Dを有効化する：ON
+    - SIMベースルーティング:ルーティング設定
+      - IP アドレスレンジ：MA-S120のLAN側のサブネットと一致していること
+      - SIM ID: MA-S120に挿入したSORACOM AirのSIMを指定していること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759938002616.png)
+
+- SIM管理画面
+  - グループ：SORACOM AirのSIMとSORACOM ArcのvSIMが同じグループに所属していること
+  - ステータス：オンラインになっていること
+  - IPアドレス：VPGのデバイスサブネットレンジに含まれるIPアドレスが割り当てられていること
+  ![alt text](/images/vpg-sim-based-routing-mas120/1759938129830.png)
+
+- SIM グループ
+  - SORACOM Air for セルラー設定：VPGのIDが正しく設定されていること
+  ![alt text](/images/vpg-sim-based-routing-mas120/1759938488166.png)
+
+- SIM詳細画面
+  - SIM
+    - セッション詳細タブ：セッション履歴
+      - VPG: 作成したVPGのIDが表示されていること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759938656951.png)
+  - vSIM
+    - セッション詳細タブ：セッション履歴
+      - VPG: 作成したVPGのIDが表示されていること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759938794924.png)
+    - バーチャルSIMタブ：セッション
+      WireGuard設定情報がWireGuardクライアントに入れている情報と齟齬がないこと
+      （WireGuardクライアントの設定には個々に表示されている情報に加えて、`AllowedIPs`にルーターのローカル側のレンジと、デバイスサブネットのレンジが含まれていること）
+      念の為、この画面からバーチャルSIMセッションのリセットをかけることも有効
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759939058710.png)
+
+- WireGuardクライアントソフトの設定
+  - SORACOM ArcのvSIMの設定情報が正しく設定されていること
+  - `AllowedIPs`にルーターのローカル側のレンジと、デバイスサブネットのレンジが含まれていること
+  ![alt text](/images/vpg-sim-based-routing-mas120/1759939145057.png)
+
+- Network 関係
+  - Ethernet設定
+    - ifup MethodがStaticでIP AddressがデバイスLAN設定のSIMベースルーティングで指定したIPアドレスレンジに含まれていること
+    ![alt text](/images/vpg-sim-based-routing-mas120/1759966501144.png)
+    - 本体に設定が反映されていること（設定ボタンをもう一度押すなどの対応）
+  - LTE設定
+    - 接続設定
+      - SORACOMのAPNが正しく設定されていること
+      - デフォルトルートとして選択されていること
+      - 本体に設定が反映されていること（設定ボタンをもう一度押すなどの対応）
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759966627580.png)
+
+    - ステータス・制御
+      - IMSIやICCIDなどが、正しく表示されていて、ユーザーコンソールのSIM詳細画面と一致していること
+      - IPアドレスがVPGのデバイスサブネットレンジに含まれるアドレスになっていること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1759969892031.png)
+
+  - Firewall設定
+    - filter設定
+      所望のプロトコル/ポートが通るように設定されていること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1760244223316.png)
+    - 本体に設定が反映されていること（設定ボタンをもう一度押すなどの対応）
+
+  - DHCP Server設定
+    - DHCP Lease 設定
+      - DHCPサーバーがeth0で有効になっていること
+      - リース範囲設定がMA-S120のLAN側のサブネットに含まれていること
+        ![alt text](/images/vpg-sim-based-routing-mas120/1760244360273.png)
+      - 本体に設定が反映されていること（設定ボタンをもう一度押すなどの対応）
+    - ステータス
+      - 配下のデバイスに所望のIPアドレスが払い出されていること
+      ![alt text](/images/vpg-sim-based-routing-mas120/1760244541207.png)
+
 ### 初期状態のMA-S120の設定
+
+:::details 設定詳細（クリックして展開）
 
 ```
 Ubuntu 22.04.5 LTS gemini ttyS0
@@ -485,7 +572,7 @@ root@gemini:~# ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 192.168.253.253  netmask 255.255.255.0  broadcast 192.168.253.255
         inet6 fe80::280:6dff:fea3:7b6  prefixlen 64  scopeid 0x20<link>
-        ether 00:80:6d:a3:07:b6  txqueuelen 1000  (Ethernet)
+        ether 00:80:6d:xx:xx:xx  txqueuelen 1000  (Ethernet)
         RX packets 5  bytes 1615 (1.6 KB)
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 9  bytes 762 (762.0 B)
@@ -573,3 +660,4 @@ root@gemini:~# iptables -t nat -S
 root@gemini:~# 
 ```
 
+:::
