@@ -2,9 +2,12 @@
 title: "SORACOM Air, Arc, Canal, VPG, カスタムDNS, Route53 を組み合わせた構成"
 emoji: "🔗"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["soracom", "customdns", "arc"]
-published: false
+topics: ["soracom", "IoT","route53","openwrt","dnsmasq"]
+published: true
 ---
+:::message
+「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
+:::
 
 ## tl;dr
 
@@ -12,19 +15,21 @@ published: false
 - 追加: Air(Global) 端末は Arc+WireGuard で JP VPG に参加
 - 名前解決の要: WireGuard IF に PHZ Resolver を注入（RasPi=wg-quick/resolvconf、OpenWrt(teltonika RUT240)=dnsmasq）
 - OpenWrt(teltonika RUT240)の注意: dnsmasq の Rebind 防御でプライベート回答が落ちる -> reject を無効化する必要あり
-- これで 海外カバレッジ端末でも既存 FQDN（PHZ）で日本 VPC のサーバーに到達できる
+- これで グローバルカバレッジ端末でも既存 FQDN（PHZ）で日本 VPC のサーバーに到達できる
 
 
 ## やりたいこと
 
-日本カバレッジのSORACOM Air の回線を用いてSORACOM Canal 経由で AWS VPC 内のアプリケーションへ FQDN 通信している既存構成に、海外カバレッジのIoT デバイス（またはSORACOM以外の回線のIoT デバイス）を追加し、同じく FQDN 通信を実現したい。
+日本カバレッジのSORACOM Air の回線を用いてSORACOM Canal 経由で AWS VPC 内のアプリケーションへ FQDN 通信している既存構成に、グローバルカバレッジのIoT デバイス（またはSORACOM以外の回線のIoT デバイス）を追加し、同じく FQDN 通信を実現したい。
 結論として構成としては以下のようになる
 ![alt text](/images/using-soracom-with-customdns-and-vpcpeering/1761958942764.png)
 
-今回のブログでは以下に詳述する既存構成を構築済みであり、この構成に対して新たに海外カバレッジのIoT デバイス（またはSORACOM以外の回線のIoT デバイス）を追加する形となる。
+今回のブログでは以下に詳述する既存構成を構築済みであり、この構成に対して新たにグローバルカバレッジのIoT デバイス（またはSORACOM以外の回線のIoT デバイス）を追加する形となる。
 - 既存構成の詳細
-  - Serve managed DNS to SORACOM Air（Route 53 Private Host Zone と Resolver Inbound を用いた FQDN 通信）
+  - Serve managed DNS to SORACOM Air（Route 53 Private Hosted Zone（PHZ）と Resolver Inbound を用いた FQDN 通信）
   - https://dev.classmethod.jp/articles/serve-managed-dns-to-soracom-air/
+
+このときのIoTデバイス側の設定に関する注意点やポイントを解説する。
 
 ## 課題
 
@@ -67,15 +72,19 @@ VPC設定
 | 10.0.0.0/16 | local | VPC 内ローカル |
 | SORACOM VPG の CIDR<br>(100.64.0.0/10の一部) | VPC Peering 接続（Canal） | 閉域（Canal）経路 |
 
-セキュリティグループ（インバウンド）
+EC2向けセキュリティグループ（インバウンド）
 | プロトコル | ポート | 許可元 (Source) | 用途 |
 |---|---|---|---|
-| ICMP | - | 必要範囲（例: 運用端末/VPG デバイスレンジ） | 疎通確認（ping 等） |
-| TCP | 22 | 必要範囲（例: 運用端末/VPG デバイスレンジ） | SSH |
+| ICMP | - | 必要範囲（例: VPGレンジ） | 疎通確認（ping 等） |
+| TCP | 22 | 必要範囲（例: VPGレンジ） | SSH |
+| TCP | 443 | 必要範囲（例: クライアント/VPGレンジ） | HTTPS ssm agent 等 |
+| （その他） | 必要ポート | 必要範囲 | デバイス→サーバーの想定通信に合わせて開放 |
+
+リゾルバエンドポイント向けセキュリティグループ（インバウンド）
+| プロトコル | ポート | 許可元 (Source) | 用途 |
+|---|---|---|---|
 | TCP | 53 | 必要範囲（例: VPC 内/Resolver/必要クライアント） | DNS over TCP |
 | UDP | 53 | 必要範囲（例: VPC 内/Resolver/必要クライアント） | DNS over UDP |
-| TCP | 443 | 必要範囲（例: クライアント/デバイス） | HTTPS ssm agent 等 |
-| （その他） | 必要ポート | 必要範囲 | デバイス→サーバーの想定通信に合わせて開放 |
 
 セキュリティグループ（アウトバウンド）
 | プロトコル | ポート | 宛先 (Destination) | 用途 |
@@ -644,7 +653,11 @@ root@RUT240:~#
 | `dnsmasq` プロセス                        | UDP:53 リスナー                            | LANクライアントおよびルータ自身のDNS問い合わせを中継・キャッシュ |
 
 
-それではここからWireGuard トンネルインターフェース `wg0` にResolver InboundのIPアドレスをDNSサーバーとして設定し、さらにRoute53 PHZのドメインを `wg0` インターフェースにバインドする設定を行います。
+それではここからWireGuard トンネルインターフェース `soracom` にResolver InboundのIPアドレスをDNSサーバーとして設定し、さらにRoute53 PHZのドメインを `soracom` インターフェースにバインドする設定を行います。
+
+:::message
+RUT240 では GUI で付けた名前（ここでは soracom）が WireGuard IF 名になります
+:::
 
 まずはWireGuard トンネルインターフェースの設定をします。
 
