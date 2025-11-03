@@ -27,6 +27,7 @@ published: true
 今回のブログでは以下に詳述する既存構成を構築済みであり、この構成に対して新たにグローバルカバレッジのIoT デバイス（またはSORACOM以外の回線のIoT デバイス）を追加する形となる。
 - 既存構成の詳細
   - Serve managed DNS to SORACOM Air（Route 53 Private Hosted Zone（PHZ）と Resolver Inbound を用いた FQDN 通信）
+
 https://dev.classmethod.jp/articles/serve-managed-dns-to-soracom-air/
 ↑ takiponeパイセンの記事（不朽の名作）だYO!！
 
