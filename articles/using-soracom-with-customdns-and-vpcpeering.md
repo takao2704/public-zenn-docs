@@ -397,6 +397,11 @@ WireGuard トンネル経由でVPC内のResolver Inbound に名前解決を投�
 
 なんとかしてWireGuard トンネル経由でResolver Inbound に名前解決を投げるように設定を変更する必要があります。
 
+ここで早まってwwan0 インターフェースのDNS設定を書き換えても意味がありません。それをやってしまうとインターネットの名前解決もできなくなってしまい、SORACOM Arcで利用するWireguardのトンネル確立に必要な`link.arc.soracom.io` の名前解決もできなくなってしまいます。
+(globalカバレッジのSORACOM Air 回線からRoute53のDNSサーバーに直接問い合わせることはできないため。あくまで、wireguardトンネル経由でResolver Inboundに問い合わせる必要があります。)
+
+
+
 対処方針としては、wireguardインターフェース `wg0` にResolver InboundのIPアドレスをDNSサーバーとして設定し、さらにRoute53 PHZのドメインを `wg0` インターフェースにバインドする設定を行います。
 先程のWireGuardの設定ファイル `/etc/wireguard/wg0.conf` に以下を追記します。
 
