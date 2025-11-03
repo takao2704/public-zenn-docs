@@ -1,5 +1,5 @@
 ---
-title: "SORACOM Air, Arc, Canal, VPG, カスタムDNS, Route53 を組み合わせた構成"
+title: "SORACOM Arc + Canal + VPG + Route 53 PHZでカスタムDNS"
 emoji: "🔗"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["soracom", "IoT","route53","openwrt","dnsmasq"]
@@ -448,7 +448,7 @@ pi@raspberrypi1:~ $ wg-quick up wg0
 
 
 コマンドの出力を比べると、
-`[#] resolvconf -a tun.wg1 -m 0 -x`
+`[#] resolvconf -a tun.wg0 -m 0 -x`
 という出力が追加されています。
 
 VPCへの名前解決と疎通確認を試してみます。
@@ -708,6 +708,9 @@ peer: vqJbLlnMb57k9Vrs3jqdwNaYKGQ1jUUGUyT2ex8F8Wc=
   transfer: 1.18 KiB received, 3.21 KiB sent
   persistent keepalive: every 25 seconds
 root@RUT240:~# 
+
+`wg show`コマンド出力結果の確認ポイント表にまとめると以下のようになります。
+所望のインターフェースの、peer endpointが正しいこと、トンネルが確立していること、通信が発生していること、VPCまでのルートが通っていることを確認します。
 ```
 | 項目               | 値                              | 判定                          |
 | ---------------- | ------------------------------ | --------------------------- |
@@ -718,7 +721,7 @@ root@RUT240:~#
 | allowed ips      | 各種 100.127.x.x + `10.0.0.0/16` | 日本側VPCまでルート通過OK             |
 
 
-日本側のVPC内EC2インスタンス（例：10.0.15.169）にPingしてみましょう。
+日本側のVPC内EC2インスタンス（例：10.0.15.169）にIPアドレス直でPingしてみましょう。
 
 ```bash
 ping -c 3 10.0.15.169
@@ -903,7 +906,7 @@ udhcpc: no lease, failing
 この状態で、別のSSHセッションでリアルタイムログを確認します。
 
 ```bash
-root@RUT240:~# logread -f | grep -i dnsmasq
+logread -f | grep -i dnsmasq
 ```
 
 もとのSSHセッションでFQDNでの疎通確認を行います。
@@ -923,7 +926,7 @@ Address:        127.0.0.1#53
 root@RUT240:~# 
 ```
 
-このときのログを確認します。
+このときの仕掛けておいたログを確認します。
 
 ログ出力例
 ```
