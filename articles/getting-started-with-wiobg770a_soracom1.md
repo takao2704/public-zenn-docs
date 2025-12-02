@@ -160,6 +160,7 @@ FreeRTOSがどのようにArduinoスケッチを動かしているか、基本�
 
 ### `xTaskCreate()` について
 ユーザー追加タスクは、Arduino スケッチ内で `xTaskCreate()` を使って生成します。例えば、以下のようなタスク設計が考えられます。この辺は実践編で実際に動かしながら確認していきましょう。
+FreeRTOS側にプロトコル・スタックは持たないので、クラウドとの通信は基本的にはwio_cellularライブラリを使って行う感じになります。
 
 | タスク例 | 役割 | 利用ライブラリ / API の例 |
 | --- | --- | --- |
@@ -167,7 +168,7 @@ FreeRTOSがどのようにArduinoスケッチを動かしているか、基本�
 | 通信タスク | キューからデータを受け取り `wio_cellular` で HTTP/TCP/UDP 送信、再送・再接続を担当 | `WioCellular`, `WioNetwork` |
 | GPS/メタデータタスク | UART (SIM28 など) で位置情報や電圧・RTC 時刻を取得し、ペイロードに付加 | `Serial1`, `TinyGPS++` 等 |
 | 監視／ウォッチドッグタスク | タスク状態や電圧、イベントを監視し、異常時は再起動・ログ出力を実施 | `xTaskGet*`, `analogRead`, ログ API |
-| ログ／ストレージタスク | USB CDC や SD へログ保存、ホストへデバッグ出力 | `Serial`, `TinyUSB`, `SD` |
+| ログ／ストレージタスク | USB CDC や FRAM へログ保存、ホストへデバッグ出力 | `Serial`, `TinyUSB`, `FRAM` |
 
 これらは `xTaskCreate(taskFunc, "name", stackSize, NULL, priority, NULL);` のように生成し、各タスク内で `xQueueSend` などを使って協調します。必要なライブラリはスケッチ側でインクルードし、タスクの中から利用します。
 
