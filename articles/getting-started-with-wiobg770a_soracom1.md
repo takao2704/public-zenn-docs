@@ -3,7 +3,7 @@ title: "Wio BG770AとSORACOM 入門: 概要編"
 emoji: "🧭"
 type: "tech"
 topics: ["WioBG770A", "SORACOM", "IoT","FreeRTOS", "nRF52840"]
-published: false
+published: true
 ---
 
 :::message
