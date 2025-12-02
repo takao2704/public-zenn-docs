@@ -285,7 +285,6 @@ USB接続状態で、resetボタンを2回押すと、UF2モードで接続さ�
 
 1.  ビルドとアップロードを行います。PlatformIO の「Upload」ボタンをクリックします。
 ![alt text](/images/getting-started-with-wiobg770a_soracom1/1764652954528.png)
-
 左下の→アイコンでもOKです。
 ![alt text](/images/getting-started-with-wiobg770a_soracom1/1764653035422.png)
 
