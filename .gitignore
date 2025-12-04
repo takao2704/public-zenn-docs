@@ -5,3 +5,4 @@ articles/*.gif
 articles/*.bak
 articles/soracom-flux-template.md
 images/*/unused*
+.serena/*
