@@ -684,9 +684,12 @@ const bool success = applyNetworkProfile() && startCellularStack() &&
                      powerOnModem() && startNetworkService() &&
                      awaitNetworkReady();
 ```
+
+それではここから各関数の詳細を見ていきましょう。
+
 ### 1. モデム制御フロー関連
 
-初期化時に呼び出されるモデム制御系 API を一覧化しました。次の表を見ながら、どの関数がどの AT レイヤーを叩いているかを追うとログ解析がしやすくなります。
+初期化時に呼び出されるモデム制御系 API を一覧化しました。次の表を見ながら、どの関数がどの ATコマンドを叩いているかを追うとログ解析がしやすくなります。
 
 | 関数 (呼び出し元) | API | 主な引数 | 役割/注意点 |
 | --- | --- | --- | --- |
@@ -701,7 +704,6 @@ const bool success = applyNetworkProfile() && startCellularStack() &&
 ### 2. SIM／モデム情報の取得 (`logModemAndSimIdentity`)
 
 IMSI や ICCID などの識別情報を取得するコマンドを次の表にまとめました。`logModemAndSimIdentity()` の出力と突き合わせる際に参照してください。
-
 
 ```cpp
 static bool logModemAndSimIdentity() {
@@ -836,7 +838,7 @@ static bool logNetworkAttachDetails() {
 
 ### 4. 電力制御 (eDRX/PSM) 状態の確認 (`logPowerSavingConfiguration`)
 
-省電力関連の AT コマンドは値や単位が紛らわしいため、まず次の表で役割を押さえてから `logPowerSavingConfiguration()` のログを読むと状況を把握しやすくなります。
+BG770AはLTE-Mの通信モジュールであるため省電力関連の機能を使ってこそ威力を発揮します。逆に省電力機能を使わないのであれば積極的にwioBG770Aを選ぶ理由はありません。各コマンドの役割を押さえてから `logPowerSavingConfiguration()` のログを読むと状況を把握しやすくなります。
 
 
 ```cpp 
