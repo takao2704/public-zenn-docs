@@ -1,5 +1,5 @@
 ---
-title: "Wio BG770AとSORACOM 入門: 基本編"
+title: "Wio BG770AとSORACOM 入門: LTE接続編"
 emoji: "🛠"
 type: "tech"
 topics: ["WioBG770A", "SORACOM", "LTE", "IoT","ATCommands"]

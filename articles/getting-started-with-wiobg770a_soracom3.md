@@ -1,5 +1,5 @@
 ---
-title: "Wio BG770AとSORACOM 入門: 実践編"
+title: "Wio BG770AとSORACOM 入門: 通信＆センサデータ取得編"
 emoji: "🚀"
 type: "tech"
 topics: ["WioBG770A", "SORACOM", "IoT"]
