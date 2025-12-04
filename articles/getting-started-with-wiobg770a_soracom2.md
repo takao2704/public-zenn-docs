@@ -518,11 +518,11 @@ static bool configurePdpAuthentication() {
 
 :::
 
-このサンプルは BG770A の初期化手順を最小限のコードにまとめたもので、後続の節で参照する関数 (`applyNetworkProfile()` など) もすべて含んでいます。
-
-### シリアルログの読み方
+このサンプルは BG770A の初期化手順を最小限のコードにまとめたもので、後続の節で参照する関数をすべて含んでいます。
 
 書き込み手順は[こちらの記事](https://zenn.dev/takao2704/articles/getting-started-with-wiobg770a_soracom1#vs-code-%2B-platformio-%E3%81%AE%E5%B0%8E%E5%85%A5%E6%89%8B%E9%A0%86)を参照してください。書き込み後、以下の手順でモデム初期化と SORACOM への接続を確認します。
+
+### シリアルログの読み方
 
 シリアルモニタでモニタリングをすると、以下のようなログが出力されます。`[INIT][1/5]` から `[5/5]` までの流れが EPS Attach 完了 (= `waitUntilCommunicationAvailable()` が `true`) へ向かうシーケンスです。
 
