@@ -19,6 +19,17 @@ published: true
 
 本記事は「Wio BG770AとSORACOM 入門」シリーズの第3回で、前回の[LTE接続編](https://zenn.dev/takao2704/articles/getting-started-with-wiobg770a_soracom2)で扱ったコードを前提にしています。LTE 接続が一通り確認できていることをスタートラインに、今回は通信まわりの高レイヤー API とセンサ制御をまとめて一体化させます。SORACOM Unified Endpoint へ HTTP/JSON・TCP・UDP を飛ばす方法と、GPS（UART）と CO₂ センサ（I2C）を読み出しする部分の実装について個別に確認していきます。
 
+wioにセンサを接続するところから始めていきましょう
+![alt text](/images/getting-started-with-wiobg770a_soracom3/1765126836841.png)
+
+## 仕様センサ
+- GPS
+  SeeedGrove-GPS (Air530Z) 
+  https://www.seeedstudio.com/SeeedGrove-GPS-Air530-p-4584.html
+- CO2センサ
+  CO2 Unit with Temperature and humidity Sensor (SCD40)
+  https://shop.m5stack.com/products/co2-unit-with-temperature-and-humidity-sensor-scd40
+
 ## 使用ライブラリ
 
 - **WioCellular / WioNetwork**
