@@ -22,7 +22,7 @@ published: true
 wioにセンサを接続するところから始めていきましょう
 ![alt text](/images/getting-started-with-wiobg770a_soracom3/1765126836841.png)
 
-## 仕様センサ
+## 使用センサ
 - GPS
   SeeedGrove-GPS (Air530Z) 
   https://www.seeedstudio.com/SeeedGrove-GPS-Air530-p-4584.html
