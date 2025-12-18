@@ -55,7 +55,8 @@ cmd + shift + p でコマンドパレットを開き、`MicroPico: Initialize mi
 (理由は後ほど解説)
 ![alt text](/images/mechatrax-microcat1-ide/1766067906789.png)
 
-- [patch_micropico.sh](files/patch_micropico.sh) をダウンロードして実行し、拡張にパッチを当てる。
+- [patch_micropico.sh](https://github.com/takao2704/public-zenn-docs/blob/main/files/patch_micropico.sh) をダウンロードして実行し、拡張にパッチを当てる。
+https://github.com/takao2704/public-zenn-docs/blob/main/files/patch_micropico.sh
 ```bash
 chmod +x patch_micropico.sh
 ./patch_micropico.sh
