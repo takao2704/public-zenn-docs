@@ -2,7 +2,7 @@
 title: "VSCode + MicroPico で MicroCat.1(MECHATRAX) に接続する"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["micropython", "pico", "vscode","microcat1"]
+topics: ["micropython", "raspberrypipico", "vscode","microcat1"]
 published: true
 ---
 
