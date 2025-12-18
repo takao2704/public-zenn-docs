@@ -3,7 +3,7 @@ title: "VSCode + MicroPico で MicroCat.1(MECHATRAX) に接続する"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["micropython", "pico", "vscode","microcat1"]
-published: false
+published: true
 ---
 
 :::message
@@ -15,23 +15,20 @@ published: false
 日頃積んだままになっているIoTデバイスに電源とSIMを入れて動かしつつ、今度もう一度動かしたくなったときにすぐ動かせるようにするための手順やノウハウをまとめ超個人的な備忘録です。
 :::
 
-## 何の話か
+## 何の話
 
 2025/12/15に販売開始されたMECHATRAX社のMicroCat.1（プレリリース版）を早速購入し、人柱になっております。
 
 https://mechatrax.com/2025/12/15/microcat1-pre/
 
 ThonnyでMicroPythonを動かすことはできたのですが、どうしてもVSCodeで動かしたくなり試した記録です。
-
-
-## サマリ
-
-MicroCat.1（RP2350 系）の MicroPython 環境を VS Code 拡張 MicroPico から扱う際にscreen等でシリアルポートを占有していないにもかかわらず接続できなかった問題を解決しました。
+具体的にはMicroCat.1（RP2350 系）の MicroPython 環境を VS Code 拡張 MicroPico から扱う際にscreen等でシリアルポートを占有していないにもかかわらず接続できなかった問題を解決しました。
 また、ポートを認識したあとにも若干動作が安定しなかった部分がありその点も合わせて対処する方法をメモしておきます。
 
 ## クイックスタート
 - microcat.1 を USB 接続
-
+![alt text](/images/mechatrax-microcat1-ide/1766071222960.png)
+![alt text](/images/mechatrax-microcat1-ide/1766071069080.png)
 
 - `screen /dev/cu.usbmodem1101 115200` 等で REPL に入れることを確認。
 ![alt text](/images/mechatrax-microcat1-ide/1766067406509.png)
@@ -95,6 +92,12 @@ pin.high()
 ```
 と打っていくとLEDが点灯する。
 ![alt text](/images/mechatrax-microcat1-ide/1766068852427.png)
+before
+![alt text](/images/mechatrax-microcat1-ide/1766071222960.png)
+after
+![alt text](/images/mechatrax-microcat1-ide/1766071069080.png)
+
+
 
 例えば、
 [こちら](https://kousaku-prog.com/vscode-micropython/)のサイトで紹介されている
@@ -167,7 +170,7 @@ print("Finished.")
 
 #### 3. MicroPico の挙動を確認
 
-- VID/PID 差分を把握しても、`getSerialPorts` が 1.5 秒ごとに走り RangeError が連続発生し、接続が確立しない。
+- VID/PID 差分を吸収しても、`getSerialPorts` が 1.5 秒ごとに走り RangeError が連続発生し、接続が確立しない。
 - Toggle Mpy FS では `stat/readFile` エラーが多発し、仮想 FS は実質使えない。
 
 ### ログサンプル（抜粋）
@@ -240,7 +243,7 @@ cd /Users/takao/Project/MicroPico-1
 - 他 OS やバージョンでパスが異なる場合は `patch_micropico.sh` に拡張ディレクトリを明示指定してください。
 
 ## まとめ
-
+- とりあえずそこまでストレスなく使えるようにはなりました。
 - MicroCat.1 のカスタム VID/PID で MicroPico の自動列挙が失敗する問題は、拡張側で「手動指定ポートがあれば列挙しない」ようにするだけで解消できます。
 - `scripts/patch_micropico.sh` で簡単に適用でき、手動接続＋アップロード運用で安定しました。
 - 拡張を更新した際はバックアップを確認しつつ再適用してください。
