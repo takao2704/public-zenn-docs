@@ -2,8 +2,8 @@
 title: "cm級GNSS走行トラッキングにおける測位精度と測位モードの実測レポート"
 emoji: "🍜"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
-published: false
+topics: [gnss,qzss,clas,soracom,iot]
+published: true
 ---
 :::message
 「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
@@ -56,12 +56,12 @@ https://qzss.go.jp/technical/system/l6.html
 使った物品とサービスは本当にこれだけです。
 - CLAS対応GPSトラッカー（詳細は後述）
 - SORACOM IoT SIM (SORACOM Air for Cellular)
-    - https://users.soracom.io/ja-jp/guides/getting-started/
+  - https://users.soracom.io/ja-jp/guides/getting-started/
 - SORACOM Harvest Data
-    - https://users.soracom.io/ja-jp/docs/harvest/enable-data/
+  - https://users.soracom.io/ja-jp/docs/harvest/enable-data/
 - SORACOM Lagoon 3
-    - https://users.soracom.io/ja-jp/docs/lagoon-v3/
-    - https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
+  - https://users.soracom.io/ja-jp/docs/lagoon-v3/
+  - https://users.soracom.io/ja-jp/docs/lagoon-v3/getting-started/
 
 ## CLAS対応GPSトラッカー(GNSS受信・測位デバイス)の構成
 
@@ -212,12 +212,10 @@ https://maps.app.goo.gl/8rPT6hiLMA25VRTFA
 ![alt text](/images/qzss-cm-level-gnss-tracking/1766254240428.png)
 https://maps.app.goo.gl/mfyoH63MwHRqzRWCA
 
-
 流山ICを過ぎたあたりからは再びCLAS信号をロストしてしまい、DGPSでの測位に戻ってしまいました。
 おそらくこのあたりは周りの土地が高く高速道路が地面よりも低い位置にあるため、衛星の電波が届きにくい環境になってしまっているのではないかと推測されます。
 ![alt text](/images/qzss-cm-level-gnss-tracking/1766254858091.png)
 https://maps.app.goo.gl/ocriP6ezdY4B2Lg57
-
 
 ### 柏ICから一般道走行
 
@@ -302,8 +300,9 @@ CLASがすごいのがここからで、止まっている間のプロットを�
   - CLASがロストしても、DGPSであればある程度の測位精度は確保できるため、ユースケースによってはDGPS運用も選択肢になり得ます。
   - また、DGPSはZED-F9P単体でも利用できるため、コスト面でのメリットもあります。
 
-  ※ DGPS の補強方式（SBAS等）は環境や受信状況に依存します（本記事では詳細は割愛します）
+※1 DGPS の補強方式（SBAS等）は環境や受信状況に依存します（本記事では詳細は割愛します）
 
+※2 今回の結果はアンテナをダッシュボードに設置した条件での実測であり、ルーフ設置等では受信状況やロスト/再補足の傾向が変わる可能性があります。
 
 ### 運用上の注意点（重要）
 - **電源断（リセット）は強制的に「初期測位からやり直し」になる**
@@ -314,7 +313,7 @@ CLASがすごいのがここからで、止まっている間のプロットを�
 
 ### 今後やりたいこと（残課題）
 - [SORACOM Query](https://soracom.jp/services/query/)で集計して比較する（都市部 / 高速 / 郊外などの詳細なデータ比較）
-    （実はこれデータのあたりをつけるためにちょろっとやってはいます）
+  （実はこれデータのあたりをつけるためにちょろっとやってはいます）
 - ロスト→再補足までの時間を定量化する（速度や空の見え方との関係）
 - 持ち運び時の給電設計を改善して、行列中でも CLAS Fix を維持できる構成にしてリベンジする（🍜）
 - ラーメン屋さんの行列待ちをcmレベルでトレースする(🍜🍜)
