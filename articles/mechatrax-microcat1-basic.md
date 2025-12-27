@@ -9,6 +9,11 @@ published: true
 「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
 :::
 
+:::message
+本記事は[積みボード/デバイスくずしAdvent Calendar 2025](https://qiita.com/advent-calendar/2025/tsumiboard)の18日目の記事です。
+日頃積んだままになっているIoTデバイスに電源とSIMを入れて動かしつつ、今度もう一度動かしたくなったときにすぐ動かせるようにするための手順やノウハウをまとめ超個人的な備忘録です。
+:::
+
 ## はじめに
 
 MECHATRAX の MicroCat.1 を Raspberry Pi Pico（MicroPython）と組み合わせ、UART 接続の GNSS と I2C 接続の SCD40 を REPL で一歩ずつ確認する手順をまとめます。NMEA の生データ確認から `micropyGPS` でのパース、環境センサの動作確認までを「基本編」として記録しました。
@@ -58,6 +63,7 @@ VSCodeの拡張機能「MicroPico」を使って、MicroCat.1に接続します�
 https://zenn.dev/takao2704/articles/mechatrax-microcat1-ide
 
 の内容を前提にして作業を進めていきます。
+個人的な趣味で、VSCodeにこだわっていますが、Thonnyなど他のIDEでも同様に進められます。
 
 microCat.1に接続できていることを確認しましょう。
 
@@ -569,6 +575,22 @@ while True:
         next_at = time.ticks_add(time.ticks_ms(), interval_ms)
     else:
         time.sleep_ms(wait_ms)
+```
+
+#### 処理フロー（Mermaid）
+
+```mermaid
+graph TD
+    A[起動] --> B[SIM7672でPPP接続]
+    B --> C[GNSS UART0 と SCD40 I2C1 初期化]
+    C --> D[メタデータ userdata から interval_s 取得 デフォルト60秒]
+    D --> E{送信ループ}
+    E --> F[GNSS を読み取り MicropyGPS 更新]
+    F --> G[SCD40 を読み取り CO2/Temp/RH 取得]
+    G --> H[struct.pack でバイナリ payload 生成]
+    H --> I[uni.soracom.io へ HTTP POST]
+    I --> J[ticks_ms で次回送信時刻を補正して待機]
+    J --> E
 ```
 
 上記の内容を`test.py` としてVSCodeのエディタに保存し、左下の「▷RUN」ボタンを押して実行します。
