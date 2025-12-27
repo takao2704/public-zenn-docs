@@ -376,6 +376,8 @@ https://users.soracom.io/ja-jp/docs/binary-parser/usage/
 
 ![alt text](/images/mechatrax-microcat1-basic/1766844444160.png)
 
+このあとの、TCP/UDP 送信用ペイロードを組み立てるコードを REPL から実行します。
+
 ```python
 import struct
 
