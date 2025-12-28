@@ -117,8 +117,8 @@ microcat.1にライブラリを入れていく手順は以下の通りです。
 REPLではなくシェルを開きます。
 ![alt text](/images/mechatrax-microcat1-basic/1766767448554.png)
 
-.mpyを作成して microcat.1 に転送するために使用する`upload.sh`スクリプトはこちら
-
+.mpyを作成して microcat.1 に転送するために使用する`upload.sh`スクリプトはこちらです。ダウンロードして実行できるようにしておいてください。
+https://raw.githubusercontent.com/takao2704/public-zenn-docs/refs/heads/main/files/upload.sh
 
 
 以下を実行していきます。
