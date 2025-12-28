@@ -27,7 +27,7 @@ https://store.mechatrax.com/product.php?id=84
 
 https://www.switch-science.com/products/8350
 
-- M5Stack用GPSユニット v1.1（UART1 接続、モジュール TXD → GP9、RXD → GP8）
+- M5Stack用GPSユニット v1.1（UART0 接続、モジュール TXD → GP0、RXD → GP1）
 
 https://www.switch-science.com/products/10037
 
@@ -74,7 +74,7 @@ VSCodeのターミナルでREPLを開きます。
 
 ### GPSモジュール（UART）
 
-Pico の UART1 で GNSS を読む手順です。屋外や窓際で衛星を掴ませてから試すとスムーズです。
+Pico の UART0 で GNSS を読む手順です。屋外や窓際で衛星を掴ませてから試すとスムーズです。
 
 #### UART に流れてくるデータを 1 行だけ確認
 
@@ -117,6 +117,10 @@ microcat.1にライブラリを入れていく手順は以下の通りです。
 REPLではなくシェルを開きます。
 ![alt text](/images/mechatrax-microcat1-basic/1766767448554.png)
 
+.mpyを作成して microcat.1 に転送するために使用する`upload.sh`スクリプトはこちら
+
+
+
 以下を実行していきます。
 
 ```bash
@@ -157,7 +161,7 @@ from machine import UART, Pin
 from micropyGPS import MicropyGPS
 from utime import ticks_ms, ticks_diff
 
-uart = UART(1, baudrate=115200, tx=Pin(8), rx=Pin(9), timeout=1000, timeout_char=100)
+uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1), timeout=1000, timeout_char=100)
 gps = MicropyGPS(local_offset=9)  # JST は +9
 
 last_sec = None
