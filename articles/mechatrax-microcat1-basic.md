@@ -110,6 +110,8 @@ while True:
 緯度経度などの必要な情報を取り出すにはNMEAセンテンスをパースする必要があります。
 当然このような汎用的な処理は既存ライブラリに任せるのが良いでしょう。ここではmicropyGPSライブラリを使います。
 
+https://github.com/inmcm/micropyGPS
+
 microcat.1にライブラリを入れていく手順は以下の通りです。
 
 今回は、`mpy-cross` を使って `.mpy` を作り、`lib/` に置いてから `./scripts/upload.sh` で microcat.1 に転送する方針とします。
@@ -232,6 +234,10 @@ i2c.scan()
 ![alt text](/images/mechatrax-microcat1-basic/1766768402220.png)
 
 #### SCD40 ライブラリを用意して Pico に入れる
+
+利用するのはこちらのライブラリです。
+
+https://github.com/peter-l5/MicroPython_SCD4X
 
 先ほどと同様に、`.mpy` にして `lib/` へ置くだけです。
 
