@@ -117,19 +117,7 @@ microcat.1にライブラリを入れていく手順は以下の通りです。
 REPLではなくシェルを開きます。
 ![alt text](/images/mechatrax-microcat1-basic/1766767448554.png)
 
-.mpyを作成して microcat.1 に転送するために使用する`upload.sh`スクリプトはこちらです。ダウンロードして実行できるようにしておいてください。
-https://github.com/takao2704/public-zenn-docs/blob/main/files/upload.sh
-
-内容的には、
-
-microcat.1 の `/lib` を毎回空にしてから、ローカルの `lib/` 配下にある `.mpy` を同じ階層構造でアップロードするワンライナー集です。主な流れは以下のとおりです。
-
-- `mpremote` を使って接続し、引数なしならポートを自動検出（`./upload.sh /dev/cu.usbmodemXXXX` のようにポート指定も可）。`MPREMOTE_BIN` を変えれば別パスの mpremote も利用できます。
-- デバイス上に `/lib` が無ければ先に作成し、埋め込み Python スニペットで `/lib` を再帰的に空にしてからアップロードするので、以前の不要なファイルが残りません。
-- ローカル `lib/` を `find` で走査し、見つかった `.mpy` ごとに対応するディレクトリをデバイス上に作りつつ `mpremote cp` でコピーします。下層ディレクトリもそのまま反映されます。
-- `set -euo pipefail` でエラーは捕捉しつつ、mkdir など失敗しても問題ない箇所は `|| true` で無視するため、存在確認のたびに停止しない挙動です。
-
-ということで、以下の手順で実行していきます。
+以下の手順で実行していきます。
 
 ```bash
 # 必要に応じてvenvなどで環境を分けてください
@@ -154,6 +142,24 @@ mpy-cross -o lib/micropyGPS.mpy third_party/micropyGPS/micropyGPS.py
 ./upload.sh                 
 # ./upload.sh /dev/cu.usbmodemXXXX  # ポートを指定したい場合
 ```
+
+最後のところで突然出てきた `upload.sh`について説明します。
+
+.mpyを作成して microcat.1 に転送するために使用するものでスクリプトはこちらです（先に言えよ）。ダウンロードして実行できるようにしておいてください。
+https://github.com/takao2704/public-zenn-docs/blob/main/files/upload.sh
+
+内容的には、
+
+microcat.1 の `/lib` を毎回空にしてから、ローカルの `lib/` 配下にある `.mpy` を同じ階層構造でアップロードするワンライナー集です。主な流れは以下のとおりです。
+
+- `mpremote` を使って接続し、引数なしならポートを自動検出（`./upload.sh /dev/cu.usbmodemXXXX` のようにポート指定も可）。`MPREMOTE_BIN` を変えれば別パスの mpremote も利用できます。
+- デバイス上に `/lib` が無ければ先に作成し、埋め込み Python スニペットで `/lib` を再帰的に空にしてからアップロードするので、以前の不要なファイルが残りません。
+- ローカル `lib/` を `find` で走査し、見つかった `.mpy` ごとに対応するディレクトリをデバイス上に作りつつ `mpremote cp` でコピーします。下層ディレクトリもそのまま反映されます。
+- `set -euo pipefail` でエラーは捕捉しつつ、mkdir など失敗しても問題ない箇所は `|| true` で無視するため、存在確認のたびに停止しない挙動です。
+
+
+
+
 
 #### micropyGPS でパースして人間向けに表示する
 
