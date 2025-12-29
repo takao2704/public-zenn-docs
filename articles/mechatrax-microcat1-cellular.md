@@ -173,6 +173,8 @@ IP通信そのもの（TCP/UDP/HTTP）は一切行いません。
 `debug=True` を付けると、`connect()` 内部の AT 送受信が REPL にそのまま出ます。実際の接続シーケンスは次の通りです。
 `#`から始まる行は説明のために追加したコメントです。
 
+
+:::details `debug=True`実行例ログ全文
 ```
 MicroPython v1.27.0-1.gfc07f56013 on 2025-12-11; MechaTracks MicroCat.1 with RP2350
 Type "help()" for more information or .help for custom vREPL commands.
@@ -364,7 +366,8 @@ b'\n'
 b'CONNECT\r\n'
 >>> 
 ```
-
+:::
+#### ざっくり解説
 RTS/CTS への切り替え（`AT+IFC=2,2`）、ボーレート確認（`AT+IPR?`）、APN と認証の確認（`AT+CGDCONT?` / `AT+CGAUTH?`）、必要に応じた RF 一時停止（`CFUN=4/1`）、PSアタッチ完了待ち（`CEREG=0,1/0,5`）、そして `ATD*99***1#` による PPP 開始までの一連が分かります。
 
 このログから、CEREG の登録完了を待ったうえで `ATD*99***1#` により PPP ネゴシエーションが始まり、IPCP で IP/DNS が付与されていることが分かります。
@@ -458,10 +461,10 @@ RTS/CTS への切り替え（`AT+IFC=2,2`）、ボーレート確認（`AT+IPR?`
 
 ## シーケンスに含まれないAT コマンドで情報を取得したいときにはどうすればいいか？
 
-今回のブログはこれを調べたかったために書いたのになります。
+実は今回のブログ、これを調べたかったために書いたものになります。
 これまでの記述の通りconnect()を行うと、modemの電源を入れるだけではなくPSアタッチをして、PDPコンテキストを確立し、さらにPPPセッションを確立するところまで一気に行います。
 
-PPP 確立後、UART は **データモード**になるため、この状態で AT コマンドを送ると PPP フレームとして扱われてしまいます。
+PPP 確立後、UART は `データモード` になるため、この状態で AT コマンドを送ると PPP フレームとして扱われてしまいます。
 
 例えば、モデムの情報や、電波状況、SIMに関する情報を取得したい場合はLTE modemがATコマンドを受け付ける`コマンドモード`のときに実行する必要があります。
 そのタイミングは以下の2つです。
@@ -535,6 +538,7 @@ if __name__ == "__main__":
 実行結果例
 ![alt text](/images/mechatrax-microcat1-cellular/1767020736399.png)
 
+:::details 実行結果全文
 ```
 MicroPython v1.27.0-1.gfc07f56013 on 2025-12-11; MechaTracks MicroCat.1 with RP2350
 Type "help()" for more information or .help for custom vREPL commands.
@@ -726,5 +730,6 @@ b'CONNECT\r\n'
 >>> 
 
 ```
+:::
 
 とりあえずここまでです。
