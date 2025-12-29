@@ -171,9 +171,7 @@ IP通信そのもの（TCP/UDP/HTTP）は一切行いません。
 
 ## 実際のログ取得手順と抜粋
 
-ソースコードを見た感じ、で理屈的にはここまでの記述のようになるのですが、百聞は一見にしかず、論より証拠です。実際に `connect()` 実行時の AT コマンドログを取得してみましょう。
-
-このライブラリでは `debug=True` を与えることで AT コマンドの送受信ログを REPL に出力できます。
+ソースコードを見た感じ理屈的にはここまでの記述のようになるのですが、百聞は一見にしかず、論より証拠です。実際に `connect()` 実行時の AT コマンドログを取得してみましょう。
 
 ### REPL 実行例（`debug=True`）
 
@@ -385,7 +383,7 @@ RTS/CTS への切り替え（`AT+IFC=2,2`）、ボーレート確認（`AT+IPR?`
 
 ### 役割
 
-ログを出すことができないので、ソースコードを見てみましょう。
+ログを出すことができないので、(ソースコード)[https://github.com/mechatrax/micropython/blob/fc07f5601332d42e2a475a5d970e74b580a3f034/ports/rp2/boards/MTX_MICROCAT1/modules/SIM7672.py#L216C48-L216C49]を見てみましょう。
 
 ```python
     def active(self, activate=None, reset=True):
