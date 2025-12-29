@@ -2,7 +2,7 @@
 title: "MicroCat.1（MechaTrax）はどうやってSORACOMにつながっているのか"
 emoji: "🌊"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["MicroPython", "PPP", "SIM7672", "SORACOM", "LTE"]
+topics: ["MicroPython", "PPP", "SIM7672", "SORACOM", "LTE","microcat1"]
 published: true
 ---
 
