@@ -531,9 +531,10 @@ if __name__ == "__main__":
 
 ```
 
-実行結果例
+IDEの`RUN`ボタンはここ
 ![alt text](/images/mechatrax-microcat1-cellular/1767020736399.png)
 
+実行結果例（ログ）
 :::details 実行結果全文
 ```
 MicroPython v1.27.0-1.gfc07f56013 on 2025-12-11; MechaTracks MicroCat.1 with RP2350
