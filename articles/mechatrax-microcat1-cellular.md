@@ -1,5 +1,5 @@
 ---
-title: "MicroCat.1（MechaTrax）はどうやってSORACOMにつながっているのか"
+title: "MicroCat.1（MECHATRAX）はどうやってSORACOMにつながっているのか"
 emoji: "🌊"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["MicroPython", "PPP",  "SORACOM", "LTE","microcat1"]
@@ -80,23 +80,25 @@ MicroCat.1 の通信構成は、いわゆる **PPP（Point-to-Point Protocol）�
 
 これは、`AT+NETOPEN` や `AT+CIPOPEN` を使うモデム内蔵 TCP/IP（ATソケット方式）とは別物です。
 
+## 全体シーケンス図
+
+ソースコードを元に、MicroCat.1 の通信シーケンスを整理すると以下のようになります。
+各動作の詳細と、実際の動作ログは後述します。
 
 ```mermaid
 sequenceDiagram
+    autonumber
     participant App as RP2350アプリケーション <br> (socket/requests)
     participant SIM as RP2350 <br> (SIM7672ライブラリ）
     participant Modem as SIM7672モデム
     participant RAN as LTEネットワーク
 
-    rect rgb(230,245,255)
-    note over SIM: activate(True)
+    note over App,RAN: ━━━━━ 1. activate(True) ━━━━━
     App->>SIM: activate(True)
     SIM->>Modem: 電源制御 + 初期AT(IFC/IPR等)
     SIM->>Modem: AT+CPIN? READY待ち
-    end
 
-    rect rgb(230,255,230)
-    note over SIM: connect() / pon()
+    note over App,RAN: ━━━━━ 2. connect() / pon() ━━━━━
     App->>SIM: connect(apn,user,key,...)
     SIM->>Modem: AT+CGDCONT?/CGAUTH? 確認・更新 (必要時 CFUN=4→1)
     SIM->>Modem: AT+CFUN=1 でRF有効化
@@ -109,48 +111,37 @@ sequenceDiagram
     Modem-->>SIM: CONNECT
     SIM-)Modem: PPP確立 (LCP→認証→IPCP)
     Modem-->>SIM: IPアドレス/DNS付与
-    end
 
-    rect rgb(255,255,220)
-    note over Modem: PPP終端までのトラフィック
+    note over App,RAN: ━━━━━ 3. PPP通信 ━━━━━
     App-->>Modem: IPトラフィック (PPPトンネル)
     Modem-->>RAN: LTE下位レイヤーへカプセル化して送信
     RAN-->>Modem: 受信→PPPペイロード抽出
     Modem-->>App: PPP経由でIPパケット渡し
-    end
 
-    rect rgb(255,240,230)
-    note over SIM: disconnect() / poff()（PSアタッチ状態は維持）
+    note over App,RAN: ━━━━━ 4. disconnect() / poff() ━━━━━
+    note right of SIM: PSアタッチ状態は維持
     App->>SIM: disconnect()/poff()
-    SIM->>Modem: PPP disconnect → “+++”, ATH
-    Note over Modem,RAN: PSアタッチ状態は維持（再認証なし）
-    end
+    SIM->>Modem: PPP disconnect → "+++", ATH
 
-    rect rgb(230,255,255)
-    note over SIM: connect(detach=False) でPPPのみ再開
+    note over App,RAN: ━━━━━ 5. connect(detach=False) 再接続 ━━━━━
+    note right of SIM: PSアタッチ継続のまま<br/>PPPのみ再確立
     App->>SIM: connect(detach=False, apn,user,key,...)
     SIM->>Modem: AT+CGDCONT?/CGAUTH? 確認（設定変更なしならCFUN切替なし）
     SIM->>Modem: AT+CEREG? でPS登録継続を確認（0,1 / 0,5）
-    Note over Modem,RAN: PSアタッチ状態は維持（再認証なし）
     SIM->>Modem: ATD*99***1#
     Modem-->>SIM: CONNECT
     SIM-)Modem: PPP再確立 (LCP→認証→IPCP)
     Modem-->>SIM: IPアドレス/DNS再付与
-    end
 
-    rect rgb(255,255,220)
-    note over Modem: PPP再開後のトラフィック
+    note over App,RAN: ━━━━━ 6. PPP通信再開 ━━━━━
     App-->>Modem: IPトラフィック (PPPトンネル)
     Modem-->>RAN: LTE下位レイヤーへカプセル化して送信
     RAN-->>Modem: 受信→PPPペイロード抽出
     Modem-->>App: PPP経由でIPパケット渡し
-    end
 
-    rect rgb(255,230,245)
-    note over SIM: activate(False)（電源断が必要な場合のみ）
+    note over App,RAN: ━━━━━ 7. activate(False) 電源断 ━━━━━
     App->>SIM: activate(False)
     SIM->>Modem: 電源OFFシーケンス
-    end
 
 ```
 
