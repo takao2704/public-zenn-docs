@@ -1,5 +1,5 @@
 ---
-title: "macOSでSORACOM OnyxにATコマンドを送る"
+title: "macOSでSoracom OnyxにATコマンドを送る"
 emoji: "🔌"
 type: "tech"
 topics: ["soracom", "python", "usb", "macos", "atコマンド"]
