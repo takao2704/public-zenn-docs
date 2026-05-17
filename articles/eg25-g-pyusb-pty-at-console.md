@@ -17,6 +17,8 @@ SORACOM Onyx は、内部に Quectel EG25-G を搭載し、USB コネクタ経�
 
 [SORACOM Onyx の AT コマンド実行手順](https://users.soracom.io/ja-jp/guides/usb-dongles/soracom-onyx/at-command/)
 
+https://users.soracom.io/ja-jp/guides/usb-dongles/soracom-onyx/at-command/
+
 macOS に接続すると、USB デバイスとしては Quectel EG25-G が見えているのに、AT コマンドを打つための `/dev/cu.*` シリアルポートが出ないことがあります。
 通常であれば USB シリアルドライバーがモデムの AT コマンド用インターフェースを `/dev/cu.*` として見せてくれますが、ドライバーが入っていない環境では、そのデバイスノードが作られません。
 
