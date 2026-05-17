@@ -12,17 +12,17 @@ published: true
 
 ## はじめに
 
-SORACOM Onyx は、内部に Quectel EG25-G を搭載し、USB コネクタ経由で EG25-G の USB インターフェースに接続する構成の LTE USB ドングルです。
-公式ユーザーガイドでも、SORACOM Onyx は Quectel EG25-G を通信モジュールとして使用していることが説明されています。
+Soracom Onyx は、内部に Quectel EG25-G を搭載し、USB コネクタ経由で EG25-G の USB インターフェースに接続する構成の LTE USB ドングルです。
+公式ユーザーガイドでも、Soracom Onyx は Quectel EG25-G を通信モジュールとして使用していることが説明されています。
 
-[SORACOM Onyx の AT コマンド実行手順](https://users.soracom.io/ja-jp/guides/usb-dongles/soracom-onyx/at-command/)
+[Soracom Onyx の AT コマンド実行手順](https://users.soracom.io/ja-jp/guides/usb-dongles/soracom-onyx/at-command/)
 
 https://users.soracom.io/ja-jp/guides/usb-dongles/soracom-onyx/at-command/
 
 macOS に接続すると、USB デバイスとしては Quectel EG25-G が見えているのに、AT コマンドを打つための `/dev/cu.*` シリアルポートが出ないことがあります。
 通常であれば USB シリアルドライバーがモデムの AT コマンド用インターフェースを `/dev/cu.*` として見せてくれますが、ドライバーが入っていない環境では、そのデバイスノードが作られません。
 
-今回の検証では、macOS 上で SORACOM Onyx 内部の EG25-G が以下の USB デバイスとして見えていました。
+今回の検証では、macOS 上で Soracom Onyx 内部の EG25-G が以下の USB デバイスとして見えていました。
 
 ```text
 Vendor: Quectel
@@ -37,11 +37,11 @@ Firmware: EG25GGBR07A08M2G
 
 さらに、`screen /tmp/eg25-at 115200` のように普段のシリアルコンソールと同じ感覚で使えるように、USB bulk endpoint とローカルの PTY（pseudo terminal）をブリッジするツールも作りました。
 
-ここで扱うのは「macOS で `/dev/cu.*` が出ない SORACOM Onyx に、どうやって AT コマンドを送るか」という検証端末側の補助テクニックです。
+ここで扱うのは「macOS で `/dev/cu.*` が出ない Soracom Onyx に、どうやって AT コマンドを送るか」という検証端末側の補助テクニックです。
 
 ## Onyx を挿しただけの macOS 側の状態
 
-まず、SORACOM Onyx を macOS に挿しただけの状態を確認します。
+まず、Soracom Onyx を macOS に挿しただけの状態を確認します。
 ここで見たいのは、USB デバイスとして認識されているかと、`screen` から開ける `/dev/cu.*` が増えているかの 2 点です。
 
 USB 関連の data type 名は macOS のバージョンによって異なることがあるため、必要に応じて先に確認します。
@@ -107,7 +107,7 @@ screen /dev/cu.usbserial-XXXX 115200
 
 ## やりたいこと
 
-やりたいことは、macOS でシリアルポートが出ない SORACOM Onyx に対して、AT コマンドを送れる状態にすることです。
+やりたいことは、macOS でシリアルポートが出ない Soracom Onyx に対して、AT コマンドを送れる状態にすることです。
 
 具体的には、Onyx 内部の EG25-G に対して `AT` や `ATI` を送り、応答を確認できる状態にします。
 さらに、SIM 情報、PDP context、DNS 解決結果などを AT コマンドで確認できるようにします。
@@ -317,7 +317,7 @@ eg25-pty --interface 2 --symlink /tmp/eg25-at
 
 ## まとめ
 
-macOS で SORACOM Onyx 内部の EG25-G が USB デバイスとして見えているのに `/dev/cu.*` が出ない場合でも、PyUSB を使えば AT コマンド用の USB bulk endpoint を直接読み書きできます。
+macOS で Soracom Onyx 内部の EG25-G が USB デバイスとして見えているのに `/dev/cu.*` が出ない場合でも、PyUSB を使えば AT コマンド用の USB bulk endpoint を直接読み書きできます。
 
 一発実行には `eg25-at`、対話的な操作には `eg25-pty` を使います。
 PTY ブリッジを挟むことで、`screen /tmp/eg25-at 115200` のように、普段のシリアルコンソールに近い形で AT コマンドを扱えるようになります。
