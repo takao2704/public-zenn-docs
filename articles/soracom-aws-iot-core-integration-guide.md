@@ -13,7 +13,7 @@ published: true
 ## TL;DR
 
 - 最初に、AWS IoT Core に「AWS IoT のクライアント/ランタイムとして接続する」のか、「SORACOM の転送サービスからメッセージを入れる」のかを分けます。
-- AWS IoT のクライアント/ランタイムとして接続するなら、SORACOM 側の到達点は Krypton です。単体デバイスでは AWS IoT Device SDK、現場ゲートウェイでは AWS IoT Greengrass で、Krypton が払い出した認証情報を使います。
+- AWS IoT のクライアント/ランタイムとして接続するなら、選択する SORACOM サービスは Krypton です。単体デバイスでは AWS IoT Device SDK、現場ゲートウェイでは AWS IoT Greengrass で、Krypton が払い出した認証情報を使います。
 - Krypton は SDK や Greengrass を提供するものではなく、AWS IoT 証明書、秘密鍵、Thing 登録の初期プロビジョニングを簡素化します。
 - AWS IoT Core に SORACOM の転送サービスからメッセージを入れるなら、SORACOM Beam / Funnel を中心に、下り通信の要否、デバイス側のプロトコル制約、HTTP の使い方、Unified Endpoint 対応可否で選びます。
 - Beam は SDK 不要化と認証情報配布のオフロード、Krypton は認証情報配布や初期登録の簡素化、という役割の違いがあります。
@@ -61,13 +61,13 @@ flowchart TD
   J -->|AWS IoT Core に一方向送信| N[Funnel AWS IoT TCP UDP<br/>uni.soracom.io:23080]
 ```
 
-AWS IoT のクライアント/ランタイムとして接続する場合、SORACOM 側の到達点は Krypton です。
+AWS IoT のクライアント/ランタイムとして接続する場合、選択する SORACOM サービスは Krypton です。
 そのうえで、単体デバイスでは AWS IoT Device SDK、現場ゲートウェイでは Greengrass で、Krypton が払い出した認証情報を使います。
 一方、AWS IoT Core の MQTT topic にメッセージを入れ、AWS IoT Rules 以降で処理するのが主目的なら、Beam / Funnel を中心に考えます。
 
-フローの到達点の概要を表にすると、以下のようになります。
+フローで選択する SORACOM サービスの概要を表にすると、以下のようになります。
 
-| 要件 | SORACOM 側の到達点 | 判断のポイント |
+| 要件 | 選択する SORACOM サービス | 判断のポイント |
 |---|---|---|
 | 単体デバイスで Shadow / Jobs / SDK を使う | Krypton | AWS IoT Device SDK で使う証明書、秘密鍵、Thing 登録の初期プロビジョニングを簡素化する |
 | 現場ゲートウェイで集約、ローカル処理、アプリ配布を行う | Krypton | Greengrass Core で使う証明書、秘密鍵、Thing 登録の初期プロビジョニングを簡素化する |
@@ -85,7 +85,7 @@ Beam / Funnel は「メッセージを転送する」機能であり、デバイ
 
 この系統では、単体デバイスで AWS IoT Device SDK を使う場合も、現場ゲートウェイで Greengrass を使う場合も、AWS IoT Core に対してクライアント/ランタイムとして接続します。
 つまり、Beam / Funnel でメッセージを転送する方式とはレイヤーが違います。
-SORACOM 側の選択肢としては、AWS IoT Device SDK や Greengrass そのものではなく、それらで使う AWS IoT のデバイス認証情報プロビジョニングを簡素化する Krypton を到達点にします。
+SORACOM 側の選択肢としては、AWS IoT Device SDK や Greengrass そのものではなく、それらで使う AWS IoT のデバイス認証情報プロビジョニングを簡素化する Krypton を選択します。
 Krypton は「SDK や Greengrass を不要にする仕組み」ではなく、「AWS IoT のデバイス認証情報プロビジョニングを簡素化する仕組み」として検討します。
 
 ### 単体デバイスを AWS IoT Thing として扱うなら AWS IoT Device SDK
@@ -232,7 +232,7 @@ AWS IoT Core に Publish するための選定ガイドでは、Beam TCP/UDP -> 
 
 HTTP が使える場合は、フローチャートの HTTP 分岐で「最短で一方向送信したいのか」「topic path を HTTP path で設計したいのか」「同期レスポンスや任意転送先を扱いたいのか」を分けます。
 
-| 判断 | SORACOM 側の到達点 | 第一候補のエントリポイント |
+| 判断 | 選択する SORACOM サービス | 第一候補のエントリポイント |
 |---|---|---|
 | 最短で AWS IoT Core に一方向送信したい | Funnel AWS IoT アダプター HTTP | `http://uni.soracom.io` または `http://uni.soracom.io:8888` |
 | HTTP path を AWS IoT Core の topic path として設計したい | Beam Web サイト | `http://beam.soracom.io:18080` |
@@ -293,7 +293,7 @@ AWS IoT Core の HTTPS Publish を IAM 権限で扱いたいなら SigV4、証�
 
 選んだ SORACOM サービスに重ねると、認証方式は次のように効きます。
 
-| 到達点 | 主に効く認証 | 見方 |
+| 選択する SORACOM サービス | 主に効く認証 | 見方 |
 |---|---|---|
 | Krypton | X.509 | Device SDK や Greengrass Core が使う証明書、秘密鍵、Thing 登録の初期プロビジョニングを簡素化する |
 | Beam MQTT | X.509 | AWS IoT Core へ MQTTS 転送するための証明書を SORACOM 側に持たせ、デバイスには持たせない |
@@ -364,10 +364,10 @@ Beam TCP/UDP -> HTTP/HTTPS は、AWS IoT Core 以外の任意の HTTP/HTTPS エ�
 
 ## まとめ
 
-AWS IoT Core 連携の選定では、SORACOM サービスと AWS 側の SDK / ランタイムを同じ到達点として横並びに比較すると混乱します。
+AWS IoT Core 連携の選定では、SORACOM サービスと AWS 側の SDK / ランタイムを同じ選択肢として横並びに比較すると混乱します。
 
 まず、AWS IoT Core にクライアント/ランタイムとして接続するのか、SORACOM の転送サービスからメッセージを入れるのかを分けます。
-前者なら、SORACOM 側の到達点は Krypton です。単体デバイスでは AWS IoT Device SDK、現場ゲートウェイでは Greengrass で、Krypton が払い出した認証情報を使います。
+前者なら、選択する SORACOM サービスは Krypton です。単体デバイスでは AWS IoT Device SDK、現場ゲートウェイでは Greengrass で、Krypton が払い出した認証情報を使います。
 
 AWS IoT Core の MQTT topic に一方向テレメトリを Publish する用途なら、Beam / Funnel を中心に、下り通信、デバイス側プロトコル、HTTP で重視すること、Unified Endpoint の順に絞り、最後に認証方式とデバイスが送信するエントリポイントを確定します。
 
