@@ -62,7 +62,7 @@ https://github.com/takao2704/dualonyxpi
 今回の実験では、Raspberry Pi に少し意地悪をするために、2 本の Onyx を同じ USB network mode にはそろえませんでした。
 片方の Onyx は MBIM モード、もう片方の Onyx は QMI モードにして接続しています。
 つまり、Raspberry Pi から見ると「同じ Soracom Onyx が 2 本挿さっているのに、片方は MBIM、片方は QMI として見える」状態です。
-MBIM と QMI の違いそのものは、[巻末のコラム](#コラム-mbim-と-qmi-の違いと選び方)で整理します。
+MBIM と QMI の違いそのものは、[巻末のコラム](#コラム:-mbim-と-qmi-の違いと選び方)で整理します。
 
 Onyx の中には EG25-G というセルラーモデムが入っています。
 これを USB 接続すると、OS からは「1 つの USB 機器」ではなく、複数の USB interface を持つ composite device として見えます。
