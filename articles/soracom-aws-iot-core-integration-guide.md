@@ -80,7 +80,7 @@ AWS IoT のクライアント/ランタイムとして接続する場合、選�
 
 AWS IoT のクライアント/ランタイムとして接続するとは、AWS IoT Core の Thing、X.509 証明書、MQTT 接続、Shadow、Jobs、Device SDK、Greengrass のデプロイ管理などを設計の中心に置くことです。
 
-この場合、Beam / Funnel は主役ではありません。
+この場合は、Beam / Funnel でメッセージを転送する構成とは考えるレイヤーが変わります。
 Beam / Funnel は「メッセージを転送する」機能であり、デバイス自身を AWS IoT のクライアントとして扱う機能ではないためです。
 
 この系統では、単体デバイスで AWS IoT Device SDK を使う場合も、現場ゲートウェイで Greengrass を使う場合も、AWS IoT Core に対してクライアント/ランタイムとして接続します。
