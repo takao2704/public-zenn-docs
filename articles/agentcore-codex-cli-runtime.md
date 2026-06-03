@@ -21,9 +21,7 @@ Amazon Bedrock AgentCore Runtime は、AI エージェントやツールコー�
 
 この記事では、その AgentCore Runtime の中で OpenAI Codex CLI を動かし、外側からは `InvokeAgentRuntime` で呼び出せる「中身が Codex CLI のチャットボット」のような構成を作ってみます。
 
-先に正直に書いておくと、これは本番向けの推奨アーキテクチャではありません。
-
-「AgentCore Runtime の microVM に Codex CLI を入れたら、本当にクラウド上で `codex exec` できるのか？」を試した検証ログです。できるかどうかを見に行っただけなので、セキュリティ設計、費用最適化、監査ログ、入力ポリシー、秘密情報の運用、マルチユーザー対応などは、全く考慮されていません。
+これは本番向けの推奨アーキテクチャではなく、「AgentCore Runtime の microVM に Codex CLI を入れたら、本当にクラウド上で `codex exec` できるのか？」を試した検証ログです。できるかどうかを見に行っただけなので、セキュリティ設計、費用最適化、監査ログ、入力ポリシー、秘密情報の運用、マルチユーザー対応などは、全く考慮されていません。
 
 :::message alert
 この記事の構成は PoC です。AgentCore Runtime の利用、ECR、CloudWatch Logs、OpenAI API キーでの Codex 利用にはそれぞれ料金が発生する可能性があります。
