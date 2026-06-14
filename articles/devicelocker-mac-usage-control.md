@@ -103,7 +103,7 @@ AWS 側は以下を持ちます。
 - `DeviceLockerDevices`: 端末 ID と device token を保持
 - `DeviceLockerNonce`: 署名済みリクエストのリプレイ防止用 nonce を短期間保持
 
-親の操作は、CLI も残しつつ、普段使いは Cognito + Google アカウント認証付きの親向け Web UI に寄せています。
+親の操作は、CLI も残しつつ、普段使いは Cognito + Google アカウント認証付きの親向け Web UI ですまほからサクッとできるようにしています。
 
 ## 技術選定
 
@@ -202,7 +202,7 @@ flowchart TD
 
 ![報酬ルール編集モーダル](/images/devicelocker-mac-usage-control/02-parent-rule-edit.png)
 
-親向け UI の具体的なコードや起動方法は [README](https://github.com/takao2704/devicelocker#readme) にまとめています。この記事では、細かな実装手順よりも、どんな体験を成立させるためにどの情報を出したかに絞っています。
+親向け UI の具体的なコードや起動方法は [README](https://github.com/takao2704/devicelocker#readme) にまとめています。この記事では、細かな実装手順は割愛します。
 
 ## まとめ
 
