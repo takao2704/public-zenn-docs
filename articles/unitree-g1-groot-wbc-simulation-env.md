@@ -187,7 +187,7 @@ export TensorRT_ROOT="$HOME/TensorRT"
 export LD_LIBRARY_PATH="$HOME/TensorRT/lib:/opt/onnxruntime/lib:${LD_LIBRARY_PATH:-}"
 ```
 
-## まず Isaac Lab quickstart を基準にする
+## まず Isaac Lab quickstart からはじめよ
 
 まず Isaac Lab quickstart で、policy が sample motion を追従できることを確認します。
 ここが通らない状態で MuJoCo deploy 側を触ると、問題の切り分けが難しくなります。
@@ -471,7 +471,7 @@ zero-quaternion crash: no
 
 ![10 m 歩行から右手ジェスチャーまでの時系列サムネイル](/images/unitree-g1-groot-wbc-simulation-env/02-v3-azimuth45-contact-sheet.jpg)
 
-## 実機へ進む前の境界線
+## 実機 deploy へ進むには？
 
 この構成は、実機投入前の Sim2Sim 検証を目的にしています。
 実機へ進む場合は、少なくとも次を別途確認します。
