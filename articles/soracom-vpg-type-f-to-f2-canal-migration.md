@@ -3,7 +3,7 @@ title: "SORACOM VPG Type-F + Gate C2D を Type-F2 + Canal へ段階移行する"
 emoji: "🛣️"
 type: "tech"
 topics: ["soracom", "aws", "vpg", "canal", "iot"]
-published: false
+published: true
 ---
 
 :::message
