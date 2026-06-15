@@ -1,5 +1,5 @@
 ---
-title: "SORACOM VPG Type-F + Gate C2D を Type-F2 + Canal へ段階移行する"
+title: "VPG Type-F の Canal + Gate Peer 構成を Type-F2 へ段階移行する"
 emoji: "🛣️"
 type: "tech"
 topics: ["soracom", "aws", "vpg", "canal", "iot"]
