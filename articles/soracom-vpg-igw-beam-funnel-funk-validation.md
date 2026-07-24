@@ -94,13 +94,23 @@ Beam については、Funnel のような AWS IoT Core 側での独立購読ま
 
 ## 公式ドキュメントの解釈
 
-[VPG の特徴](https://users.soracom.io/ja-jp/docs/vpg/feature/)では、アウトバウンドルーティングフィルターと IGW を別の機能として説明しています。アウトバウンドルーティングフィルターでインターネットへのルートをブロックしても、Beam、Funnel、Funk からインターネット上の転送先へ送信できます。一方、IGW を OFF にした VPG では、これらのサービスを利用しても SORACOM 外のサーバー、パブリッククラウド、FaaS へ転送できません。
+[VPG の特徴](https://users.soracom.io/ja-jp/docs/vpg/feature/)には、アウトバウンドルーティングフィルターについて次の記述があります。
 
-この記事では、この説明を「利用が保証される構成の境界」として読みます。Beam、Funnel、Funk からパブリックな転送先を使うなら、IGW を ON にしたうえで、アウトバウンドルーティングフィルターでデバイスの直接通信を拒否します。IGW OFF は、Canal、Door、Direct で接続したシステムとの閉域通信に使う設定です。
+> 「[インターネットへのルートをブロックする] にチェックを入れても、Beam、Funnel、Funk で、（中略）データを転送できます。」
 
-今回、IGW OFF でも Funnel から AWS IoT Core、Funk から AWS Lambda への転送に成功しました。ただし、これは検証時点の条件でリクエストが成功したことを表すだけです。AWS 向けアダプターや Lambda 呼び出しが使った内部経路は公開されておらず、IGW OFF で利用できることが保証されたとは解釈しません。本番構成ではこの挙動に依存せず、IGW OFF が必須なら SORACOM サポートへ確認します。
+これは、Type-F の IGW ON + `deny 0.0.0.0/0` で Beam、Funnel、Funk のすべてが成功した今回の結果と一致します。デバイスの直接通信を拒否しながらパブリックな転送先を使う構成として、公式ドキュメントに記載された挙動です。
 
-Private Garden は、アウトバウンドルーティングフィルターですべての宛先を拒否した、SORACOM 管理の VPG と説明されています。[Private Garden 機能を使用する](https://users.soracom.io/ja-jp/docs/vpg/use-private-garden/)には、Beam、Funnel、Funk などのエントリポイントを利用できると明記されています。ただし、[Beam Advanced Security](https://developers.soracom.io/en/docs/beam/advanced-security/)では、Beam の MQTT と TCP → TCP/TCPS でパブリックな転送先を使う場合はインターネットルートが必要とされています。Private Garden を選ぶときも、利用するサービスとプロトコルのドキュメントをあわせて確認します。
+同じページでは、IGW OFF の場合について次のように記載されています。
+
+> 「Beam、Funnel、Funk を利用しても、（中略）データを転送できません。」
+
+Beam HTTP がタイムアウトした結果は、この記述と一致します。一方、Funnel から AWS IoT Core、Funk から AWS Lambda への転送は成功しました。この成功は検証時点で観測した挙動であり、IGW OFF で利用できることが保証されたとは解釈しません。本番構成では依存せず、IGW OFF が必須なら SORACOM サポートへ確認します。
+
+Private Garden についても、[VPG の特徴](https://users.soracom.io/ja-jp/docs/vpg/feature/)に具体的な記述があります。
+
+> 「デバイスから直接インターネットへはアクセスできませんが、Beam、Funnel、Funk、（中略）は利用できます。」
+
+Private Garden で Beam、Funnel、Funk のすべてが成功した結果は、この記述と一致します。ただし、[Beam Advanced Security](https://developers.soracom.io/en/docs/beam/advanced-security/)には「Using Soracom Beam MQTT and TCP → TCP/TCPS entry points with a public destination requires an Internet route」とあります。Private Garden を選ぶときも、利用するサービスとプロトコルのドキュメントをあわせて確認します。
 
 ## 本番で採用する構成
 
