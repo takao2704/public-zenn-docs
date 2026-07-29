@@ -1,5 +1,5 @@
 ---
-title: "AsteriskとAgentCore、OpenAI RealtimeでSORACOMに答える電話AIを作る"
+title: "【実装編】AsteriskとAgentCoreでSORACOMに答える日本語電話AIを動かす"
 emoji: "☎️"
 type: "tech"
 topics: [asterisk, aws, agentcore, openai, mcp]
@@ -20,101 +20,37 @@ published: false
 
 ## TL;DR
 
-- EC2上のAsteriskでSIPとRTPを終端し、`chan_websocket`から16 kHzのPCM音声をPython製Media Bridgeへ渡します。
-- Media BridgeはAmazon Bedrock AgentCore Runtimeへ接続し、OpenAI GPT-Realtime-2.1との日本語音声対話を中継します。
-- AgentCore上のエージェントには、読み取り専用のSORACOM Knowledge MCPを登録しました。
-- 実機で起きたスピーカーフォンの回り込みと回答の途中切れには、半二重化と出力上限の調整で対処しました。
+- EC2へAsteriskとPython製Media Bridgeを配置し、スマートフォンからAI用内線`7000`へ発信できるようにします。
+- Amazon Bedrock AgentCore Runtime上でOpenAI GPT-Realtime-2.1を動かし、日本語音声とSORACOM Knowledge MCPの3ツールを接続します。
+- デプロイ、SIP設定、通話試験に加え、実機で起きた回り込みと回答の途中切れへの対処まで扱います。
 
 ## はじめに
 
-今回作ったのは、スマートフォンのソフトフォンから内線`7000`へ電話すると、日本語のAIが応答するデモです。
-SORACOMについて聞くと、必要に応じて公式ドキュメントを検索して答えます。
+この記事は、スマートフォンのソフトフォンから内線`7000`へ電話すると、日本語のAIが応答するデモの実装編です。SORACOMについて聞くと、必要に応じて公式ドキュメントを検索して答えます。
 
-ブラウザーだけなら、WebRTCやWebSocketで音声モデルへ接続できます。
-電話ではその手前にSIP、RTP、コーデック変換、ダイヤルプランが必要です。
+各コンポーネントの責務、通話からツール呼び出しまでの流れ、SORACOM Knowledge MCPをアーキテクチャに含めた理由は、先に[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で整理しました。本記事では、その構成を実際にデプロイして通話する手順へ集中します。
 
-そこでPBXはAsteriskのまま残し、AI用の音声経路だけをWebSocketで追加しました。
-Asteriskは通話を処理し、Amazon Bedrock AgentCore Runtimeはエージェントを動かし、OpenAI Realtimeは音声を理解して返答します。
-この分け方なら、あとでSIPトランクや既存PBXへつなぐ場合も、AIを1つの内線や転送先として扱えます。
-
-## この記事で扱うこと
-
-この記事では、1台のEC2上にAsteriskとMedia Bridgeを置き、スマートフォンのSIPソフトフォンからAI用内線へ発信するPoCを扱います。日本語の音声対話、SORACOM Knowledge MCPの呼び出し、スピーカーフォンでの回り込み対策までが対象です。
+1台のEC2上にAsteriskとMedia Bridgeを置き、スマートフォンのSIPソフトフォンからAI用内線へ発信します。日本語の音声対話、SORACOM Knowledge MCPの呼び出し、スピーカーフォンでの回り込み対策までが対象です。
 
 SIPトランク、既存PBXとの接続、冗長化、同時通話の負荷試験、有人転送は扱いません。本番化までに必要な項目は記事の後半で整理します。
 
-## 全体構成
+## 実装する構成
 
-```mermaid
-flowchart LR
-  Phone[SIP電話またはSIPトランク]
-  PBX[Asterisk on EC2]
-  Bridge[Python Media Bridge]
-  Runtime[Bedrock AgentCore Runtime]
-  Realtime[OpenAI Realtime]
-  MCP[SORACOM Knowledge MCP]
-
-  Phone <-->|SIPとRTP| PBX
-  PBX <-->|WebSocketとPCM16| Bridge
-  Bridge <-->|SigV4 WSS| Runtime
-  Runtime <-->|音声とイベント| Realtime
-  Runtime --> MCP
-```
-
-今回の分担はこうしました。
-
-| コンポーネント | 役割 |
-|---|---|
-| Asterisk | SIP登録、着信、RTP、コーデック変換、ダイヤルプラン |
-| Media Bridge | AsteriskとAgentCoreのWebSocket中継、PCM変換、フロー制御 |
-| AgentCore Runtime | エージェントのホスティング、セッション分離、Identity、ツール実行 |
-| OpenAI Realtime | 音声認識、発話生成、ターン検出、ツール選択 |
-| 外部ツール | SORACOM公式ドキュメント検索 |
-
-AgentCore RuntimeのWebSocketアプリケーションは、コンテナの`8080/tcp`に`/ws`を実装します。
-クライアント側のMedia Bridgeは、SigV4で署名したWSS接続を通して、通話ごとのセッションを作ります。
-
-## 音声データの流れ
-
-### AsteriskからMedia Bridge
-
-Asteriskの`chan_websocket`は、音声をBinary WebSocketフレーム、制御イベントをText WebSocketフレームで送ります。
-`chan_websocket`を選んだのは、Python側でRTPヘッダーや送信タイミングを直接扱わずに済むからです。
-
-AI用の内線はこう定義しました。
-
-```ini
-[from-internal]
-exten = 7000,1,NoOp(Voice agent demo)
- same = n,Answer()
- same = n,Dial(WebSocket/voice_agent/c(slin16)f(json))
- same = n,Hangup()
-```
-
-`slin16`は、16 kHz、16 bit、モノラルの符号付きリニアPCM（signed linear PCM）です。
-20 ms分のフレームサイズは次の計算で640 byteになります。
+音声は次の経路を往復します。
 
 ```text
-16,000 samples/sec × 2 bytes × 0.02 sec = 640 bytes
+スマートフォン
+  ↕ SIP / RTP
+Asterisk on EC2
+  ↕ WebSocket / 16 kHz PCM
+Media Bridge
+  ↕ SigV4 WebSocket
+AgentCore Runtime
+  ↕ 音声イベント、ツール呼び出し
+OpenAI Realtime / SORACOM Knowledge MCP
 ```
 
-Media Bridgeは、モデルから届く任意長のPCMを640 byte単位にそろえてAsteriskへ返します。
-端数は最後に無音で埋めます。
-
-### AgentCoreとOpenAI Realtime
-
-OpenAI Realtimeへは24 kHzのPCMを渡すため、AgentCoreアプリケーションでリサンプリングします。
-
-```text
-Asterisk 16 kHz PCM
-  ↓ resample
-OpenAI Realtime 24 kHz PCM
-  ↓ resample
-Asterisk 16 kHz PCM
-```
-
-Media BridgeとAgentCoreの間では、PCMをBase64へ変換してJSONイベントとして送ります。
-大きな音声イベントは、AgentCoreのWebSocketを安定して通せるサイズへ分割します。
+Asteriskは電話を終端し、Media Bridgeは音声形式とWebSocketを中継します。AgentCore Runtimeは通話ごとのエージェントをホストし、RealtimeモデルとMCPツールを接続します。
 
 ## 事前準備
 
@@ -383,6 +319,16 @@ reconnect_attempts = 3
 tls_enabled = no
 ```
 
+AI用の内線`7000`では、`slin16`を指定してMedia Bridgeへ接続します。
+
+```ini
+[from-internal]
+exten = 7000,1,NoOp(Voice agent demo)
+ same = n,Answer()
+ same = n,Dial(WebSocket/voice_agent/c(slin16)f(json))
+ same = n,Hangup()
+```
+
 制御イベントはJSONにします。
 
 ```ini
@@ -399,10 +345,14 @@ Asteriskから受けるイベントと処理を対応させます。
 | `MEDIA_XON` | 音声送信を再開 |
 | `DTMF_END` | 押された番号をログへ記録 |
 
+`slin16`は、16 kHz、16 bit、モノラルの符号付きリニアPCMです。Media Bridgeはモデルから届く任意長のPCMを、20 msに相当する640 byte単位へそろえてAsteriskへ返します。端数は最後に無音で埋めます。AgentCoreアプリケーションでは、OpenAI Realtimeに合わせて16 kHzと24 kHzを相互変換します。
+
 モデルが割り込まれたら、すでにAsteriskへ積まれた音声を`FLUSH_MEDIA`で破棄します。
 古い回答をキューに残したままだと、次の発話へ重なってしまいます。
 
 ## ステップ4: SORACOM Knowledge MCPを追加する
+
+3つのツールをどう使い分け、どの情報を外部検索へ渡さないようにするかは[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で整理しています。ここではAgentCoreアプリケーションから接続する実装を見ていきます。
 
 [SORACOM Knowledge MCPサーバーのツール一覧](https://users.soracom.io/ja-jp/tools/soracom-knowledge-mcp-server/tools/)では、次の3つが読み取り専用で公開されています。
 
@@ -684,6 +634,8 @@ AIが止まったときに通常の内線やフロントへ戻せないと、電
 前者は半二重の入力制御、後者は`response.done`の終了理由を見ながら出力上限を調整して対応しています。
 
 電話、Media Bridge、AgentCore、Realtimeを一気にデバッグするのはつらいので、`MEDIA_START`、AgentCore接続、transcript、tool use、音声出力、`response.done`の順にログを追えるようにしておくのがおすすめです。
+
+この実装を支える責務分担、通話からMCP回答までの流れ、本番化で残る境界は[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で説明しています。
 
 ## 参考資料
 
