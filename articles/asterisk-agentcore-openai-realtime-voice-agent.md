@@ -26,13 +26,13 @@ published: false
 
 ## はじめに
 
-この記事は、スマートフォンのソフトフォンから内線`7000`へ電話すると、日本語のAIが応答するデモの実装編です。SORACOMについて聞くと、必要に応じて公式ドキュメントを検索して答えます。
+今回作ったのは、スマートフォンのソフトフォンから内線`7000`へ電話すると、日本語のAIが応答するデモです。SORACOMについて聞くと、必要なときだけ公式ドキュメントを検索して答えます。
 
-各コンポーネントの責務、通話からツール呼び出しまでの流れ、SORACOM Knowledge MCPをアーキテクチャに含めた理由は、先に[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で整理しました。本記事では、その構成を実際にデプロイして通話する手順へ集中します。
+各コンポーネントの役割と、通話からツール呼び出しまでの流れは[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)へ分けました。こちらはデプロイから通話試験までの記録です。
 
 1台のEC2上にAsteriskとMedia Bridgeを置き、スマートフォンのSIPソフトフォンからAI用内線へ発信します。日本語の音声対話、SORACOM Knowledge MCPの呼び出し、スピーカーフォンでの回り込み対策までが対象です。
 
-SIPトランク、既存PBXとの接続、冗長化、同時通話の負荷試験、有人転送は扱いません。本番化までに必要な項目は記事の後半で整理します。
+SIPトランク、既存PBXとの接続、冗長化、同時通話の負荷試験、有人転送は今回試していません。
 
 ## 実装する構成
 
@@ -352,7 +352,7 @@ Asteriskから受けるイベントと処理を対応させます。
 
 ## ステップ4: SORACOM Knowledge MCPを追加する
 
-3つのツールをどう使い分け、どの情報を外部検索へ渡さないようにするかは[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で整理しています。ここではAgentCoreアプリケーションから接続する実装を見ていきます。
+3つのツールの使い分けと、外部検索へ渡さない情報は[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)に書きました。AgentCoreアプリケーションから接続する主要部分は次のコードです。
 
 [SORACOM Knowledge MCPサーバーのツール一覧](https://users.soracom.io/ja-jp/tools/soracom-knowledge-mcp-server/tools/)では、次の3つが読み取り専用で公開されています。
 
@@ -517,7 +517,7 @@ Realtime response finished status=completed reason=none output_tokens=262 max_ou
 | `MAX_OUTPUT_TOKENS=1024` | 38.7秒 | `interrupted` | 文の途中で停止 |
 | `MAX_OUTPUT_TOKENS=2048`と短話プロンプト | 37.5秒 | `complete` | 自然な文末で完了 |
 
-ここでは、プロンプトで目指す長さと、応答ごとに設定する出力上限を分けました。
+プロンプトで目指す長さと、応答ごとに設定する出力上限は分けました。
 
 - プロンプトでは、簡単な質問は1〜2文、長い回答は最大3点を目安にします。
 - `MAX_OUTPUT_TOKENS=2048`は、モデルが少し長く話したときの安全余裕として使います。
@@ -633,9 +633,9 @@ AIが止まったときに通常の内線やフロントへ戻せないと、電
 どちらもプロンプトだけでは直りませんでした。
 前者は半二重の入力制御、後者は`response.done`の終了理由を見ながら出力上限を調整して対応しています。
 
-電話、Media Bridge、AgentCore、Realtimeを一気にデバッグするのはつらいので、`MEDIA_START`、AgentCore接続、transcript、tool use、音声出力、`response.done`の順にログを追えるようにしておくのがおすすめです。
+電話、Media Bridge、AgentCore、Realtimeを一気にデバッグするのはつらいです。`MEDIA_START`、AgentCore接続、transcript、tool use、音声出力、`response.done`の順にログを追うようにしてから、止まった場所を切り分けやすくなりました。
 
-この実装を支える責務分担、通話からMCP回答までの流れ、本番化で残る境界は[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)で説明しています。
+構成を分けた理由と、通話からMCP回答までの流れは[アーキテクチャ編](/articles/asterisk-agentcore-realtime-architecture)に書いています。
 
 ## 参考資料
 

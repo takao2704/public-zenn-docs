@@ -18,22 +18,22 @@ published: false
 
 - 電話のSIPとRTPはEC2上のAsteriskで終端し、AIとの音声ストリームはPython製Media Bridgeで中継します。
 - Amazon Bedrock AgentCore Runtimeを、OpenAI Realtimeと外部ツールをつなぐエージェント実行基盤として使います。
-- SORACOM Knowledge MCPは後付けの検索機能ではなく、質問に応じて検索と本文取得を選ぶAgentic RAGの一部として構成します。
+- SORACOM Knowledge MCPの3ツールを登録し、質問に応じて検索と本文取得を選ぶAgentic RAGとして動かします。
 - 電話特有の回り込みと回答の途中切れは、音声経路の制御とモデルの出力制御を分けて扱います。
 
 ## はじめに
 
-スマートフォンから内線へ電話すると、日本語のAIが応答し、SORACOMについての質問には公式ドキュメントを調べて答えるデモを作りました。
+今回作ったのは、スマートフォンから内線へ電話すると、日本語のAIが応答するデモです。SORACOMについて聞くと、必要なときだけ公式ドキュメントを調べます。
 
-音声モデルへ接続するだけなら、ブラウザーからWebRTCやWebSocketを使えます。しかし電話から使うには、その手前でSIP、RTP、コーデック、ダイヤルプランを扱わなければなりません。外部ドキュメントを参照するなら、音声だけでなくツール呼び出しの経路と安全境界も必要です。
+ブラウザーから音声モデルへつなぐだけなら、WebRTCやWebSocketで済みます。電話から使うには、その手前でSIP、RTP、コーデック、ダイヤルプランを扱わなければなりません。今回はさらに外部ドキュメントを参照するので、ツール呼び出しの経路と、検索へ渡す情報の制限も決めました。
 
-この記事では、Asterisk、Amazon Bedrock AgentCore Runtime、OpenAI Realtime、SORACOM Knowledge MCPの役割をどう分けたかを整理します。デプロイと設定の手順は[実装編](/articles/asterisk-agentcore-openai-realtime-voice-agent)で扱います。
+Asterisk、Amazon Bedrock AgentCore Runtime、OpenAI Realtime、SORACOM Knowledge MCPの役割をどう分けたかを書きます。デプロイと設定の手順は[実装編](/articles/asterisk-agentcore-openai-realtime-voice-agent)へ分けました。
 
-## 対象としないもの
+## 今回の検証範囲
 
 今回の構成は、1台のEC2と1つのAI用内線を使うPoCです。SIPトランク、既存PBXとの接続、冗長化、同時通話の負荷試験、有人転送は含みません。
 
-一方で、あとからSIPトランクや既存PBXへ接続できるよう、AIを電話システム全体へ埋め込まず、1つの内線または転送先として扱える境界を選びました。
+AIは電話システム全体へ埋め込まず、1つの内線として追加しました。この形なら、あとからSIPトランクや既存PBXへつなぐときも転送先として扱えます。
 
 ## 全体構成
 
@@ -53,8 +53,6 @@ flowchart LR
   Runtime <-->|Streamable HTTP| MCP
 ```
 
-コンポーネントごとの責務を次のように分けました。
-
 | コンポーネント | 担当すること | 担当しないこと |
 |---|---|---|
 | Asterisk | SIP登録、着信、RTP、コーデック変換、ダイヤルプラン | AIモデルの選択、ツール実行 |
@@ -63,7 +61,7 @@ flowchart LR
 | OpenAI Realtime | 音声の理解と生成、ターン検出、ツール選択 | 電話回線の制御 |
 | SORACOM Knowledge MCP | SORACOM公式情報の検索と取得 | 通話や音声の処理 |
 
-この分割にした理由は、障害が起きた境界を特定しやすくするためです。電話がつながらない問題と、AIが答えられない問題を同じプロセスへ詰め込むと、SIP、音声変換、モデル、ツールのどこで止まったのか分かりにくくなります。
+電話がつながらない問題と、AIが答えられない問題を同じプロセスへ詰め込むと、SIP、音声変換、モデル、ツールのどこで止まったのか分かりません。通話試験では実際にこの順でログを追ったので、処理を分けておいて助かりました。
 
 ## 通話から回答までの流れ
 
@@ -96,7 +94,7 @@ SORACOMと関係のない挨拶などではMCPを呼びません。モデル自�
 
 Asteriskの`chan_websocket`は、音声をBinary WebSocketフレーム、制御イベントをText WebSocketフレームで扱えます。RTPのパケット化と送信タイミングはAsteriskへ任せられるため、AI側でRTPスタックを実装する必要がありません。
 
-ただし、AsteriskとAgentCore Runtimeでは、音声の形式とWebSocket上のプロトコルが異なります。
+AsteriskとAgentCore Runtimeでは、音声の形式とWebSocket上のプロトコルが異なります。
 
 ```text
 Asterisk: 16 kHz、16 bit、モノラルPCM
@@ -104,7 +102,7 @@ AgentCore側: Base64化したPCMを含むJSONイベント
 OpenAI Realtime: 24 kHz PCM
 ```
 
-そこでMedia Bridgeを変換境界にしました。Asteriskから受け取る20 ms分のPCMは640 byteです。
+この変換をMedia Bridgeへまとめました。Asteriskから受け取る20 ms分のPCMは640 byteです。
 
 ```text
 16,000 samples/sec × 2 bytes × 0.02 sec = 640 bytes
@@ -112,9 +110,9 @@ OpenAI Realtime: 24 kHz PCM
 
 モデルから戻る任意長の音声を640 byte単位へそろえ、16 kHzと24 kHzの変換はAgentCore側で行います。電話側とAI側の変更をMedia Bridgeで吸収できるため、Asteriskのダイヤルプランをモデル固有の実装から切り離せます。
 
-## AgentCoreをエージェントの境界にする
+## AgentCoreの担当
 
-AgentCore Runtimeは、音声モデルそのものとしてではなく、通話ごとのエージェントを動かす場所として使いました。
+AgentCore Runtimeには、通話ごとのエージェント実行を任せました。
 
 - Media BridgeからSigV4で署名したWebSocket接続を受ける
 - 通話ごとにセッションIDとユーザーIDを分離する
@@ -123,7 +121,7 @@ AgentCore Runtimeは、音声モデルそのものとしてではなく、通話
 - モデルが選んだMCPツールを実行する
 - 音声と制御イベントをMedia Bridgeへ返す
 
-OpenAI APIキーをPBX用EC2へ配置せず、AgentCore Runtimeの実行ロールとIdentityの権限内に閉じられる点も、この境界を選んだ理由です。
+OpenAI APIキーはPBX用EC2へ配置せず、AgentCore Runtimeの実行ロールとIdentityの権限内に置けます。
 
 ## SORACOM Knowledge MCPを組み込む
 
@@ -135,15 +133,13 @@ OpenAI APIキーをPBX用EC2へ配置せず、AgentCore Runtimeの実行ロー�
 | `search_api_docs` | API、CLI、SAM権限の検索 | 実装方法や権限を調べる |
 | `get_document` | 検索結果URLの本文取得 | 検索結果の抜粋だけでは回答できない |
 
-常に「検索してから本文を取る」という固定フローにはしていません。Realtimeモデルへ3ツールを登録し、質問に応じて検索の要否、検索先、本文取得の要否を選ばせます。ここでは、この動きをAgentic RAGと呼んでいます。
+Realtimeモデルへ3ツールを登録し、質問に応じて検索の要否、検索先、本文取得の要否を選ばせます。この実装はAgentic RAGとして動きます。
 
 たとえば「SORACOM Airとは何ですか」なら`search_soracom_docs`で概要を探します。検索結果だけでは足りない場合に限って`get_document`を呼び、取得した情報を電話向けの短い日本語へまとめます。APIの引数を尋ねられた場合は`search_api_docs`を選べます。
 
 ### 外部検索へ渡す情報を制限する
 
 MCP endpointはAgentCore Runtimeの外部にあります。音声で聞き取った文字列をそのまま検索へ渡すと、SIM ID、IMSI、電話番号、メールアドレス、APIキーなどが混ざる可能性があります。
-
-このPoCでは次の制限を置きました。
 
 - 代表的な識別子パターンを検索前に検出し、該当する入力を拒否する
 - 利用者へ具体的な値を除いて質問し直すよう案内する
@@ -161,16 +157,14 @@ MCP endpointはAgentCore Runtimeの外部にあります。音声で聞き取っ
 
 回答の長さは別の問題です。プロンプトで「1〜2文」と指定しても、技術的な出力上限にはなりません。一方で出力トークンの上限を小さくすると、自然な文末より先に音声が切れます。
 
-そのため、次の2段階で制御します。
-
 - プロンプトでは、結論から話し、簡単な質問は1〜2文、長い回答は最大3点に絞る
 - 出力トークンには余裕を持たせ、応答完了イベントのstatusとreasonを監視する
 
-「短く話すこと」と「途中で切らないこと」を同じ設定だけで解決しないのがポイントです。
+今回は「短く話すこと」をプロンプト、「途中で切らないこと」を出力上限とログで別々に調整しました。
 
-## ログで境界を追う
+## ログの追い方
 
-通話からツール呼び出しまでを一度にデバッグすると、無音の原因を判断しにくくなります。次の順にイベントを追えるようにしました。
+無音になったときは、次の順にイベントを追いました。
 
 1. Asteriskから`MEDIA_START`が届く
 2. Media BridgeがAgentCore WebSocketへ接続する
@@ -182,9 +176,9 @@ MCP endpointはAgentCore Runtimeの外部にあります。音声で聞き取っ
 
 会話transcriptは障害調査に役立ちますが、個人情報を含む可能性があります。通常は保存せず、制御されたデバッグ通話でだけ一時的に有効化します。定常監視には接続、ツール利用、音声出力、終了理由などの制御イベントを使います。
 
-## 本番化で残る境界
+## PoCに入れていないもの
 
-PoCのアーキテクチャをそのまま本番へ持ち込むことはできません。少なくとも次の設計が残ります。
+今回は次の項目を実装していません。
 
 - 同時通話数、バックプレッシャー、障害時の再接続
 - SIPトランクまたは既存PBXとの接続とアクセス制御
@@ -195,13 +189,13 @@ PoCのアーキテクチャをそのまま本番へ持ち込むことはでき�
 - AIが回答できない場合の有人転送
 - DTMFによるメニューと緊急離脱
 
-とくに有人転送は先に設計したい機能です。AI、外部API、ネットワークのどこかが止まっても、通常の内線や窓口へ戻せる経路が必要です。
+この中で先に追加したいのは有人転送です。AI、外部API、ネットワークのどこかが止まっても、通常の内線や窓口へ戻せないと電話として困ります。
 
 ## まとめ
 
-AsteriskへAI機能を直接詰め込まず、Media Bridge、AgentCore Runtime、OpenAI Realtime、SORACOM Knowledge MCPへ責務を分けました。MCPを含めて設計することで、音声認識から公式情報の検索、電話向け回答までを1つのエージェントの流れとして扱えます。
+今回の構成では、Asteriskに電話処理だけを残し、Media Bridgeで音声を変換し、AgentCore上のエージェントからRealtimeとMCPを呼びます。最初からMCPまで含めておくと、公式情報を検索したかどうかも通話セッションのログで追えました。
 
-構成を実際に作る手順、Asteriskの設定、MCPの接続コード、通話試験、回り込みと途中切れの調整は[実装編](/articles/asterisk-agentcore-openai-realtime-voice-agent)へ続きます。
+Asteriskの設定、MCPの接続コード、通話試験、回り込みと途中切れの調整は[実装編](/articles/asterisk-agentcore-openai-realtime-voice-agent)にまとめています。
 
 ## 参考資料
 
