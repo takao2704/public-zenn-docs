@@ -6,15 +6,21 @@ topics: ["soracom", "iot"]
 published: true
 ---
 
+:::message
+「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
+:::
+
 ## はじめに
 
 設備の接点状態を `ON=1`、`OFF=0` としてSORACOM Harvest Dataに保存している場合、SORACOM Lagoonを使ってON時間や稼働率を表示できます。ただし、現在の状態を一定間隔で送信する場合と、状態の変化時のみ送信する場合とでは、計算方法が異なります。
 
 この記事では、Harvest Dataに保存済みのサンプルデータを使用し、Lagoonのパネルを設定する手順を解説します。10秒間隔のデータと接点変化のデータそれぞれにおいて、ON時間・稼働率・状態グラフを表示する方法を紹介します。どちらのケースも、保存されている `state` と時刻情報をもとに、Lagoon内で直接計算します。
 
-:::message
-「[一般消費者が事業者の表示であることを判別することが困難である表示](https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf)」の運用基準に基づく開示: この記事は記載の日付時点で[株式会社ソラコム](https://soracom.jp/)に所属する社員が執筆しました。ただし、個人としての投稿であり、株式会社ソラコムとしての正式な発言や見解ではありません。
-:::
+## 全体構成
+
+接点入力デバイスからUnified Endpointへ送信したデータをSORACOM Harvest Dataに保存し、SORACOM Lagoonで可視化する構成を想定します。
+
+![接点入力デバイスからUnified Endpoint、SORACOM Harvest Data、SORACOM Lagoonへ至る構成図](/images/lagoon-contact-runtime-utilization/12-architecture.png)
 
 ## 使用するデータと表示する値
 
@@ -34,6 +40,12 @@ Harvest Dataに以下のデータが保存されており、Lagoonから参照�
 ### 10秒間隔の状態データ
 
 `state` に数値の `0` または `1` が格納されています。検証用データは20:00:00から20:59:50までの全360件で、そのうち288件が `1` です。
+
+Harvest Dataでは、次のように10秒刻みの時刻と `state` の値を確認できます。画像は20:20にON（`1`）からOFF（`0`）へ切り替わる前後の記録です。
+
+![Harvest Dataに保存された10秒間隔の接点状態データ](/images/lagoon-contact-runtime-utilization/13-harvest-periodic.jpg)
+
+以下は接点状態を表す部分の例です。
 
 ```json
 {"state": 1}
