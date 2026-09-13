@@ -1,5 +1,5 @@
 ---
-title: "接点のON時間と稼働率をSORACOM Lagoonで表示する"
+title: "接点信号から設備の稼働率をSORACOM Lagoonで可視化する"
 emoji: "⏱️"
 type: "tech"
 topics: ["soracom", "iot"]
@@ -11,6 +11,10 @@ published: true
 :::
 
 ## はじめに
+
+接点信号のON/OFFから、設備の稼働時間と稼働率を可視化するダッシュボードを作ります。第1章で作成する完成形は次のとおりです。接点状態の時系列グラフと、稼働時間・稼働率・受信件数を並べて表示します。
+
+![今回作成するダッシュボード。接点状態の時系列グラフ、稼働時間2,880秒、稼働率80%、受信件数360件](/images/lagoon-contact-runtime-utilization/09-periodic-dashboard.jpg)
 
 設備の接点状態を `ON=1`、`OFF=0` としてSORACOM Harvest Dataに保存している場合、SORACOM Lagoonを使ってON時間や稼働率を表示できます。ただし、現在の状態を一定間隔で送信する場合と、状態の変化時のみ送信する場合とでは、計算方法が異なります。
 
