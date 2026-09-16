@@ -52,7 +52,7 @@ https://soracom.jp/services/air/japan_coverage/
 
 切り替えの分岐点は、上りが**20GiBを超えたらDU-50GB、70GiBを超えたらDU-100GB**です。境界ちょうどでは小さいバンドルの方が安く、超過料金が1ブロック増えたところで逆転します。100GiBを超えた後も、3バンドルの中ではDU-100GBが最安です。
 
-この分岐点は公式の料金表・課金条件から計算した値です。公式の推奨設定として掲載されている値ではありません。
+この分岐点は公式の料金表・課金条件から計算した値です。
 
 :::details 差額と超過料金から分岐点を計算する
 
@@ -261,7 +261,8 @@ https://users.soracom.io/ja-jp/docs/flux/action-payload-condition/
 (payload.target == "DU-50GB" || payload.target == "DU-100GB") && getUTCYear(now()) == getUTCYear(toNumber(payload.checkedAt)) && getUTCMonth(now()) == getUTCMonth(toNumber(payload.checkedAt)) && (getUTCHours(now()) < 23 || getUTCMinutes(now()) < 50)
 ```
 
-選択されたバンドルに加え、判定時と同じUTC月であることを確認します。また、毎日23:50〜24:00 UTCの新たな変更を止めます。非同期処理の遅延まで解消するものではないため、月末の完了を保証する条件ではありません。
+選択されたバンドルに加え、判定時と同じUTC月であることを確認します。また、毎日23:50〜24:00 UTCでの新たな変更処理はおこなわないようにします。（微妙にタイミングがずれて翌月に変更が入るのを極力防ぐため）
+
 
 ![A3のCONDITION：アクションを無効にし、変更対象とUTC日時の条件を設定](/images/plan-du-bundle-optimization/40-a3-condition.png)
 
@@ -292,7 +293,7 @@ https://users.soracom.io/ja-jp/docs/flux/action-payload-condition/
 }
 ```
 
-APIの成功出力を受けて、このJSONを復元アクションへ渡します。OUTPUTは有効にしますが、画面上部のアクション自体は無効のまま保存します。
+APIの成功出力を受けて、このJSONを次のアクションへ渡します。OUTPUTは有効にしますが、画面上部のアクション自体は無効のまま保存します。
 
 ![A3のOUTPUT：upgradedへの送信と、IMSI・選択バンドル・判定時刻の引き継ぎ](/images/plan-du-bundle-optimization/42-a3-output.png)
 
@@ -333,7 +334,7 @@ APIの成功出力を受けて、このJSONを復元アクションへ渡しま�
 }
 ```
 
-`configured`には`putBundles`の成功応答に含まれるバンドルを入れます。確認用のGETアクションは追加しません。応答仕様は公式CLIのAPI仕様で確認しています。
+`configured`には`putBundles`の成功応答に含まれるバンドルを入れます。確認用のGETアクションは不要です。
 
 https://github.com/soracom/soracom-cli/blob/cbc57fcb34878ab4c358d42f03f8d91bca1ecb8d/generators/assets/soracom-api.en.yaml
 
@@ -345,7 +346,7 @@ https://github.com/soracom/soracom-cli/blob/cbc57fcb34878ab4c358d42f03f8d91bca1e
 
 月次通信量は同じ月の中で増えていくため、10GiB超のルール1つで、その後も毎日見直せます。翌月は通信量がリセットされ、再び合計10GiBを超えるまで待ちます。
 
-例えば上り9.9GiB・下り0.2GiBなら、合計10GiBを超えてFluxが起動しますが、DU-10GBのままです。その後、上り20GiBを超えた後の再評価でDU-50GBを選びます。これは動作を説明する例です。検証範囲は「判定を試した結果」にまとめています。
+例えば上り9.9GiB・下り0.2GiBなら、合計10GiBを超えてFluxが起動しますが、DU-10GBのままです。その後、上り20GiBを超えた後の再評価でDU-50GBを選んでまたDU-10GBに戻るようにします。
 
 1. 左上の「メニュー」→「SORACOM Air for セルラー」→「イベントハンドラー」を開き、「イベント作成」をクリックします。
 
@@ -396,7 +397,7 @@ Bodyには次のJSONを入力します。
 
 ![イベント編集画面全体。監視対象、月次10240MiBと翌日開始時、POSTの本文、有効チェックと保存ボタンの位置](/images/plan-du-bundle-optimization/32-event-settings.png)
 
-検証環境では、この10GiBルールを保存して開き直し、しきい値・翌日開始時の再評価・再実行抑止オフ・イベント無効を確認しました。以前作った70GiBルールは無効のまま残していますが、今回の構成では使用しません。
+検証環境では、この10GiBルールを保存して開き直し、しきい値・翌日開始時の再評価・再実行抑止オフ・イベント無効を確認しました。
 
 ## 4. 判定を試した結果
 
@@ -424,7 +425,7 @@ Bodyには次のJSONを入力します。
 
 ## 実SIMで動かす前に
 
-この例では、対象SIMをイベントハンドラーの専用グループで絞ります。Flux内でSIM情報を取得してplan-DUかどうかを再確認する処理は入れていないため、グループには対象のplan-DU SIMだけを入れてください。Incoming WebhookのURLも公開しません。
+この例では、対象SIMをイベントハンドラーの専用グループで絞ります。Flux内でSIM情報を取得してplan-DUかどうかを再確認する処理は入れていないため、グループには対象のplan-DU SIMだけを入れてください。Incoming WebhookのURLも公開しないように気をつけましょう。
 
 実SIMで動かす前に、次の順で確認します。
 
