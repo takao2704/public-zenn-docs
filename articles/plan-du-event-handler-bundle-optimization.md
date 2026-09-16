@@ -11,7 +11,9 @@ published: true
 :::
 
 :::message
-この記事は2026-09-16時点の情報に基づいています。料金やサービス内容は変更される可能性がありますので、最新情報は公式サイト（https://soracom.jp/services/air/japan_coverage/）でご確認ください。
+この記事は2026-09-16時点の情報に基づいています。料金やサービス内容は変更される可能性がありますので、最新情報は公式サイトでご確認ください。
+
+https://soracom.jp/services/air/japan_coverage/
 :::
 
 ## やりたいこと
