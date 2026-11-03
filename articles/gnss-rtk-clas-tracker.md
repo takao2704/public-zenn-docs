@@ -44,7 +44,7 @@ GNSS受信機が位置を計算し、Raspberry Piが記録・送信を担当し�
 ![車内に置いた2台のRaspberry Pi、GNSS機器、LTEモデム](/images/gnss-rtk-clas-qgis-soracam/01-tracker.png)
 *車内に置いたトラッカー。2台のRaspberry Piから、それぞれLTEモデムを使って送信します。*
 
-## GPSから高精度GNSSへ
+## GNSS測位の原理
 
 ### 衛星の位置と電波の到達時間
 
