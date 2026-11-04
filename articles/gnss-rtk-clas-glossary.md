@@ -83,7 +83,15 @@ Standard Positioning Service。今回のログでは、受信機が衛星から�
 
 #### DGPS
 
-Differential [GPS](#gps)（差分[GPS](#gps)）。位置の分かっている基準局などが作った補正情報を使って、測位の誤差を減らす方式です。
+Differential [GPS](#gps)（差分GPS）。位置が分かっている基準局で、衛星までの距離を計算し、信号から測った距離（擬似距離）と比べます。近くの車で同じ衛星を見ていれば、衛星の時計のずれや大気による遅れはよく似ています。そこで、基準局で見積もった誤差を車でも補正に使えます。[DGPSの仕組み（ESA）](https://gssc.esa.int/navipedia/index.php?title=DGNSS_Fundamentals)
+
+配るのは、**どの時刻の、どの衛星の距離を、どれだけ直すか**というデータです。たとえば、ある時刻にGPS衛星G12までの距離が5 m長く測れていたら、G12の補正値は「−5 m」です。車の受信機は、自分が測ったG12までの距離から5 mを引きます。他の衛星にもそれぞれの補正値を適用してから、車の位置を計算します。
+
+補正を届ける経路はサービスによって違います。
+
+- **地上の無線**を使った例が、船舶向けのDGPSです。沿岸の無線局が複数の衛星の補正値をまとめて放送し、周辺の船が受信していました。[米国沿岸警備隊のDGPS資料](https://www.navcen.uscg.gov/sites/default/files/pdf/waterways/shallow_draft/CIM_16500_1D%20ATON%20Positioning%20and%20Range%20Surveying.pdf)
+- **インターネット**では、[NTRIP](#ntrip)を使って補正値や基準局の観測データを配信できます。今回のネットワーク[RTK](#rtk)もこの経路で、Raspberry PiがLTE経由でデータを受け取り、[USB](#usb)で[車載受信機](#qlm29hbaa-gm)へ渡します。[NTRIPの解説（BKG）](https://igs.bkg.bund.de/ntrip/about)
+- **衛星経由**の例が、[みちびき](#qzss)のサブメータ級測位補強サービス（SLAS）です。地上で作った補正情報をL1S信号に載せ、対応する受信機に届けます。今回使った[CLAS](#clas)は、同じみちびきの[L6D](#l6d)信号で、衛星の軌道や時計、大気の遅れなどの補強情報を届けます。[SLASの仕様（内閣府）](https://qzss.go.jp/technical/system/l1s.html)
 
 #### DR
 
